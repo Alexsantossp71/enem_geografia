@@ -1,0 +1,272 @@
+<!DOCTYPE html>
+
+<html lang="pt-BR"><head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<title>Palavras-Cruzadas: Geografia</title>
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<style data-purpose="custom-fonts">
+    @import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap');
+    body {
+      font-family: 'Inter', sans-serif;
+    }
+  </style>
+<script>
+    tailwind.config = {
+      theme: {
+        extend: {
+          colors: {
+            'brand-green': '#208B4E',
+            'brand-light-green': '#E2F6EA',
+            'brand-bg': '#E6F5E9',
+            'cell-border': '#707070',
+            'active-row': '#B2E2C6',
+            'hint-active-bg': '#BCE3CB',
+          }
+        }
+      }
+    }
+  </script>
+<style data-purpose="crossword-grid">
+    .grid-cell {
+      width: 40px;
+      height: 40px;
+      border: 1px solid #7d8e85;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 1.25rem;
+      font-weight: 500;
+      background-color: white;
+      position: relative;
+    }
+    .grid-cell.empty {
+      background-color: transparent;
+      border: none;
+    }
+    .grid-cell.active-highlight {
+      background-color: #a8e6b3;
+      border-color: #7d8e85;
+    }
+    .grid-number {
+      position: absolute;
+      top: 2px;
+      left: 2px;
+      font-size: 10px;
+      color: #333;
+      line-height: 1;
+    }
+  </style>
+</head>
+<body class="bg-brand-bg min-h-screen flex flex-col overflow-x-hidden">
+<!-- BEGIN: MainHeader -->
+<header class="bg-white px-8 py-4 flex justify-between items-center border-b border-gray-200">
+<div>
+<h1 class="text-3xl font-bold text-brand-green tracking-tight">Palavras-Cruzadas: Geografia</h1>
+<p class="text-gray-700 mt-1">Recursos Naturais - Preparatório ENEM</p>
+</div>
+<nav class="flex items-center space-x-6 text-gray-700 font-medium">
+<a class="flex items-center hover:text-brand-green transition-colors" href="#">
+<svg class="h-5 w-5 mr-1" fill="none" stroke="currentColor" viewbox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+<path d="M10 19l-7-7m0 0l7-7m-7 7h18" stroke-linecap="round" stroke-linejoin="round" stroke-width="2"></path>
+</svg>
+        Voltar ao Menu
+      </a>
+<a class="hover:text-brand-green transition-colors" href="#">Ajuda</a>
+<button class="p-1 rounded-full text-gray-500 hover:bg-gray-100 transition-colors focus:outline-none">
+<svg class="h-8 w-8" fill="currentColor" viewbox="0 0 20 20" xmlns="http://www.w3.org/2000/svg">
+<path clip-rule="evenodd" d="M10 9a3 3 0 100-6 3 3 0 000 6zm-7 9a7 7 0 1114 0H3z" fill-rule="evenodd"></path>
+</svg>
+</button>
+</nav>
+</header>
+<!-- END: MainHeader -->
+<!-- BEGIN: MainContent -->
+<main class="flex-grow flex flex-col items-center py-8 px-4 w-full max-w-6xl mx-auto space-y-8">
+<div class="flex flex-col lg:flex-row w-full gap-6 justify-center">
+<!-- Crossword Grid Area -->
+<section class="bg-white rounded-xl shadow-sm border border-brand-green/20 p-8 flex-grow flex justify-center items-center overflow-auto max-w-3xl">
+<!-- Logical grid representation -->
+<div class="grid grid-cols-10">
+<!-- Row 1 -->
+<div class="grid-cell empty"></div>
+<div class="grid-cell empty"></div>
+<div class="grid-cell empty"></div>
+<div class="grid-cell"><span class="grid-number">1</span></div>
+<div class="grid-cell empty"></div>
+<div class="grid-cell"><span class="grid-number">2</span></div>
+<div class="grid-cell empty"></div>
+<div class="grid-cell empty"></div>
+<div class="grid-cell empty"></div>
+<div class="grid-cell empty"></div>
+<!-- Row 2 -->
+<div class="grid-cell empty"></div>
+<div class="grid-cell empty"></div>
+<div class="grid-cell"><span class="grid-number">7</span></div>
+<div class="grid-cell"><span class="grid-number">3</span></div>
+<div class="grid-cell"></div>
+<div class="grid-cell empty"></div>
+<div class="grid-cell"></div>
+<div class="grid-cell"><span class="grid-number">4</span></div>
+<div class="grid-cell empty"></div>
+<div class="grid-cell"><span class="grid-number">5</span></div>
+<!-- Row 3 -->
+<div class="grid-cell empty"></div>
+<div class="grid-cell"><span class="grid-number">6</span></div>
+<div class="grid-cell"></div>
+<div class="grid-cell"></div>
+<div class="grid-cell"></div>
+<div class="grid-cell"></div>
+<div class="grid-cell"></div>
+<div class="grid-cell"></div>
+<div class="grid-cell empty"></div>
+<div class="grid-cell"></div>
+<!-- Row 4 -->
+<div class="grid-cell empty"></div>
+<div class="grid-cell"></div>
+<div class="grid-cell"></div>
+<div class="grid-cell"></div>
+<div class="grid-cell"></div>
+<div class="grid-cell"></div>
+<div class="grid-cell"></div>
+<div class="grid-cell"></div>
+<div class="grid-cell empty"></div>
+<div class="grid-cell"></div>
+<!-- Row 5 (Active Row 'PETRÓLEO') -->
+<div class="grid-cell active-highlight"></div>
+<div class="grid-cell active-highlight">P</div>
+<div class="grid-cell active-highlight">E</div>
+<div class="grid-cell active-highlight">T</div>
+<div class="grid-cell active-highlight">R</div>
+<div class="grid-cell active-highlight">Ó</div>
+<div class="grid-cell active-highlight">L</div>
+<div class="grid-cell active-highlight">E</div>
+<div class="grid-cell active-highlight">O</div>
+<div class="grid-cell active-highlight"></div>
+<!-- Row 6 -->
+<div class="grid-cell empty"></div>
+<div class="grid-cell"></div>
+<div class="grid-cell"></div>
+<div class="grid-cell"></div>
+<div class="grid-cell"></div>
+<div class="grid-cell"></div>
+<div class="grid-cell"></div>
+<div class="grid-cell"></div>
+<div class="grid-cell empty"></div>
+<div class="grid-cell"></div>
+<!-- Row 7 -->
+<div class="grid-cell empty"></div>
+<div class="grid-cell"><span class="grid-number">7</span></div>
+<div class="grid-cell"></div>
+<div class="grid-cell"></div>
+<div class="grid-cell"></div>
+<div class="grid-cell empty"></div>
+<div class="grid-cell"></div>
+<div class="grid-cell"></div>
+<div class="grid-cell empty"></div>
+<div class="grid-cell empty"></div>
+<!-- Row 8 -->
+<div class="grid-cell empty"></div>
+<div class="grid-cell empty"></div>
+<div class="grid-cell"></div>
+<div class="grid-cell"></div>
+<div class="grid-cell"></div>
+<div class="grid-cell empty"></div>
+<div class="grid-cell"></div>
+<div class="grid-cell"></div>
+<div class="grid-cell empty"></div>
+<div class="grid-cell empty"></div>
+<!-- Row 9 -->
+<div class="grid-cell empty"></div>
+<div class="grid-cell empty"></div>
+<div class="grid-cell empty"></div>
+<div class="grid-cell"><span class="grid-number">8</span></div>
+<div class="grid-cell"></div>
+<div class="grid-cell"></div>
+<div class="grid-cell"></div>
+<div class="grid-cell"></div>
+<div class="grid-cell empty"></div>
+<div class="grid-cell empty"></div>
+</div>
+</section>
+<!-- Hints Area -->
+<aside class="w-full lg:w-80 bg-white rounded-xl shadow-sm border border-[#7d8e85] flex flex-col h-[500px]">
+<div class="p-4 border-b border-gray-200 text-center font-bold text-lg text-gray-800">
+          Dicas
+        </div>
+<div class="flex-grow overflow-y-auto">
+<!-- Active Hint -->
+<div class="p-4 bg-[#a8e6b3] border-b border-[#7d8e85] cursor-pointer">
+<p class="text-sm font-semibold text-gray-900 mb-1">Horizontal: <span class="font-bold">7. Recurso energético não renovável abundante no Brasil.</span></p>
+</div>
+<!-- Inactive Hints -->
+<div class="p-4 border-b border-gray-100 hover:bg-gray-50 cursor-pointer transition-colors text-sm text-gray-700">
+            Vertical: 1. Fonte de vida essencial, uma conceenavesa sonma no Brasil, a desogeino do recurso de qualito de eotentiats.
+          </div>
+<div class="p-4 border-b border-gray-100 hover:bg-gray-50 cursor-pointer transition-colors text-sm text-gray-700">
+            Horizontal: 3. Mineral utilizado na commorrda natural quanvificação da slicn e'em energético.
+          </div>
+<div class="p-4 border-b border-gray-100 hover:bg-gray-50 cursor-pointer transition-colors text-sm text-gray-700">
+            Vertical: 5. Bioma rico em Brasil, no peareso do chote e na toma os dectadvtros.
+          </div>
+</div>
+</aside>
+</div>
+<!-- On-screen Keyboard Area -->
+<section class="w-full max-w-3xl flex flex-col items-center mt-6">
+<div class="flex flex-col gap-2 w-full px-4">
+<!-- Keyboard Row 1 -->
+<div class="flex justify-center gap-1.5 sm:gap-2">
+<button class="w-8 h-10 sm:w-12 sm:h-12 bg-white border border-[#c8e6c9] rounded-[4px] text-[#1a5e20] font-semibold text-lg hover:bg-[#e8f5e9] transition-colors focus:outline-none">Q</button>
+<button class="w-8 h-10 sm:w-12 sm:h-12 bg-white border border-[#c8e6c9] rounded-[4px] text-[#1a5e20] font-semibold text-lg hover:bg-[#e8f5e9] transition-colors focus:outline-none">W</button>
+<button class="w-8 h-10 sm:w-12 sm:h-12 bg-white border border-[#c8e6c9] rounded-[4px] text-[#1a5e20] font-semibold text-lg hover:bg-[#e8f5e9] transition-colors focus:outline-none">E</button>
+<button class="w-8 h-10 sm:w-12 sm:h-12 bg-white border border-[#c8e6c9] rounded-[4px] text-[#1a5e20] font-semibold text-lg hover:bg-[#e8f5e9] transition-colors focus:outline-none">R</button>
+<button class="w-8 h-10 sm:w-12 sm:h-12 bg-white border border-[#c8e6c9] rounded-[4px] text-[#1a5e20] font-semibold text-lg hover:bg-[#e8f5e9] transition-colors focus:outline-none">T</button>
+<button class="w-8 h-10 sm:w-12 sm:h-12 bg-white border border-[#c8e6c9] rounded-[4px] text-[#1a5e20] font-semibold text-lg hover:bg-[#e8f5e9] transition-colors focus:outline-none">Y</button>
+<button class="w-8 h-10 sm:w-12 sm:h-12 bg-white border border-[#c8e6c9] rounded-[4px] text-[#1a5e20] font-semibold text-lg hover:bg-[#e8f5e9] transition-colors focus:outline-none">U</button>
+<button class="w-8 h-10 sm:w-12 sm:h-12 bg-white border border-[#c8e6c9] rounded-[4px] text-[#1a5e20] font-semibold text-lg hover:bg-[#e8f5e9] transition-colors focus:outline-none">I</button>
+<button class="w-8 h-10 sm:w-12 sm:h-12 bg-white border border-[#c8e6c9] rounded-[4px] text-[#1a5e20] font-semibold text-lg hover:bg-[#e8f5e9] transition-colors focus:outline-none">O</button>
+<button class="w-8 h-10 sm:w-12 sm:h-12 bg-white border border-[#c8e6c9] rounded-[4px] text-[#1a5e20] font-semibold text-lg hover:bg-[#e8f5e9] transition-colors focus:outline-none">P</button>
+<button class="w-8 h-10 sm:w-12 sm:h-12 bg-white border border-[#c8e6c9] rounded-[4px] text-[#1a5e20] font-semibold text-lg hover:bg-[#e8f5e9] transition-colors focus:outline-none">Ã</button>
+</div>
+<!-- Keyboard Row 2 -->
+<div class="flex justify-center gap-1.5 sm:gap-2 ml-4">
+<button class="w-8 h-10 sm:w-12 sm:h-12 bg-white border border-[#c8e6c9] rounded-[4px] text-[#1a5e20] font-semibold text-lg hover:bg-[#e8f5e9] transition-colors focus:outline-none">A</button>
+<button class="w-8 h-10 sm:w-12 sm:h-12 bg-white border border-[#c8e6c9] rounded-[4px] text-[#1a5e20] font-semibold text-lg hover:bg-[#e8f5e9] transition-colors focus:outline-none">S</button>
+<button class="w-8 h-10 sm:w-12 sm:h-12 bg-white border border-[#c8e6c9] rounded-[4px] text-[#1a5e20] font-semibold text-lg hover:bg-[#e8f5e9] transition-colors focus:outline-none">D</button>
+<button class="w-8 h-10 sm:w-12 sm:h-12 bg-white border border-[#c8e6c9] rounded-[4px] text-[#1a5e20] font-semibold text-lg hover:bg-[#e8f5e9] transition-colors focus:outline-none">F</button>
+<button class="w-8 h-10 sm:w-12 sm:h-12 bg-white border border-[#c8e6c9] rounded-[4px] text-[#1a5e20] font-semibold text-lg hover:bg-[#e8f5e9] transition-colors focus:outline-none">G</button>
+<button class="w-8 h-10 sm:w-12 sm:h-12 bg-white border border-[#c8e6c9] rounded-[4px] text-[#1a5e20] font-semibold text-lg hover:bg-[#e8f5e9] transition-colors focus:outline-none">H</button>
+<button class="w-8 h-10 sm:w-12 sm:h-12 bg-white border border-[#c8e6c9] rounded-[4px] text-[#1a5e20] font-semibold text-lg hover:bg-[#e8f5e9] transition-colors focus:outline-none">J</button>
+<button class="w-8 h-10 sm:w-12 sm:h-12 bg-white border border-[#c8e6c9] rounded-[4px] text-[#1a5e20] font-semibold text-lg hover:bg-[#e8f5e9] transition-colors focus:outline-none">K</button>
+<button class="w-8 h-10 sm:w-12 sm:h-12 bg-white border border-[#c8e6c9] rounded-[4px] text-[#1a5e20] font-semibold text-lg hover:bg-[#e8f5e9] transition-colors focus:outline-none">L</button>
+<button class="w-8 h-10 sm:w-12 sm:h-12 bg-white border border-[#c8e6c9] rounded-[4px] text-[#1a5e20] font-semibold text-lg hover:bg-[#e8f5e9] transition-colors focus:outline-none">Ç</button>
+</div>
+<!-- Keyboard Row 3 -->
+<div class="flex justify-center gap-1.5 sm:gap-2">
+<button class="px-2 h-10 sm:h-12 bg-white border border-[#c8e6c9] rounded-[4px] text-[#1a5e20] font-semibold hover:bg-[#e8f5e9] transition-colors focus:outline-none flex items-center justify-center">
+            —
+          </button>
+<button class="w-8 h-10 sm:w-12 sm:h-12 bg-white border border-[#c8e6c9] rounded-[4px] text-[#1a5e20] font-semibold text-lg hover:bg-[#e8f5e9] transition-colors focus:outline-none">Z</button>
+<button class="w-8 h-10 sm:w-12 sm:h-12 bg-white border border-[#c8e6c9] rounded-[4px] text-[#1a5e20] font-semibold text-lg hover:bg-[#e8f5e9] transition-colors focus:outline-none">X</button>
+<button class="w-8 h-10 sm:w-12 sm:h-12 bg-white border border-[#c8e6c9] rounded-[4px] text-[#1a5e20] font-semibold text-lg hover:bg-[#e8f5e9] transition-colors focus:outline-none">C</button>
+<button class="w-8 h-10 sm:w-12 sm:h-12 bg-white border border-[#c8e6c9] rounded-[4px] text-[#1a5e20] font-semibold text-lg hover:bg-[#e8f5e9] transition-colors focus:outline-none">V</button>
+<button class="w-8 h-10 sm:w-12 sm:h-12 bg-white border border-[#c8e6c9] rounded-[4px] text-[#1a5e20] font-semibold text-lg hover:bg-[#e8f5e9] transition-colors focus:outline-none">B</button>
+<button class="w-8 h-10 sm:w-12 sm:h-12 bg-white border border-[#c8e6c9] rounded-[4px] text-[#1a5e20] font-semibold text-lg hover:bg-[#e8f5e9] transition-colors focus:outline-none">N</button>
+<button class="w-8 h-10 sm:w-12 sm:h-12 bg-white border border-[#c8e6c9] rounded-[4px] text-[#1a5e20] font-semibold text-lg hover:bg-[#e8f5e9] transition-colors focus:outline-none">M</button>
+<button class="w-8 h-10 sm:w-12 sm:h-12 bg-white border border-[#c8e6c9] rounded-[4px] text-[#1a5e20] font-semibold text-lg hover:bg-[#e8f5e9] transition-colors focus:outline-none">,</button>
+<button class="w-8 h-10 sm:w-12 sm:h-12 bg-white border border-[#c8e6c9] rounded-[4px] text-[#1a5e20] font-semibold text-lg hover:bg-[#e8f5e9] transition-colors focus:outline-none">Á</button>
+<button class="px-2 h-10 sm:h-12 bg-white border border-[#c8e6c9] rounded-[4px] text-[#1a5e20] font-semibold hover:bg-[#e8f5e9] transition-colors focus:outline-none flex items-center justify-center">
+<svg class="h-5 w-5" fill="none" stroke="currentColor" viewbox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path d="M12 14l2-2m0 0l2-2m-2 2l-2-2m2 2l2 2M3 12l6.414 6.414a2 2 0 001.414.586H19a2 2 0 002-2V7a2 2 0 00-2-2h-8.172a2 2 0 00-1.414.586L3 12z" stroke-linecap="round" stroke-linejoin="round" stroke-width="2"></path></svg>
+</button>
+</div>
+</div>
+<div class="mt-6 mb-8">
+<button class="bg-white border border-gray-300 text-gray-700 px-6 py-2 rounded-md font-medium shadow-sm hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-brand-green focus:ring-offset-2 transition-colors">
+          Verificar Respostas
+        </button>
+</div>
+</section>
+</main>
+<!-- END: MainContent -->
+</body></html>

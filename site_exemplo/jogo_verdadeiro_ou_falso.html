@@ -1,0 +1,120 @@
+<!DOCTYPE html>
+
+<html lang="pt-BR"><head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<title>GeoLearn Quiz</title>
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@600;700;800&amp;display=swap" rel="stylesheet"/>
+<style data-purpose="custom-fonts-and-gradients">
+    body {
+      font-family: 'Montserrat', sans-serif;
+      background-color: #e9f5ed;
+    }
+    
+    .progress-bar-stripes {
+      background: repeating-linear-gradient(
+        -45deg,
+        rgba(255, 255, 255, 0.4),
+        rgba(255, 255, 255, 0.4) 15px,
+        transparent 15px,
+        transparent 30px
+      );
+    }
+
+    .btn-shadow-green {
+      box-shadow: 0 6px 0 #1b8a33;
+    }
+    
+    .btn-shadow-red {
+      box-shadow: 0 6px 0 #b32b29;
+    }
+    
+    .text-outline-green {
+      -webkit-text-stroke: 3px #1e7b45;
+      color: #3bd362;
+      text-shadow: 2px 2px 0 #1e7b45, 4px 4px 0 #1e7b45;
+    }
+  </style>
+<script>
+    tailwind.config = {
+      theme: {
+        extend: {
+          colors: {
+            brand: {
+              darkgreen: '#1e7b45',
+              green: '#2db34a',
+              red: '#d93a38',
+              bg: '#f3f8f5'
+            }
+          }
+        }
+      }
+    }
+  </script>
+</head>
+<body class="min-h-screen flex flex-col relative overflow-hidden text-gray-900">
+<!-- BEGIN: Top Bar -->
+<header class="w-full py-6 px-8 flex justify-center items-center z-10" data-purpose="top-bar">
+<div class="max-w-6xl w-full flex items-center justify-between gap-6">
+<!-- Progress Bar -->
+<div class="flex-1 max-w-3xl border-4 border-brand-darkgreen rounded-full p-1 bg-white h-12 flex items-center relative overflow-hidden shadow-sm" data-purpose="progress-container">
+<div class="h-full bg-gradient-to-r from-green-500 via-green-400 to-yellow-400 rounded-full w-[70%] relative overflow-hidden flex items-center" data-purpose="progress-fill">
+<div class="absolute inset-0 progress-bar-stripes"></div>
+<!-- Tiny white indicator line inside progress -->
+<div class="absolute right-[20%] top-1/2 -translate-y-1/2 h-4 w-[2px] bg-white opacity-80"></div>
+</div>
+</div>
+<!-- Timer & Streak Info -->
+<div class="flex items-center gap-4 whitespace-nowrap" data-purpose="stats-container">
+<div class="text-4xl font-extrabold tracking-tight">0:07</div>
+<div class="flex items-center gap-2">
+<div class="text-[80px] font-black text-outline-green italic tracking-tighter" data-purpose="multiplier">X3</div>
+<div class="flex flex-col justify-center leading-none">
+<span class="text-4xl font-black text-brand-darkgreen tracking-wide">STREAK!</span>
+<span class="text-xl font-bold text-brand-green">+500 POINTS</span>
+</div>
+</div>
+</div>
+</div>
+</header>
+<!-- END: Top Bar -->
+<!-- BEGIN: Main Content Area -->
+<main class="flex-1 flex flex-col items-center justify-center px-4 w-full max-w-5xl mx-auto z-10 pb-20" data-purpose="main-quiz-area">
+<!-- Question Card -->
+<article class="w-full bg-white border-[6px] border-brand-darkgreen rounded-3xl overflow-hidden shadow-lg mb-12" data-purpose="question-card">
+<header class="bg-brand-darkgreen text-white text-center py-4 px-6">
+<h2 class="text-xl font-bold tracking-widest uppercase">Questão 4 de 6: Climas do Mundo</h2>
+</header>
+<div class="px-8 py-16 text-center">
+<p class="text-[32px] leading-tight font-bold text-gray-900 max-w-4xl mx-auto">
+          O clima equatorial é caracterizado por baixas temperaturas e pouca pluviosidade ao longo do ano.
+        </p>
+</div>
+</article>
+<!-- Action Buttons -->
+<div class="flex justify-center items-center gap-16" data-purpose="action-buttons">
+<!-- True Button -->
+<button class="group w-[280px] h-[280px] rounded-full bg-brand-green border-[16px] border-[#1b8a33] flex flex-col items-center justify-center btn-shadow-green transform transition-transform active:translate-y-2 active:shadow-none hover:brightness-105" data-purpose="btn-true">
+<svg class="w-32 h-32 text-white mb-2 drop-shadow-md" fill="none" stroke="currentColor" stroke-width="4" viewbox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+<path d="M5 13l4 4L19 7" stroke-linecap="round" stroke-linejoin="round"></path>
+</svg>
+<span class="text-white font-bold text-3xl tracking-wider drop-shadow-md">VERDADEIRO</span>
+</button>
+<!-- False Button -->
+<button class="group w-[280px] h-[280px] rounded-full bg-brand-red border-[16px] border-[#b32b29] flex flex-col items-center justify-center btn-shadow-red transform transition-transform active:translate-y-2 active:shadow-none hover:brightness-105" data-purpose="btn-false">
+<svg class="w-32 h-32 text-white mb-2 drop-shadow-md" fill="none" stroke="currentColor" stroke-width="4" viewbox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+<path d="M6 18L18 6M6 6l12 12" stroke-linecap="round" stroke-linejoin="round"></path>
+</svg>
+<span class="text-white font-bold text-3xl tracking-wider drop-shadow-md">FALSO</span>
+</button>
+</div>
+</main>
+<!-- END: Main Content Area -->
+<!-- BEGIN: Footer -->
+<footer class="w-full bg-white/80 backdrop-blur-sm border-t border-gray-300 py-3 px-6 flex justify-between items-center text-sm font-semibold text-gray-600 fixed bottom-0 z-20" data-purpose="page-footer">
+<span>GeoLearn ENEM - Plataforma de Aprendizagem</span>
+<span>© 2024 GeoLearn</span>
+</footer>
+<!-- END: Footer -->
+</body></html>

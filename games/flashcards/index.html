@@ -1,0 +1,151 @@
+<!DOCTYPE html>
+
+<html lang="pt-BR"><head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<title>Flashcards Memory Game</title>
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" rel="stylesheet"/>
+<script>
+    tailwind.config = {
+      theme: {
+        extend: {
+          colors: {
+            'brand-green': '#3ba563',
+            'brand-dark': '#1a5632',
+            'brand-light': '#eaf5ee',
+            'brand-card-bg': '#d8efe1'
+          },
+          fontFamily: {
+            sans: ['Inter', 'sans-serif'],
+          }
+        }
+      }
+    }
+  </script>
+<style data-purpose="custom-utilities">
+    @import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap');
+    
+    body {
+      font-family: 'Inter', sans-serif;
+      background-color: #f7fcfa;
+      min-height: 100vh;
+      display: flex;
+      flex-direction: column;
+    }
+
+    .flashcard-container {
+      perspective: 1000px;
+    }
+    
+    .flashcard-inner {
+      position: relative;
+      width: 100%;
+      height: 100%;
+      transition: transform 0.6s;
+      transform-style: preserve-3d;
+      cursor: pointer;
+    }
+    
+    .flashcard-front, .flashcard-back {
+      position: absolute;
+      width: 100%;
+      height: 100%;
+      -webkit-backface-visibility: hidden;
+      backface-visibility: hidden;
+    }
+    
+    .flashcard-back {
+      transform: rotateY(180deg);
+    }
+
+    .flipped {
+      transform: rotateY(180deg);
+    }
+  </style>
+</head>
+<body class="text-gray-800">
+<!-- BEGIN: MainHeader -->
+<header class="bg-brand-green text-white py-3 px-6 flex justify-between items-center shadow-md z-10 relative">
+<div class="font-bold text-lg md:text-xl tracking-tight">
+      Geografia ENEM: Preparação Completa
+    </div>
+<div class="flex items-center gap-2 cursor-pointer hover:opacity-80 transition-opacity">
+<div class="w-8 h-8 rounded-full bg-gray-300 text-gray-600 flex items-center justify-center overflow-hidden">
+<i class="fa-solid fa-user text-sm"></i>
+</div>
+<i class="fa-solid fa-chevron-down text-xs"></i>
+</div>
+</header>
+<!-- END: MainHeader -->
+<!-- BEGIN: ProgressBar -->
+<div class="bg-white px-6 py-2 border-b border-gray-200 shadow-sm relative z-0">
+<div class="max-w-5xl mx-auto flex items-center justify-between text-sm font-medium text-gray-600 mb-1">
+<span>Progresso: 5/20 Cartas Restantes</span>
+<span>25%</span>
+</div>
+<div class="max-w-5xl mx-auto w-full bg-gray-200 rounded-full h-2 overflow-hidden">
+<div class="bg-brand-green h-2 rounded-full" style="width: 25%"></div>
+</div>
+</div>
+<!-- END: ProgressBar -->
+<!-- BEGIN: MainContent -->
+<main class="flex-grow flex flex-col items-center justify-center p-6 relative">
+<div class="text-center mb-8 z-10">
+<h1 class="text-3xl md:text-4xl font-extrabold text-brand-dark mb-2">Flashcards Memory Game - Urbanização</h1>
+</div>
+<!-- Flashcard Area -->
+<div class="relative w-full max-w-2xl aspect-[3/2] sm:aspect-[16/9] md:aspect-[2/1] mb-8 flashcard-container group">
+<!-- Decorative background card (rotated) -->
+<div class="absolute -inset-2 bg-[#e0f2e9] rounded-[32px] transform rotate-3 transition-transform duration-300 group-hover:rotate-6 z-0"></div>
+<!-- Actual Flashcard -->
+<div class="flashcard-inner z-10 bg-white border-[4px] border-[#3ba563] rounded-[32px] shadow-xl flex flex-col items-center justify-center p-8 md:p-12 hover:shadow-2xl transition-shadow w-full h-full" onclick="this.classList.toggle('flipped')">
+<!-- Front side -->
+<div class="flashcard-front flex flex-col items-center justify-center bg-white rounded-2xl">
+<h2 class="text-4xl md:text-6xl font-extrabold text-[#114a2a] text-center leading-tight mb-8">
+            O que é<br/>Gentrificação?
+          </h2>
+<p class="text-gray-500 text-base absolute bottom-6 text-center w-full">Clique para virar e ver a resposta</p>
+</div>
+<!-- Back side (hidden by default, revealed on click) -->
+<div class="flashcard-back flex flex-col items-center justify-center bg-white rounded-2xl px-6 text-center">
+<h3 class="text-xl md:text-2xl font-bold text-brand-dark mb-4 border-b pb-2 inline-block">Gentrificação</h3>
+<p class="text-gray-700 md:text-lg">
+             Processo de transformação de áreas urbanas que leva ao encarecimento do custo de vida e à consequente expulsão dos moradores de baixa renda, substituídos por classes mais abastadas.
+           </p>
+<p class="text-gray-500 text-sm md:text-base mt-8">Clique novamente para voltar</p>
+</div>
+</div>
+</div>
+<!-- Controls -->
+<div class="flex flex-wrap justify-center items-center gap-4 z-10 w-full max-w-2xl px-4">
+<button class="flex items-center gap-2 px-6 py-3 rounded-lg border-2 border-brand-green text-brand-green font-semibold hover:bg-brand-light transition-colors focus:ring-4 focus:ring-brand-green/20">
+<i class="fa-solid fa-arrow-left"></i>
+        Anterior
+      </button>
+<button class="flex items-center gap-2 px-6 py-3 rounded-lg bg-brand-green border-2 border-brand-green text-white font-semibold hover:bg-brand-dark hover:border-brand-dark transition-colors shadow-md focus:ring-4 focus:ring-brand-green/30 flex-grow md:flex-grow-0 justify-center">
+<i class="fa-solid fa-check"></i>
+        Marcar como Aprendido
+      </button>
+<button class="flex items-center gap-2 px-6 py-3 rounded-lg border-2 border-brand-green text-brand-green font-semibold hover:bg-brand-light transition-colors focus:ring-4 focus:ring-brand-green/20">
+        Próximo
+        <i class="fa-solid fa-arrow-right"></i>
+</button>
+</div>
+</main>
+<!-- END: MainContent -->
+<!-- BEGIN: Footer -->
+<footer class="bg-white border-t border-gray-200 py-6 px-6 mt-auto">
+<div class="max-w-6xl mx-auto flex flex-col md:flex-row justify-between items-center gap-4">
+<div class="text-gray-400 text-sm font-semibold tracking-wider uppercase hidden md:block">
+        Geografia
+      </div>
+<nav class="flex gap-6 text-sm font-medium text-gray-600">
+<a class="hover:text-brand-green transition-colors" href="#">Sobre o Curso</a>
+<a class="hover:text-brand-green transition-colors" href="#">Termos de Uso</a>
+<a class="hover:text-brand-green transition-colors" href="#">Contato</a>
+</nav>
+</div>
+</footer>
+<!-- END: Footer -->
+</body></html>
