@@ -135,6 +135,7 @@
 
     <!-- BEGIN: Header -->
     
+
 <header class="fixed top-0 w-full z-50 glass border-b border-indigo-100 shadow-sm pointer-events-none">
   <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 pointer-events-auto">
     <div class="flex justify-between items-center h-16 md:h-20">
@@ -148,7 +149,6 @@
       <nav class="hidden md:flex items-center gap-8 text-sm font-bold uppercase tracking-widest text-indigo-900/70">
         <a href="./index.html" class="hover:text-emerald-500 transition-colors">Início</a>
         <a href="./aulas/Indice_aulas.html" class="hover:text-emerald-500 transition-colors">Aulas</a>
-        <a href="./games/memory/index.html" class="hover:text-emerald-500 transition-colors">Jogos</a>
       </nav>
 
       <!-- Mobile Menu Toggle -->
@@ -161,10 +161,10 @@
   <!-- Mobile Menu Content -->
   <div id="mobile-menu" class="hidden md:hidden glass border-b border-indigo-100 py-4 px-6 flex flex-col gap-4 text-sm font-bold uppercase tracking-widest text-indigo-900 pointer-events-auto">
     <a href="./index.html" class="py-2 border-b border-indigo-50/50">Início</a>
-    <a href="./aulas/Indice_aulas.html" class="py-2 border-b border-indigo-50/50">Aulas</a>
-    <a href="./games/memory/index.html" class="py-2">Jogos</a>
+    <a href="./aulas/Indice_aulas.html" class="py-2">Aulas</a>
   </div>
 </header>
+
 
     <!-- END: Header -->
 
@@ -191,10 +191,6 @@
                     <a class="btn-shine inline-flex justify-center items-center gap-2 bg-gradient-primary text-white font-semibold py-4 px-8 rounded-2xl shadow-xl shadow-emerald-500/30 transition-all transform hover:-translate-y-1 hover:shadow-2xl hover:shadow-emerald-500/40" href="aulas/Indice_aulas.html">
                         <span>Acessar Aulas</span>
                         <i class="fas fa-arrow-right"></i>
-                    </a>
-                    <a class="inline-flex justify-center items-center gap-2 bg-white text-gray-800 font-semibold py-4 px-8 rounded-2xl shadow-lg shadow-gray-200/50 hover:bg-gray-50 transition-all transform hover:-translate-y-1 border border-gray-100" href="#jogos">
-                        <i class="fas fa-gamepad text-emerald-500"></i>
-                        <span>Testar Jogos</span>
                     </a>
                 </div>
                 
@@ -236,11 +232,11 @@
                 <!-- Floating badge 2 -->
                 <div class="absolute bottom-10 -right-6 lg:-right-12 glass p-4 rounded-2xl shadow-lg flex items-center gap-3 animate-bounce" style="animation-duration: 4s; animation-delay: 1s;">
                     <div class="w-12 h-12 rounded-xl bg-blue-500 text-white flex items-center justify-center text-xl shadow-md shadow-blue-500/40">
-                        <i class="fas fa-puzzle-piece"></i>
+                        <i class="fas fa-check-circle"></i>
                     </div>
                     <div>
-                        <p class="text-xs text-gray-500 font-medium">Prática</p>
-                        <p class="font-bold text-gray-800">Jogos Interativos</p>
+                        <p class="text-xs text-gray-500 font-medium">Fixação</p>
+                        <p class="font-bold text-gray-800">Exercícios 3D</p>
                     </div>
                 </div>
             </div>
@@ -418,63 +414,7 @@
         </section>
         <!-- END: Topics Section -->
 
-        <!-- BEGIN: Game Section -->
-        <section id="jogos" class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-12 mb-12 relative z-10">
-            <div class="bg-gradient-to-br from-emerald-900 to-emerald-700 rounded-[3rem] p-8 md:p-16 relative overflow-hidden shadow-2xl flex flex-col lg:flex-row items-center justify-between gap-12">
-                <!-- Background decorative shapes -->
-                <div class="absolute inset-0 z-0">
-                    <div class="absolute -top-32 -left-32 w-96 h-96 bg-emerald-500 rounded-full opacity-20 blur-3xl"></div>
-                    <div class="absolute bottom-0 right-0 w-[40rem] h-[40rem] bg-emerald-400 rounded-full opacity-10 blur-3xl translate-x-1/3 translate-y-1/3"></div>
-                </div>
 
-                <div class="relative z-10 lg:w-3/5 text-center lg:text-left">
-                    <span class="inline-block py-1 px-3 rounded-full bg-white/20 text-white/90 text-sm font-bold tracking-wider mb-6 border border-white/30 backdrop-blur-sm">
-                        <i class="fas fa-gamepad mr-2 text-yellow-300"></i> GAMIFICAÇÃO
-                    </span>
-                    <h2 class="text-4xl md:text-5xl font-bold mb-6 text-white outfit">Pratique Brincando</h2>
-                    <p class="text-emerald-50 text-xl leading-relaxed mb-10 max-w-xl mx-auto lg:mx-0">
-                        Os jogos premium são essenciais para fixar o conteúdo. Descubra uma nova forma de memorizar mapas, capitais e conceitos chaves.
-                    </p>
-                    
-                    <div class="flex flex-wrap gap-4 justify-center lg:justify-start">
-                        <a href="games/memory/index.html" class="bg-white text-emerald-800 hover:bg-emerald-50 font-bold py-4 px-8 rounded-2xl shadow-xl transition-all transform hover:scale-105 hover:shadow-2xl inline-flex items-center gap-3">
-                            <i class="fas fa-brain text-emerald-500 text-xl"></i>
-                            Jogo da Memória
-                        </a>
-                        <a href="aulas/Indice_aulas.html" class="bg-emerald-800 bg-opacity-50 hover:bg-opacity-80 border border-emerald-400/50 text-white font-bold py-4 px-8 rounded-2xl transition-all inline-flex items-center gap-3 backdrop-blur-md">
-                            Ver mais jogos
-                        </a>
-                    </div>
-                </div>
-
-                <!-- Floating Cards Illustration -->
-                <div class="relative z-10 lg:w-2/5 flex items-center justify-center">
-                    <div class="relative w-64 h-64 lg:w-80 lg:h-80 perspective-1000">
-                        <div class="absolute inset-0 bg-emerald-400 rounded-full filter blur-[100px] opacity-40 animate-pulse"></div>
-                        
-                        <!-- Center Card -->
-                        <div class="absolute left-1/2 top-1/2 -translate-x-1/2 -translate-y-1/2 w-40 h-56 bg-white rounded-2xl shadow-2xl rotate-3 border-2 border-emerald-100 flex flex-col items-center justify-center z-30 transform hover:-translate-y-6 hover:rotate-6 transition-transform duration-500">
-                            <div class="w-16 h-16 bg-blue-100 rounded-full flex items-center justify-center text-3xl mb-4 shadow-inner">
-                                🌎
-                            </div>
-                            <div class="w-20 h-2 bg-gray-200 rounded-full mb-2"></div>
-                            <div class="w-12 h-2 bg-gray-200 rounded-full"></div>
-                        </div>
-
-                        <!-- Left Card -->
-                        <div class="absolute left-[10%] top-[40%] -translate-y-1/2 w-32 h-44 bg-emerald-50 rounded-2xl shadow-xl -rotate-12 border-2 border-white flex items-center justify-center z-20 transform hover:-translate-y-6 hover:-rotate-6 transition-transform duration-500">
-                            <div class="text-4xl filter drop-shadow">🌱</div>
-                        </div>
-
-                        <!-- Right Card -->
-                        <div class="absolute right-[5%] top-[55%] -translate-y-1/2 w-36 h-48 bg-sky-50 rounded-2xl shadow-xl rotate-12 border-2 border-white flex items-center justify-center z-20 transform hover:-translate-y-6 hover:rotate-24 transition-transform duration-500">
-                            <div class="text-4xl filter drop-shadow">🗺️</div>
-                        </div>
-                    </div>
-                </div>
-            </div>
-        </section>
-        <!-- END: Game Section -->
 
         <!-- BEGIN: Call to Action -->
         <section class="max-w-4xl mx-auto px-4 sm:px-6 py-16 text-center relative z-10">
@@ -506,7 +446,7 @@
                     <ul class="space-y-2 text-sm text-gray-600">
                         <li><a href="#" class="hover:text-emerald-500 transition-colors">Início</a></li>
                         <li><a href="aulas/Indice_aulas.html" class="hover:text-emerald-500 transition-colors">Todas as Aulas</a></li>
-                        <li><a href="games/memory/index.html" class="hover:text-emerald-500 transition-colors">Minigames</a></li>
+
                     </ul>
                 </div>
                 <div>
