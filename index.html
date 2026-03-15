@@ -134,28 +134,38 @@
     </div>
 
     <!-- BEGIN: Header -->
-    <header class="fixed top-0 w-full z-50 pt-4 px-4 sm:px-6 lg:px-8 pointer-events-none">
-        <div class="max-w-7xl mx-auto glass rounded-2xl pointer-events-auto">
-            <div class="flex justify-between items-center h-16 px-6">
-                <!-- Logo -->
-                <div class="flex-shrink-0 flex items-center gap-3">
-                    <div class="w-10 h-10 rounded-xl bg-gradient-primary flex items-center justify-center text-white font-bold text-xl shadow-lg shadow-emerald-500/30">G</div>
-                    <a class="font-bold text-2xl tracking-tight outfit" href="#">Geografia<span class="text-emerald-500">ENEM</span></a>
-                </div>
-                <!-- Navigation -->
-                <nav class="hidden md:flex space-x-8 items-center text-sm font-semibold">
-                    <a class="text-emerald-600 border-b-2 border-emerald-500 pb-1" href="index.html">Início</a>
-                    <a class="text-gray-600 hover:text-emerald-600 transition-colors" href="aulas/Indice_aulas.html">Aulas</a>
-                    <a class="text-gray-600 hover:text-emerald-600 transition-colors" href="games/memory/index.html">Jogos</a>
-                    <a class="bg-gray-900 hover:bg-emerald-600 btn-shine text-white px-5 py-2.5 rounded-xl transition-all shadow-md hover:shadow-lg" href="#topicos">Começar</a>
-                </nav>
-                <!-- Mobile button -->
-                <button class="md:hidden text-gray-600 hover:text-emerald-600 focus:outline-none">
-                    <i class="fas fa-bars text-2xl"></i>
-                </button>
-            </div>
-        </div>
-    </header>
+    
+<header class="fixed top-0 w-full z-50 glass border-b border-indigo-100 shadow-sm pointer-events-none">
+  <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 pointer-events-auto">
+    <div class="flex justify-between items-center h-16 md:h-20">
+      <!-- Logo -->
+      <a href="./index.html" class="flex items-center gap-2 group">
+        <div class="w-8 h-8 md:w-10 md:h-10 rounded-lg bg-emerald-500 flex items-center justify-center text-white font-bold text-lg md:text-xl shadow-lg shadow-emerald-500/20 group-hover:scale-110 transition-transform">G</div>
+        <span class="font-bold text-xl md:text-2xl tracking-tighter outfit text-indigo-950">Geo<span class="text-emerald-500">ENEM</span></span>
+      </a>
+
+      <!-- Desktop Nav -->
+      <nav class="hidden md:flex items-center gap-8 text-sm font-bold uppercase tracking-widest text-indigo-900/70">
+        <a href="./index.html" class="hover:text-emerald-500 transition-colors">Início</a>
+        <a href="./aulas/Indice_aulas.html" class="hover:text-emerald-500 transition-colors">Aulas</a>
+        <a href="./games/memory/index.html" class="hover:text-emerald-500 transition-colors">Jogos</a>
+      </nav>
+
+      <!-- Mobile Menu Toggle -->
+      <button id="mobile-menu-toggle" class="md:hidden p-2 text-indigo-950 focus:outline-none">
+        <i class="fa-solid fa-bars text-2xl"></i>
+      </button>
+    </div>
+  </div>
+
+  <!-- Mobile Menu Content -->
+  <div id="mobile-menu" class="hidden md:hidden glass border-b border-indigo-100 py-4 px-6 flex flex-col gap-4 text-sm font-bold uppercase tracking-widest text-indigo-900 pointer-events-auto">
+    <a href="./index.html" class="py-2 border-b border-indigo-50/50">Início</a>
+    <a href="./aulas/Indice_aulas.html" class="py-2 border-b border-indigo-50/50">Aulas</a>
+    <a href="./games/memory/index.html" class="py-2">Jogos</a>
+  </div>
+</header>
+
     <!-- END: Header -->
 
     <!-- BEGIN: Main Content -->
@@ -528,5 +538,32 @@
             perspective: 1000px;
         }
     </style>
+
+<script>
+  (function() {
+    const toggle = document.getElementById('mobile-menu-toggle');
+    const menu = document.getElementById('mobile-menu');
+    if (toggle && menu) {
+      toggle.addEventListener('click', (e) => {
+        e.stopPropagation();
+        menu.classList.toggle('hidden');
+        const icon = toggle.querySelector('i');
+        if (menu.classList.contains('hidden')) {
+          icon.classList.replace('fa-xmark', 'fa-bars');
+        } else {
+          icon.classList.replace('fa-bars', 'fa-xmark');
+        }
+      });
+      // Close menu when clicking outside
+      document.addEventListener('click', (e) => {
+        if (!menu.contains(e.target) && !toggle.contains(e.target)) {
+          menu.classList.add('hidden');
+          const icon = toggle.querySelector('i');
+          icon.classList.replace('fa-xmark', 'fa-bars');
+        }
+      });
+    }
+  })();
+</script>
 </body>
 </html>

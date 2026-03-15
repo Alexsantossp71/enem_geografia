@@ -14,21 +14,49 @@
     .card-zoom img { transition: transform 0.5s ease; }
     .card-zoom:hover img { transform: scale(1.1); }
   </style>
+
+  <style>
+    .glass {
+      background: rgba(255, 255, 255, 0.8) !important;
+      backdrop-filter: blur(12px) !important;
+      -webkit-backdrop-filter: blur(12px) !important;
+    }
+  </style>
 </head>
 <body class="min-h-screen flex flex-col text-gray-800 bg-gray-50">
 
-<header class="bg-indigo-700 text-white py-4 px-8 sticky top-0 z-50 shadow-md">
-  <div class="max-w-7xl mx-auto flex justify-between items-center">
-    <div class="flex items-center gap-2">
-      <h1 class="text-2xl font-black tracking-tighter italic">GeoENEM</h1>
+
+<header class="fixed top-0 w-full z-50 glass border-b border-indigo-100 shadow-sm pointer-events-none">
+  <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 pointer-events-auto">
+    <div class="flex justify-between items-center h-16 md:h-20">
+      <!-- Logo -->
+      <a href="../index.html" class="flex items-center gap-2 group">
+        <div class="w-8 h-8 md:w-10 md:h-10 rounded-lg bg-emerald-500 flex items-center justify-center text-white font-bold text-lg md:text-xl shadow-lg shadow-emerald-500/20 group-hover:scale-110 transition-transform">G</div>
+        <span class="font-bold text-xl md:text-2xl tracking-tighter outfit text-indigo-950">Geo<span class="text-emerald-500">ENEM</span></span>
+      </a>
+
+      <!-- Desktop Nav -->
+      <nav class="hidden md:flex items-center gap-8 text-sm font-bold uppercase tracking-widest text-indigo-900/70">
+        <a href="../index.html" class="hover:text-emerald-500 transition-colors">Início</a>
+        <a href="../aulas/Indice_aulas.html" class="hover:text-emerald-500 transition-colors">Aulas</a>
+        <a href="../games/memory/index.html" class="hover:text-emerald-500 transition-colors">Jogos</a>
+      </nav>
+
+      <!-- Mobile Menu Toggle -->
+      <button id="mobile-menu-toggle" class="md:hidden p-2 text-indigo-950 focus:outline-none">
+        <i class="fa-solid fa-bars text-2xl"></i>
+      </button>
     </div>
-    <nav class="flex items-center gap-6 text-sm font-bold uppercase tracking-widest">
-      <a class="hover:text-indigo-200 transition-colors" href="../index.html">Início</a>
-      <a class="bg-white/20 px-4 py-1 rounded-full hover:bg-white/30 transition-all" href="Indice_aulas.html">Aulas</a>
-      <a class="hover:text-indigo-200 transition-colors" href="../games/memory/index.html">Jogos</a>
-    </nav>
+  </div>
+
+  <!-- Mobile Menu Content -->
+  <div id="mobile-menu" class="hidden md:hidden glass border-b border-indigo-100 py-4 px-6 flex flex-col gap-4 text-sm font-bold uppercase tracking-widest text-indigo-900 pointer-events-auto">
+    <a href="../index.html" class="py-2 border-b border-indigo-50/50">Início</a>
+    <a href="../aulas/Indice_aulas.html" class="py-2 border-b border-indigo-50/50">Aulas</a>
+    <a href="../games/memory/index.html" class="py-2">Jogos</a>
   </div>
 </header>
+
 
 <main class="max-w-[1400px] mx-auto px-6 lg:px-12 py-12">
   <div class="text-center mb-16 px-4">
@@ -262,5 +290,32 @@
   </div>
 </footer>
 
+
+<script>
+  (function() {
+    const toggle = document.getElementById('mobile-menu-toggle');
+    const menu = document.getElementById('mobile-menu');
+    if (toggle && menu) {
+      toggle.addEventListener('click', (e) => {
+        e.stopPropagation();
+        menu.classList.toggle('hidden');
+        const icon = toggle.querySelector('i');
+        if (menu.classList.contains('hidden')) {
+          icon.classList.replace('fa-xmark', 'fa-bars');
+        } else {
+          icon.classList.replace('fa-bars', 'fa-xmark');
+        }
+      });
+      // Close menu when clicking outside
+      document.addEventListener('click', (e) => {
+        if (!menu.contains(e.target) && !toggle.contains(e.target)) {
+          menu.classList.add('hidden');
+          const icon = toggle.querySelector('i');
+          icon.classList.replace('fa-xmark', 'fa-bars');
+        }
+      });
+    }
+  })();
+</script>
 </body>
 </html>

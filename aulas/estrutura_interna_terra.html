@@ -16,22 +16,49 @@
     .concept-card:hover .concept-img { transform: scale(1.05); }
     .overlay-text { text-shadow: 2px 2px 4px rgba(0,0,0,0.5); }
   </style>
+
+  <style>
+    .glass {
+      background: rgba(255, 255, 255, 0.8) !important;
+      backdrop-filter: blur(12px) !important;
+      -webkit-backdrop-filter: blur(12px) !important;
+    }
+  </style>
 </head>
 <body class="bg-gray-50 text-gray-900 leading-relaxed pt-28 pb-32 ">
 
-<header class="bg-indigo-950/90 text-white py-3 px-6 fixed top-0 w-full z-50 shadow-md backdrop-blur-md border-b border-indigo-900">
-  <div class="max-w-7xl mx-auto flex justify-between items-center">
-    <div class="flex items-center gap-4">
-        <h1 class="text-xl font-extrabold tracking-tighter italic">GeoENEM</h1>
-        <div class="hidden md:flex items-center border-l border-indigo-700 w-px h-6 mx-2"></div>
-        <span class="hidden md:block text-xs font-black uppercase tracking-widest text-indigo-300">Aula 04</span>
-        <span class="hidden md:block text-sm font-bold truncate max-w-[200px]">Estrutura da Terra</span>
+
+<header class="fixed top-0 w-full z-50 glass border-b border-indigo-100 shadow-sm pointer-events-none">
+  <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 pointer-events-auto">
+    <div class="flex justify-between items-center h-16 md:h-20">
+      <!-- Logo -->
+      <a href="../index.html" class="flex items-center gap-2 group">
+        <div class="w-8 h-8 md:w-10 md:h-10 rounded-lg bg-emerald-500 flex items-center justify-center text-white font-bold text-lg md:text-xl shadow-lg shadow-emerald-500/20 group-hover:scale-110 transition-transform">G</div>
+        <span class="font-bold text-xl md:text-2xl tracking-tighter outfit text-indigo-950">Geo<span class="text-emerald-500">ENEM</span></span>
+      </a>
+
+      <!-- Desktop Nav -->
+      <nav class="hidden md:flex items-center gap-8 text-sm font-bold uppercase tracking-widest text-indigo-900/70">
+        <a href="../index.html" class="hover:text-emerald-500 transition-colors">Início</a>
+        <a href="../aulas/Indice_aulas.html" class="hover:text-emerald-500 transition-colors">Aulas</a>
+        <a href="../games/memory/index.html" class="hover:text-emerald-500 transition-colors">Jogos</a>
+      </nav>
+
+      <!-- Mobile Menu Toggle -->
+      <button id="mobile-menu-toggle" class="md:hidden p-2 text-indigo-950 focus:outline-none">
+        <i class="fa-solid fa-bars text-2xl"></i>
+      </button>
     </div>
-    <nav class="flex gap-6 text-xs font-bold uppercase tracking-widest items-center">
-      <a href="Indice_aulas.html" class="hover:text-amber-400 transition-colors flex items-center gap-2"><i class="fa-solid fa-layer-group"></i> <span class="hidden sm:inline">Índice Geral</span></a>
-    </nav>
+  </div>
+
+  <!-- Mobile Menu Content -->
+  <div id="mobile-menu" class="hidden md:hidden glass border-b border-indigo-100 py-4 px-6 flex flex-col gap-4 text-sm font-bold uppercase tracking-widest text-indigo-900 pointer-events-auto">
+    <a href="../index.html" class="py-2 border-b border-indigo-50/50">Início</a>
+    <a href="../aulas/Indice_aulas.html" class="py-2 border-b border-indigo-50/50">Aulas</a>
+    <a href="../games/memory/index.html" class="py-2">Jogos</a>
   </div>
 </header>
+
 
 
 <!-- Bottom Nav -->
@@ -201,5 +228,32 @@
   </div>
 </footer>
 
+
+<script>
+  (function() {
+    const toggle = document.getElementById('mobile-menu-toggle');
+    const menu = document.getElementById('mobile-menu');
+    if (toggle && menu) {
+      toggle.addEventListener('click', (e) => {
+        e.stopPropagation();
+        menu.classList.toggle('hidden');
+        const icon = toggle.querySelector('i');
+        if (menu.classList.contains('hidden')) {
+          icon.classList.replace('fa-xmark', 'fa-bars');
+        } else {
+          icon.classList.replace('fa-bars', 'fa-xmark');
+        }
+      });
+      // Close menu when clicking outside
+      document.addEventListener('click', (e) => {
+        if (!menu.contains(e.target) && !toggle.contains(e.target)) {
+          menu.classList.add('hidden');
+          const icon = toggle.querySelector('i');
+          icon.classList.replace('fa-xmark', 'fa-bars');
+        }
+      });
+    }
+  })();
+</script>
 </body>
 </html>
