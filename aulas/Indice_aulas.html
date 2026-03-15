@@ -1,0 +1,265 @@
+﻿<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="utf-8"/>
+  <meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+  <title>Geografia ENEM - Índice de Aulas</title>
+  <script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+  <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" rel="stylesheet"/>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet"/>
+  <style>
+    body { font-family: 'Inter', sans-serif; background-color: #f3f4f6; }
+    .card-zoom { overflow: hidden; }
+    .card-zoom img { transition: transform 0.5s ease; }
+    .card-zoom:hover img { transform: scale(1.1); }
+  </style>
+</head>
+<body class="min-h-screen flex flex-col text-gray-800 bg-gray-50">
+
+<header class="bg-indigo-700 text-white py-4 px-8 sticky top-0 z-50 shadow-md">
+  <div class="max-w-7xl mx-auto flex justify-between items-center">
+    <div class="flex items-center gap-2">
+      <h1 class="text-2xl font-black tracking-tighter italic">GeoENEM</h1>
+    </div>
+    <nav class="flex items-center gap-6 text-sm font-bold uppercase tracking-widest">
+      <a class="hover:text-indigo-200 transition-colors" href="../index.html">Início</a>
+      <a class="bg-white/20 px-4 py-1 rounded-full hover:bg-white/30 transition-all" href="Indice_aulas.html">Aulas</a>
+      <a class="hover:text-indigo-200 transition-colors" href="../games/memory/index.html">Jogos</a>
+    </nav>
+  </div>
+</header>
+
+<main class="max-w-[1400px] mx-auto px-6 lg:px-12 py-12">
+  <div class="text-center mb-16 px-4">
+    <h2 class="text-5xl font-black text-gray-900 mb-4 tracking-tight uppercase">Trilha da Geografia</h2>
+    <p class="text-lg text-gray-500 max-w-2xl mx-auto">Sua jornada rumo à nota 1000 começa aqui. Explore os módulos preparados com o melhor conteúdo visual e pedagógico.</p>
+  </div>
+
+  <div class="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-3 gap-8">
+    
+    <!-- Module 1 -->
+    <article class="bg-white rounded-3xl shadow-sm border border-gray-100 flex flex-col hover:shadow-2xl hover:-translate-y-1 transition-all overflow-hidden group">
+      <div class="card-zoom h-52 relative">
+        <img src="https://images.unsplash.com/photo-1451187580459-43490279c0fa?auto=format&fit=crop&q=80&w=800" alt="Base Estrutural" class="w-full h-full object-cover">
+        <div class="absolute inset-0 bg-gradient-to-t from-black/60 to-transparent"></div>
+        <span class="absolute bottom-4 left-6 text-white font-bold text-sm uppercase tracking-widest">Aula 01</span>
+      </div>
+      <div class="p-8 flex flex-col flex-grow">
+        <h4 class="text-2xl font-bold text-gray-900 mb-3 group-hover:text-indigo-600 transition-colors">Base Estrutural</h4>
+        <p class="text-sm text-gray-600 leading-relaxed flex-grow">Os fundamentos da ciência geográfica e as metodologias modernas de análise do espaço.</p>
+        <a class="mt-8 bg-indigo-600 hover:bg-indigo-700 text-white font-bold py-3 px-6 rounded-2xl shadow-lg shadow-indigo-200 text-center transition-all" href="base_estrutural_geografia.html">Estudar Agora</a>
+      </div>
+    </article>
+
+    <!-- Module 2 -->
+    <article class="bg-white rounded-3xl shadow-sm border border-gray-100 flex flex-col hover:shadow-2xl hover:-translate-y-1 transition-all overflow-hidden group">
+      <div class="card-zoom h-52 relative">
+        <img src="https://images.unsplash.com/photo-1516912481808-310f50d23c02?auto=format&fit=crop&q=80&w=800" alt="Clima Brasil" class="w-full h-full object-cover">
+        <div class="absolute inset-0 bg-gradient-to-t from-black/60 to-transparent"></div>
+        <span class="absolute bottom-4 left-6 text-white font-bold text-sm uppercase tracking-widest">Aula 02</span>
+      </div>
+      <div class="p-8 flex flex-col flex-grow">
+        <h4 class="text-2xl font-bold text-gray-900 mb-3 group-hover:text-amber-600 transition-colors">Clima do Brasil</h4>
+        <p class="text-sm text-gray-600 leading-relaxed flex-grow">A diversidade climática brasileira e os fatores que influenciam nossos biomas.</p>
+        <a class="mt-8 bg-amber-600 hover:bg-amber-700 text-white font-bold py-3 px-6 rounded-2xl shadow-lg shadow-amber-200 text-center transition-all" href="caracteristicas_climaticas_brasil.html">Estudar Agora</a>
+      </div>
+    </article>
+
+    <!-- Module 3 -->
+    <article class="bg-white rounded-3xl shadow-sm border border-gray-100 flex flex-col hover:shadow-2xl hover:-translate-y-1 transition-all overflow-hidden group">
+      <div class="card-zoom h-52 relative">
+        <img src="https://images.unsplash.com/photo-1441974231531-c6227db76b6e?auto=format&fit=crop&q=80&w=800" alt="Questões Ambientais" class="w-full h-full object-cover">
+        <div class="absolute inset-0 bg-gradient-to-t from-black/60 to-transparent"></div>
+        <span class="absolute bottom-4 left-6 text-white font-bold text-sm uppercase tracking-widest">Aula 03</span>
+      </div>
+      <div class="p-8 flex flex-col flex-grow">
+        <h4 class="text-2xl font-bold text-gray-900 mb-3 group-hover:text-red-600 transition-colors">Questões Ambientais</h4>
+        <p class="text-sm text-gray-600 leading-relaxed flex-grow">Desafios do século XXI: aquecimento global, poluição e sustentabilidade.</p>
+        <a class="mt-8 bg-red-600 hover:bg-red-700 text-white font-bold py-3 px-6 rounded-2xl shadow-lg shadow-red-200 text-center transition-all" href="questoes_ambientais_contemporaneas.html">Estudar Agora</a>
+      </div>
+    </article>
+
+    <!-- Module 4 -->
+    <article class="bg-white rounded-3xl shadow-sm border border-gray-100 flex flex-col hover:shadow-2xl hover:-translate-y-1 transition-all overflow-hidden group">
+      <div class="card-zoom h-52 relative">
+        <img src="https://images.unsplash.com/photo-1543329043-41f23737caf7?auto=format&fit=crop&q=80&w=800" alt="Meio Ambiente" class="w-full h-full object-cover">
+        <div class="absolute inset-0 bg-gradient-to-t from-black/60 to-transparent"></div>
+        <span class="absolute bottom-4 left-6 text-white font-bold text-sm uppercase tracking-widest">Aula 04</span>
+      </div>
+      <div class="p-8 flex flex-col flex-grow">
+        <h4 class="text-2xl font-bold text-gray-900 mb-3 group-hover:text-emerald-600 transition-colors">Meio Ambiente</h4>
+        <p class="text-sm text-gray-600 leading-relaxed flex-grow">A interface entre a sociedade e a natureza e a preservação dos ecossistemas.</p>
+        <a class="mt-8 bg-emerald-600 hover:bg-emerald-700 text-white font-bold py-3 px-6 rounded-2xl shadow-lg shadow-emerald-200 text-center transition-all" href="meio_ambiente.html">Estudar Agora</a>
+      </div>
+    </article>
+
+    <!-- Module 5 -->
+    <article class="bg-white rounded-3xl shadow-sm border border-gray-100 flex flex-col hover:shadow-2xl hover:-translate-y-1 transition-all overflow-hidden group">
+      <div class="card-zoom h-52 relative">
+        <img src="https://images.unsplash.com/photo-1463171300673-4eddf9fcc055?auto=format&fit=crop&q=80&w=800" alt="Estrutura Terra" class="w-full h-full object-cover">
+        <div class="absolute inset-0 bg-gradient-to-t from-black/60 to-transparent"></div>
+        <span class="absolute bottom-4 left-6 text-white font-bold text-sm uppercase tracking-widest">Aula 05</span>
+      </div>
+      <div class="p-8 flex flex-col flex-grow">
+        <h4 class="text-2xl font-bold text-gray-900 mb-3 group-hover:text-amber-800 transition-colors">Estrutura da Terra</h4>
+        <p class="text-sm text-gray-600 leading-relaxed flex-grow">Camadas internas, placas tectônicas e a dinâmica do calor terrestre.</p>
+        <a class="mt-8 bg-amber-800 hover:bg-amber-900 text-white font-bold py-3 px-6 rounded-2xl shadow-lg shadow-amber-900/20 text-center transition-all" href="estrutura_interna_terra.html">Estudar Agora</a>
+      </div>
+    </article>
+
+    <!-- Module 6 -->
+    <article class="bg-white rounded-3xl shadow-sm border border-gray-100 flex flex-col hover:shadow-2xl hover:-translate-y-1 transition-all overflow-hidden group">
+      <div class="card-zoom h-52 relative">
+        <img src="https://images.unsplash.com/photo-1464822759023-fed622ff2c3b?auto=format&fit=crop&q=80&w=800" alt="Solo e Relevo" class="w-full h-full object-cover">
+        <div class="absolute inset-0 bg-gradient-to-t from-black/60 to-transparent"></div>
+        <span class="absolute bottom-4 left-6 text-white font-bold text-sm uppercase tracking-widest">Aula 06</span>
+      </div>
+      <div class="p-8 flex flex-col flex-grow">
+        <h4 class="text-2xl font-bold text-gray-900 mb-3 group-hover:text-orange-600 transition-colors">Solo e Relevo</h4>
+        <p class="text-sm text-gray-600 leading-relaxed flex-grow">Formação do relevo e dos solos através de agentes internos e externos.</p>
+        <a class="mt-8 bg-orange-600 hover:bg-orange-700 text-white font-bold py-3 px-6 rounded-2xl shadow-lg shadow-orange-200 text-center transition-all" href="estruturas_solo_relevo.html">Estudar Agora</a>
+      </div>
+    </article>
+
+    <!-- Module 7 -->
+    <article class="bg-white rounded-3xl shadow-sm border border-gray-100 flex flex-col hover:shadow-2xl hover:-translate-y-1 transition-all overflow-hidden group">
+      <div class="card-zoom h-52 relative">
+        <img src="https://images.unsplash.com/photo-1596464716127-f2a82984de30?auto=format&fit=crop&q=80&w=800" alt="Território Brasil" class="w-full h-full object-cover">
+        <div class="absolute inset-0 bg-gradient-to-t from-black/60 to-transparent"></div>
+        <span class="absolute bottom-4 left-6 text-white font-bold text-sm uppercase tracking-widest">Aula 07</span>
+      </div>
+      <div class="p-8 flex flex-col flex-grow">
+        <h4 class="text-2xl font-bold text-gray-900 mb-3 group-hover:text-indigo-600 transition-colors">Formação do Brasil</h4>
+        <p class="text-sm text-gray-600 leading-relaxed flex-grow">Evolução histórica, ocupação territorial e regionalização do país.</p>
+        <a class="mt-8 bg-indigo-600 hover:bg-indigo-700 text-white font-bold py-3 px-6 rounded-2xl shadow-lg shadow-indigo-200 text-center transition-all" href="formacao_territorial_brasileira.html">Estudar Agora</a>
+      </div>
+    </article>
+
+    <!-- Module 8 -->
+    <article class="bg-white rounded-3xl shadow-sm border border-gray-100 flex flex-col hover:shadow-2xl hover:-translate-y-1 transition-all overflow-hidden group">
+      <div class="card-zoom h-52 relative">
+        <img src="https://images.unsplash.com/photo-1470115636492-6ec4a576b29d?auto=format&fit=crop&q=80&w=800" alt="Sustentabilidade" class="w-full h-full object-cover">
+        <div class="absolute inset-0 bg-gradient-to-t from-black/60 to-transparent"></div>
+        <span class="absolute bottom-4 left-6 text-white font-bold text-sm uppercase tracking-widest">Aula 08</span>
+      </div>
+      <div class="p-8 flex flex-col flex-grow">
+        <h4 class="text-2xl font-bold text-gray-900 mb-3 group-hover:text-emerald-700 transition-colors">Sustentabilidade</h4>
+        <p class="text-sm text-gray-600 leading-relaxed flex-grow">Desenvolvimento sustentável, pegada ecológica e a Agenda 2030.</p>
+        <a class="mt-8 bg-emerald-700 hover:bg-emerald-800 text-white font-bold py-3 px-6 rounded-2xl shadow-lg shadow-emerald-200 text-center transition-all" href="origem_evolucao_sustentabilidade.html">Estudar Agora</a>
+      </div>
+    </article>
+
+    <!-- Module 9 -->
+    <article class="bg-white rounded-3xl shadow-sm border border-gray-100 flex flex-col hover:shadow-2xl hover:-translate-y-1 transition-all overflow-hidden group">
+      <div class="card-zoom h-52 relative">
+        <img src="https://images.unsplash.com/photo-1518173946687-a4c8a9fd33b0?auto=format&fit=crop&q=80&w=800" alt="Vegetação" class="w-full h-full object-cover">
+        <div class="absolute inset-0 bg-gradient-to-t from-black/60 to-transparent"></div>
+        <span class="absolute bottom-4 left-6 text-white font-bold text-sm uppercase tracking-widest">Aula 09</span>
+      </div>
+      <div class="p-8 flex flex-col flex-grow">
+        <h4 class="text-2xl font-bold text-gray-900 mb-3 group-hover:text-green-600 transition-colors">Vegetação Brasileira</h4>
+        <p class="text-sm text-gray-600 leading-relaxed flex-grow">Biomas, domínios morfoclimáticos e a preservação da nossa biodiversidade.</p>
+        <a class="mt-8 bg-green-600 hover:bg-green-700 text-white font-bold py-3 px-6 rounded-2xl shadow-lg shadow-green-200 text-center transition-all" href="grandes_dominios_vegetacao.html">Estudar Agora</a>
+      </div>
+    </article>
+
+    <!-- Module 10 -->
+    <article class="bg-white rounded-3xl shadow-sm border border-gray-100 flex flex-col hover:shadow-2xl hover:-translate-y-1 transition-all overflow-hidden group">
+      <div class="card-zoom h-52 relative">
+        <img src="https://images.unsplash.com/photo-1543329043-41f23737caf7?auto=format&fit=crop&q=80&w=800" alt="Atmosfera" class="w-full h-full object-cover">
+        <div class="absolute inset-0 bg-gradient-to-t from-black/60 to-transparent"></div>
+        <span class="absolute bottom-4 left-6 text-white font-bold text-sm uppercase tracking-widest">Aula 10</span>
+      </div>
+      <div class="p-8 flex flex-col flex-grow">
+        <h4 class="text-2xl font-bold text-gray-900 mb-3 group-hover:text-sky-600 transition-colors">Atmosfera e Clima</h4>
+        <p class="text-sm text-gray-600 leading-relaxed flex-grow">Dinâmica atmosférica, movimentos da Terra e classificações climáticas.</p>
+        <a class="mt-8 bg-sky-600 hover:bg-sky-700 text-white font-bold py-3 px-6 rounded-2xl shadow-lg shadow-sky-200 text-center transition-all" href="situacao_atmosfera_classificacao_climatica.html">Estudar Agora</a>
+      </div>
+    </article>
+
+    <!-- Module 11 -->
+    <article class="bg-white rounded-3xl shadow-sm border border-gray-100 flex flex-col hover:shadow-2xl hover:-translate-y-1 transition-all overflow-hidden group">
+      <div class="card-zoom h-52 relative">
+        <img src="https://images.unsplash.com/photo-1483729558449-99ef09a8c325?auto=format&fit=crop&q=80&w=800" alt="Geografia Física" class="w-full h-full object-cover">
+        <div class="absolute inset-0 bg-gradient-to-t from-black/60 to-transparent"></div>
+        <span class="absolute bottom-4 left-6 text-white font-bold text-sm uppercase tracking-widest">Aula 11</span>
+      </div>
+      <div class="p-8 flex flex-col flex-grow">
+        <h4 class="text-2xl font-bold text-gray-900 mb-3 group-hover:text-blue-700 transition-colors">Geografia Física</h4>
+        <p class="text-sm text-gray-600 leading-relaxed flex-grow">Uma visão integrada dos sistemas naturais da Terra e do Brasil.</p>
+        <a class="mt-8 bg-blue-700 hover:bg-blue-800 text-white font-bold py-3 px-6 rounded-2xl shadow-lg shadow-blue-200 text-center transition-all" href="geografia_fisica.html">Estudar Agora</a>
+      </div>
+    </article>
+
+    <!-- Module 12 -->
+    <article class="bg-white rounded-3xl shadow-sm border border-gray-100 flex flex-col hover:shadow-2xl hover:-translate-y-1 transition-all overflow-hidden group">
+      <div class="card-zoom h-52 relative">
+        <img src="https://images.unsplash.com/photo-1529107386315-e1a2ed48a620?auto=format&fit=crop&q=80&w=800" alt="Demografia" class="w-full h-full object-cover">
+        <div class="absolute inset-0 bg-gradient-to-t from-black/60 to-transparent"></div>
+        <span class="absolute bottom-4 left-6 text-white font-bold text-sm uppercase tracking-widest">Aula 12</span>
+      </div>
+      <div class="p-8 flex flex-col flex-grow">
+        <h4 class="text-2xl font-bold text-gray-900 mb-3 group-hover:text-purple-600 transition-colors">Demografia</h4>
+        <p class="text-sm text-gray-600 leading-relaxed flex-grow">Dinâmicas populacionais, pirâmides etárias e tendências sociais globais.</p>
+        <a class="mt-8 bg-purple-600 hover:bg-purple-700 text-white font-bold py-3 px-6 rounded-2xl shadow-lg shadow-purple-200 text-center transition-all" href="demografia.html">Estudar Agora</a>
+      </div>
+    </article>
+
+    <!-- Module 13 -->
+    <article class="bg-white rounded-3xl shadow-sm border border-gray-100 flex flex-col hover:shadow-2xl hover:-translate-y-1 transition-all overflow-hidden group">
+      <div class="card-zoom h-52 relative">
+        <img src="https://images.unsplash.com/photo-1480714378408-67cf0d13bc1b?auto=format&fit=crop&q=80&w=800" alt="Geografia Brasil" class="w-full h-full object-cover">
+        <div class="absolute inset-0 bg-gradient-to-t from-black/60 to-transparent"></div>
+        <span class="absolute bottom-4 left-6 text-white font-bold text-sm uppercase tracking-widest">Aula 13</span>
+      </div>
+      <div class="p-8 flex flex-col flex-grow">
+        <h4 class="text-2xl font-bold text-gray-900 mb-3 group-hover:text-green-700 transition-colors">Geografia do Brasil</h4>
+        <p class="text-sm text-gray-600 leading-relaxed flex-grow">Integração regional, biomas e a estrutura econômica do nosso país.</p>
+        <a class="mt-8 bg-green-700 hover:bg-green-800 text-white font-bold py-3 px-6 rounded-2xl shadow-lg shadow-green-200 text-center transition-all" href="geografia_brasil.html">Estudar Agora</a>
+      </div>
+    </article>
+
+    <!-- Module 14 -->
+    <article class="bg-white rounded-3xl shadow-sm border border-gray-100 flex flex-col hover:shadow-2xl hover:-translate-y-1 transition-all overflow-hidden group">
+      <div class="card-zoom h-52 relative">
+        <img src="https://images.unsplash.com/photo-1526778548025-fa2f459cd5c1?auto=format&fit=crop&q=80&w=800" alt="Geopolítica" class="w-full h-full object-cover">
+        <div class="absolute inset-0 bg-gradient-to-t from-black/60 to-transparent"></div>
+        <span class="absolute bottom-4 left-6 text-white font-bold text-sm uppercase tracking-widest">Aula 14</span>
+      </div>
+      <div class="p-8 flex flex-col flex-grow">
+        <h4 class="text-2xl font-bold text-gray-900 mb-3 group-hover:text-slate-800 transition-colors">Geopolítica</h4>
+        <p class="text-sm text-gray-600 leading-relaxed flex-grow">Relações de poder, blocos econômicos e as dinâmicas da política global.</p>
+        <a class="mt-8 bg-slate-800 hover:bg-slate-900 text-white font-bold py-3 px-6 rounded-2xl shadow-lg shadow-slate-200 text-center transition-all" href="geopolitica.html">Estudar Agora</a>
+      </div>
+    </article>
+
+    <!-- Module 15 -->
+    <article class="bg-white rounded-3xl shadow-sm border border-gray-100 flex flex-col hover:shadow-2xl hover:-translate-y-1 transition-all overflow-hidden group">
+      <div class="card-zoom h-52 relative">
+        <img src="https://images.unsplash.com/photo-1449156001931-82830078e00d?auto=format&fit=crop&q=80&w=800" alt="Geografia Humana" class="w-full h-full object-cover">
+        <div class="absolute inset-0 bg-gradient-to-t from-black/60 to-transparent"></div>
+        <span class="absolute bottom-4 left-6 text-white font-bold text-sm uppercase tracking-widest">Aula 15</span>
+      </div>
+      <div class="p-8 flex flex-col flex-grow">
+        <h4 class="text-2xl font-bold text-gray-900 mb-3 group-hover:text-indigo-800 transition-colors">Geografia Humana</h4>
+        <p class="text-sm text-gray-600 leading-relaxed flex-grow">Sociedade, espaço urbano e as desigualdades sociais no mundo moderno.</p>
+        <a class="mt-8 bg-indigo-800 hover:bg-indigo-900 text-white font-bold py-3 px-6 rounded-2xl shadow-lg shadow-indigo-200 text-center transition-all" href="geografia_humana.html">Estudar Agora</a>
+      </div>
+    </article>
+
+  </div>
+</main>
+
+<footer class="bg-white border-t border-gray-200 py-12">
+  <div class="max-w-7xl mx-auto px-6 lg:px-12 flex flex-col md:flex-row justify-between items-center gap-6">
+    <p class="text-sm text-gray-500">© 2025 Geografia ENEM - Preparação para o seu futuro.</p>
+    <div class="flex space-x-6 text-sm font-bold uppercase tracking-widest text-gray-400">
+      <a class="hover:text-indigo-600 transition-colors" href="#">Sobre</a>
+      <a class="hover:text-indigo-600 transition-colors" href="#">Contato</a>
+      <a class="hover:text-indigo-600 transition-colors" href="#">Termos</a>
+    </div>
+  </div>
+</footer>
+
+</body>
+</html>

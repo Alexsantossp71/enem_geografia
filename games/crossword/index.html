@@ -1,272 +1,329 @@
 <!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="utf-8"/>
+  <meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+  <title>GeoENEM - Caça-Palavras</title>
+  <script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+  <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" rel="stylesheet"/>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet"/>
+  <style>
+    body { font-family: 'Inter', sans-serif; background: #f5f3ff; }
+    .glass-nav { background: rgba(255,255,255,0.85); backdrop-filter: blur(12px); border-bottom: 1px solid rgba(0,0,0,0.05); }
 
-<html lang="pt-BR"><head>
-<meta charset="utf-8"/>
-<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
-<title>Palavras-Cruzadas: Geografia</title>
-<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
-<style data-purpose="custom-fonts">
-    @import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap');
-    body {
-      font-family: 'Inter', sans-serif;
+    #grid-container {
+      display: grid;
+      grid-template-columns: repeat(15, 1fr);
+      gap: 2px;
+      background: #c7d2fe;
+      padding: 4px;
+      border-radius: 14px;
+      box-shadow: 0 20px 40px -10px rgba(99,102,241,0.18);
+      user-select: none;
+      -webkit-user-select: none;
+      touch-action: none;
     }
-  </style>
-<script>
-    tailwind.config = {
-      theme: {
-        extend: {
-          colors: {
-            'brand-green': '#208B4E',
-            'brand-light-green': '#E2F6EA',
-            'brand-bg': '#E6F5E9',
-            'cell-border': '#707070',
-            'active-row': '#B2E2C6',
-            'hint-active-bg': '#BCE3CB',
-          }
-        }
-      }
-    }
-  </script>
-<style data-purpose="crossword-grid">
-    .grid-cell {
-      width: 40px;
-      height: 40px;
-      border: 1px solid #7d8e85;
+
+    .gc {
+      aspect-ratio: 1/1;
+      background: white;
       display: flex;
       align-items: center;
       justify-content: center;
-      font-size: 1.25rem;
-      font-weight: 500;
-      background-color: white;
-      position: relative;
+      font-weight: 900;
+      cursor: crosshair;
+      font-size: clamp(0.55rem, 1.4vw, 0.9rem);
+      color: #3730a3;
+      transition: background 0.12s, color 0.12s;
+      border-radius: 3px;
     }
-    .grid-cell.empty {
-      background-color: transparent;
-      border: none;
-    }
-    .grid-cell.active-highlight {
-      background-color: #a8e6b3;
-      border-color: #7d8e85;
-    }
-    .grid-number {
-      position: absolute;
-      top: 2px;
-      left: 2px;
-      font-size: 10px;
-      color: #333;
-      line-height: 1;
+    .gc.selecting { background: #818cf8 !important; color: white !important; }
+
+    /* 20 unique found colors */
+    .fc-0  { background: #ef4444 !important; color: white !important; }
+    .fc-1  { background: #f97316 !important; color: white !important; }
+    .fc-2  { background: #eab308 !important; color: white !important; }
+    .fc-3  { background: #22c55e !important; color: white !important; }
+    .fc-4  { background: #06b6d4 !important; color: white !important; }
+    .fc-5  { background: #6366f1 !important; color: white !important; }
+    .fc-6  { background: #a855f7 !important; color: white !important; }
+    .fc-7  { background: #ec4899 !important; color: white !important; }
+    .fc-8  { background: #14b8a6 !important; color: white !important; }
+    .fc-9  { background: #f43f5e !important; color: white !important; }
+    .fc-10 { background: #84cc16 !important; color: white !important; }
+    .fc-11 { background: #3b82f6 !important; color: white !important; }
+    .fc-12 { background: #d97706 !important; color: white !important; }
+    .fc-13 { background: #10b981 !important; color: white !important; }
+    .fc-14 { background: #8b5cf6 !important; color: white !important; }
+    .fc-15 { background: #fb7185 !important; color: white !important; }
+    .fc-16 { background: #0ea5e9 !important; color: white !important; }
+    .fc-17 { background: #65a30d !important; color: white !important; }
+    .fc-18 { background: #dc2626 !important; color: white !important; }
+    .fc-19 { background: #7c3aed !important; color: white !important; }
+
+    /* Colored dots for word list items */
+    .wi { display: flex; align-items: center; gap: 6px; padding: 5px 10px; border-radius: 8px; font-size: 10px; font-weight: 700; text-transform: uppercase; color: #4b5563; border: 1.5px solid #e0e7ff; background: white; white-space: nowrap; transition: all 0.2s; }
+    .wi .dot { width: 10px; height: 10px; border-radius: 50%; flex-shrink: 0; }
+    .wi.found { opacity: 0.55; }
+    .wi.found span { text-decoration: line-through; }
+
+    .word-scroll { max-height: 480px; overflow-y: auto; }
+    .word-scroll::-webkit-scrollbar { width: 4px; }
+    .word-scroll::-webkit-scrollbar-thumb { background: #a5b4fc; border-radius: 4px; }
+
+    @media (max-width: 640px) {
+      .gc { font-size: 0.55rem; border-radius: 2px; }
+      #grid-container { gap: 1px; padding: 2px; }
     }
   </style>
 </head>
-<body class="bg-brand-bg min-h-screen flex flex-col overflow-x-hidden">
-<!-- BEGIN: MainHeader -->
-<header class="bg-white px-8 py-4 flex justify-between items-center border-b border-gray-200">
-<div>
-<h1 class="text-3xl font-bold text-brand-green tracking-tight">Palavras-Cruzadas: Geografia</h1>
-<p class="text-gray-700 mt-1">Recursos Naturais - Preparatório ENEM</p>
-</div>
-<nav class="flex items-center space-x-6 text-gray-700 font-medium">
-<a class="flex items-center hover:text-brand-green transition-colors" href="#">
-<svg class="h-5 w-5 mr-1" fill="none" stroke="currentColor" viewbox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
-<path d="M10 19l-7-7m0 0l7-7m-7 7h18" stroke-linecap="round" stroke-linejoin="round" stroke-width="2"></path>
-</svg>
-        Voltar ao Menu
-      </a>
-<a class="hover:text-brand-green transition-colors" href="#">Ajuda</a>
-<button class="p-1 rounded-full text-gray-500 hover:bg-gray-100 transition-colors focus:outline-none">
-<svg class="h-8 w-8" fill="currentColor" viewbox="0 0 20 20" xmlns="http://www.w3.org/2000/svg">
-<path clip-rule="evenodd" d="M10 9a3 3 0 100-6 3 3 0 000 6zm-7 9a7 7 0 1114 0H3z" fill-rule="evenodd"></path>
-</svg>
-</button>
-</nav>
+<body class="min-h-screen flex flex-col">
+
+<header class="glass-nav sticky top-0 z-50 py-4 px-6">
+  <div class="max-w-7xl mx-auto flex justify-between items-center">
+    <div class="flex items-center gap-4">
+      <h1 class="text-2xl font-black tracking-tighter italic text-indigo-600">GeoENEM</h1>
+      <div class="h-6 w-px bg-slate-200 hidden md:block"></div>
+      <span class="text-xs font-bold uppercase tracking-widest text-slate-400 hidden md:block">Caça-Palavras</span>
+    </div>
+    <nav class="flex gap-4 items-center">
+      <a href="../../aulas/Indice_aulas.html" class="text-sm font-bold text-slate-600 hover:text-indigo-600 transition-colors uppercase tracking-widest">Sair</a>
+      <div class="bg-indigo-100 text-indigo-700 px-4 py-1.5 rounded-full text-xs font-black uppercase tracking-tighter">
+        <span id="found-count">0</span> / <span id="total-count">0</span> encontradas
+      </div>
+    </nav>
+  </div>
 </header>
-<!-- END: MainHeader -->
-<!-- BEGIN: MainContent -->
-<main class="flex-grow flex flex-col items-center py-8 px-4 w-full max-w-6xl mx-auto space-y-8">
-<div class="flex flex-col lg:flex-row w-full gap-6 justify-center">
-<!-- Crossword Grid Area -->
-<section class="bg-white rounded-xl shadow-sm border border-brand-green/20 p-8 flex-grow flex justify-center items-center overflow-auto max-w-3xl">
-<!-- Logical grid representation -->
-<div class="grid grid-cols-10">
-<!-- Row 1 -->
-<div class="grid-cell empty"></div>
-<div class="grid-cell empty"></div>
-<div class="grid-cell empty"></div>
-<div class="grid-cell"><span class="grid-number">1</span></div>
-<div class="grid-cell empty"></div>
-<div class="grid-cell"><span class="grid-number">2</span></div>
-<div class="grid-cell empty"></div>
-<div class="grid-cell empty"></div>
-<div class="grid-cell empty"></div>
-<div class="grid-cell empty"></div>
-<!-- Row 2 -->
-<div class="grid-cell empty"></div>
-<div class="grid-cell empty"></div>
-<div class="grid-cell"><span class="grid-number">7</span></div>
-<div class="grid-cell"><span class="grid-number">3</span></div>
-<div class="grid-cell"></div>
-<div class="grid-cell empty"></div>
-<div class="grid-cell"></div>
-<div class="grid-cell"><span class="grid-number">4</span></div>
-<div class="grid-cell empty"></div>
-<div class="grid-cell"><span class="grid-number">5</span></div>
-<!-- Row 3 -->
-<div class="grid-cell empty"></div>
-<div class="grid-cell"><span class="grid-number">6</span></div>
-<div class="grid-cell"></div>
-<div class="grid-cell"></div>
-<div class="grid-cell"></div>
-<div class="grid-cell"></div>
-<div class="grid-cell"></div>
-<div class="grid-cell"></div>
-<div class="grid-cell empty"></div>
-<div class="grid-cell"></div>
-<!-- Row 4 -->
-<div class="grid-cell empty"></div>
-<div class="grid-cell"></div>
-<div class="grid-cell"></div>
-<div class="grid-cell"></div>
-<div class="grid-cell"></div>
-<div class="grid-cell"></div>
-<div class="grid-cell"></div>
-<div class="grid-cell"></div>
-<div class="grid-cell empty"></div>
-<div class="grid-cell"></div>
-<!-- Row 5 (Active Row 'PETRÓLEO') -->
-<div class="grid-cell active-highlight"></div>
-<div class="grid-cell active-highlight">P</div>
-<div class="grid-cell active-highlight">E</div>
-<div class="grid-cell active-highlight">T</div>
-<div class="grid-cell active-highlight">R</div>
-<div class="grid-cell active-highlight">Ó</div>
-<div class="grid-cell active-highlight">L</div>
-<div class="grid-cell active-highlight">E</div>
-<div class="grid-cell active-highlight">O</div>
-<div class="grid-cell active-highlight"></div>
-<!-- Row 6 -->
-<div class="grid-cell empty"></div>
-<div class="grid-cell"></div>
-<div class="grid-cell"></div>
-<div class="grid-cell"></div>
-<div class="grid-cell"></div>
-<div class="grid-cell"></div>
-<div class="grid-cell"></div>
-<div class="grid-cell"></div>
-<div class="grid-cell empty"></div>
-<div class="grid-cell"></div>
-<!-- Row 7 -->
-<div class="grid-cell empty"></div>
-<div class="grid-cell"><span class="grid-number">7</span></div>
-<div class="grid-cell"></div>
-<div class="grid-cell"></div>
-<div class="grid-cell"></div>
-<div class="grid-cell empty"></div>
-<div class="grid-cell"></div>
-<div class="grid-cell"></div>
-<div class="grid-cell empty"></div>
-<div class="grid-cell empty"></div>
-<!-- Row 8 -->
-<div class="grid-cell empty"></div>
-<div class="grid-cell empty"></div>
-<div class="grid-cell"></div>
-<div class="grid-cell"></div>
-<div class="grid-cell"></div>
-<div class="grid-cell empty"></div>
-<div class="grid-cell"></div>
-<div class="grid-cell"></div>
-<div class="grid-cell empty"></div>
-<div class="grid-cell empty"></div>
-<!-- Row 9 -->
-<div class="grid-cell empty"></div>
-<div class="grid-cell empty"></div>
-<div class="grid-cell empty"></div>
-<div class="grid-cell"><span class="grid-number">8</span></div>
-<div class="grid-cell"></div>
-<div class="grid-cell"></div>
-<div class="grid-cell"></div>
-<div class="grid-cell"></div>
-<div class="grid-cell empty"></div>
-<div class="grid-cell empty"></div>
-</div>
-</section>
-<!-- Hints Area -->
-<aside class="w-full lg:w-80 bg-white rounded-xl shadow-sm border border-[#7d8e85] flex flex-col h-[500px]">
-<div class="p-4 border-b border-gray-200 text-center font-bold text-lg text-gray-800">
-          Dicas
-        </div>
-<div class="flex-grow overflow-y-auto">
-<!-- Active Hint -->
-<div class="p-4 bg-[#a8e6b3] border-b border-[#7d8e85] cursor-pointer">
-<p class="text-sm font-semibold text-gray-900 mb-1">Horizontal: <span class="font-bold">7. Recurso energético não renovável abundante no Brasil.</span></p>
-</div>
-<!-- Inactive Hints -->
-<div class="p-4 border-b border-gray-100 hover:bg-gray-50 cursor-pointer transition-colors text-sm text-gray-700">
-            Vertical: 1. Fonte de vida essencial, uma conceenavesa sonma no Brasil, a desogeino do recurso de qualito de eotentiats.
-          </div>
-<div class="p-4 border-b border-gray-100 hover:bg-gray-50 cursor-pointer transition-colors text-sm text-gray-700">
-            Horizontal: 3. Mineral utilizado na commorrda natural quanvificação da slicn e'em energético.
-          </div>
-<div class="p-4 border-b border-gray-100 hover:bg-gray-50 cursor-pointer transition-colors text-sm text-gray-700">
-            Vertical: 5. Bioma rico em Brasil, no peareso do chote e na toma os dectadvtros.
-          </div>
-</div>
-</aside>
-</div>
-<!-- On-screen Keyboard Area -->
-<section class="w-full max-w-3xl flex flex-col items-center mt-6">
-<div class="flex flex-col gap-2 w-full px-4">
-<!-- Keyboard Row 1 -->
-<div class="flex justify-center gap-1.5 sm:gap-2">
-<button class="w-8 h-10 sm:w-12 sm:h-12 bg-white border border-[#c8e6c9] rounded-[4px] text-[#1a5e20] font-semibold text-lg hover:bg-[#e8f5e9] transition-colors focus:outline-none">Q</button>
-<button class="w-8 h-10 sm:w-12 sm:h-12 bg-white border border-[#c8e6c9] rounded-[4px] text-[#1a5e20] font-semibold text-lg hover:bg-[#e8f5e9] transition-colors focus:outline-none">W</button>
-<button class="w-8 h-10 sm:w-12 sm:h-12 bg-white border border-[#c8e6c9] rounded-[4px] text-[#1a5e20] font-semibold text-lg hover:bg-[#e8f5e9] transition-colors focus:outline-none">E</button>
-<button class="w-8 h-10 sm:w-12 sm:h-12 bg-white border border-[#c8e6c9] rounded-[4px] text-[#1a5e20] font-semibold text-lg hover:bg-[#e8f5e9] transition-colors focus:outline-none">R</button>
-<button class="w-8 h-10 sm:w-12 sm:h-12 bg-white border border-[#c8e6c9] rounded-[4px] text-[#1a5e20] font-semibold text-lg hover:bg-[#e8f5e9] transition-colors focus:outline-none">T</button>
-<button class="w-8 h-10 sm:w-12 sm:h-12 bg-white border border-[#c8e6c9] rounded-[4px] text-[#1a5e20] font-semibold text-lg hover:bg-[#e8f5e9] transition-colors focus:outline-none">Y</button>
-<button class="w-8 h-10 sm:w-12 sm:h-12 bg-white border border-[#c8e6c9] rounded-[4px] text-[#1a5e20] font-semibold text-lg hover:bg-[#e8f5e9] transition-colors focus:outline-none">U</button>
-<button class="w-8 h-10 sm:w-12 sm:h-12 bg-white border border-[#c8e6c9] rounded-[4px] text-[#1a5e20] font-semibold text-lg hover:bg-[#e8f5e9] transition-colors focus:outline-none">I</button>
-<button class="w-8 h-10 sm:w-12 sm:h-12 bg-white border border-[#c8e6c9] rounded-[4px] text-[#1a5e20] font-semibold text-lg hover:bg-[#e8f5e9] transition-colors focus:outline-none">O</button>
-<button class="w-8 h-10 sm:w-12 sm:h-12 bg-white border border-[#c8e6c9] rounded-[4px] text-[#1a5e20] font-semibold text-lg hover:bg-[#e8f5e9] transition-colors focus:outline-none">P</button>
-<button class="w-8 h-10 sm:w-12 sm:h-12 bg-white border border-[#c8e6c9] rounded-[4px] text-[#1a5e20] font-semibold text-lg hover:bg-[#e8f5e9] transition-colors focus:outline-none">Ã</button>
-</div>
-<!-- Keyboard Row 2 -->
-<div class="flex justify-center gap-1.5 sm:gap-2 ml-4">
-<button class="w-8 h-10 sm:w-12 sm:h-12 bg-white border border-[#c8e6c9] rounded-[4px] text-[#1a5e20] font-semibold text-lg hover:bg-[#e8f5e9] transition-colors focus:outline-none">A</button>
-<button class="w-8 h-10 sm:w-12 sm:h-12 bg-white border border-[#c8e6c9] rounded-[4px] text-[#1a5e20] font-semibold text-lg hover:bg-[#e8f5e9] transition-colors focus:outline-none">S</button>
-<button class="w-8 h-10 sm:w-12 sm:h-12 bg-white border border-[#c8e6c9] rounded-[4px] text-[#1a5e20] font-semibold text-lg hover:bg-[#e8f5e9] transition-colors focus:outline-none">D</button>
-<button class="w-8 h-10 sm:w-12 sm:h-12 bg-white border border-[#c8e6c9] rounded-[4px] text-[#1a5e20] font-semibold text-lg hover:bg-[#e8f5e9] transition-colors focus:outline-none">F</button>
-<button class="w-8 h-10 sm:w-12 sm:h-12 bg-white border border-[#c8e6c9] rounded-[4px] text-[#1a5e20] font-semibold text-lg hover:bg-[#e8f5e9] transition-colors focus:outline-none">G</button>
-<button class="w-8 h-10 sm:w-12 sm:h-12 bg-white border border-[#c8e6c9] rounded-[4px] text-[#1a5e20] font-semibold text-lg hover:bg-[#e8f5e9] transition-colors focus:outline-none">H</button>
-<button class="w-8 h-10 sm:w-12 sm:h-12 bg-white border border-[#c8e6c9] rounded-[4px] text-[#1a5e20] font-semibold text-lg hover:bg-[#e8f5e9] transition-colors focus:outline-none">J</button>
-<button class="w-8 h-10 sm:w-12 sm:h-12 bg-white border border-[#c8e6c9] rounded-[4px] text-[#1a5e20] font-semibold text-lg hover:bg-[#e8f5e9] transition-colors focus:outline-none">K</button>
-<button class="w-8 h-10 sm:w-12 sm:h-12 bg-white border border-[#c8e6c9] rounded-[4px] text-[#1a5e20] font-semibold text-lg hover:bg-[#e8f5e9] transition-colors focus:outline-none">L</button>
-<button class="w-8 h-10 sm:w-12 sm:h-12 bg-white border border-[#c8e6c9] rounded-[4px] text-[#1a5e20] font-semibold text-lg hover:bg-[#e8f5e9] transition-colors focus:outline-none">Ç</button>
-</div>
-<!-- Keyboard Row 3 -->
-<div class="flex justify-center gap-1.5 sm:gap-2">
-<button class="px-2 h-10 sm:h-12 bg-white border border-[#c8e6c9] rounded-[4px] text-[#1a5e20] font-semibold hover:bg-[#e8f5e9] transition-colors focus:outline-none flex items-center justify-center">
-            —
-          </button>
-<button class="w-8 h-10 sm:w-12 sm:h-12 bg-white border border-[#c8e6c9] rounded-[4px] text-[#1a5e20] font-semibold text-lg hover:bg-[#e8f5e9] transition-colors focus:outline-none">Z</button>
-<button class="w-8 h-10 sm:w-12 sm:h-12 bg-white border border-[#c8e6c9] rounded-[4px] text-[#1a5e20] font-semibold text-lg hover:bg-[#e8f5e9] transition-colors focus:outline-none">X</button>
-<button class="w-8 h-10 sm:w-12 sm:h-12 bg-white border border-[#c8e6c9] rounded-[4px] text-[#1a5e20] font-semibold text-lg hover:bg-[#e8f5e9] transition-colors focus:outline-none">C</button>
-<button class="w-8 h-10 sm:w-12 sm:h-12 bg-white border border-[#c8e6c9] rounded-[4px] text-[#1a5e20] font-semibold text-lg hover:bg-[#e8f5e9] transition-colors focus:outline-none">V</button>
-<button class="w-8 h-10 sm:w-12 sm:h-12 bg-white border border-[#c8e6c9] rounded-[4px] text-[#1a5e20] font-semibold text-lg hover:bg-[#e8f5e9] transition-colors focus:outline-none">B</button>
-<button class="w-8 h-10 sm:w-12 sm:h-12 bg-white border border-[#c8e6c9] rounded-[4px] text-[#1a5e20] font-semibold text-lg hover:bg-[#e8f5e9] transition-colors focus:outline-none">N</button>
-<button class="w-8 h-10 sm:w-12 sm:h-12 bg-white border border-[#c8e6c9] rounded-[4px] text-[#1a5e20] font-semibold text-lg hover:bg-[#e8f5e9] transition-colors focus:outline-none">M</button>
-<button class="w-8 h-10 sm:w-12 sm:h-12 bg-white border border-[#c8e6c9] rounded-[4px] text-[#1a5e20] font-semibold text-lg hover:bg-[#e8f5e9] transition-colors focus:outline-none">,</button>
-<button class="w-8 h-10 sm:w-12 sm:h-12 bg-white border border-[#c8e6c9] rounded-[4px] text-[#1a5e20] font-semibold text-lg hover:bg-[#e8f5e9] transition-colors focus:outline-none">Á</button>
-<button class="px-2 h-10 sm:h-12 bg-white border border-[#c8e6c9] rounded-[4px] text-[#1a5e20] font-semibold hover:bg-[#e8f5e9] transition-colors focus:outline-none flex items-center justify-center">
-<svg class="h-5 w-5" fill="none" stroke="currentColor" viewbox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path d="M12 14l2-2m0 0l2-2m-2 2l-2-2m2 2l2 2M3 12l6.414 6.414a2 2 0 001.414.586H19a2 2 0 002-2V7a2 2 0 00-2-2h-8.172a2 2 0 00-1.414.586L3 12z" stroke-linecap="round" stroke-linejoin="round" stroke-width="2"></path></svg>
-</button>
-</div>
-</div>
-<div class="mt-6 mb-8">
-<button class="bg-white border border-gray-300 text-gray-700 px-6 py-2 rounded-md font-medium shadow-sm hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-brand-green focus:ring-offset-2 transition-colors">
-          Verificar Respostas
-        </button>
-</div>
-</section>
+
+<main class="flex-grow flex flex-col lg:flex-row items-start justify-center p-4 md:p-6 gap-6 max-w-7xl mx-auto w-full">
+
+  <!-- Word List Panel -->
+  <aside class="w-full lg:w-56 shrink-0">
+    <div class="bg-white p-5 rounded-3xl shadow-lg border border-indigo-50">
+      <h2 class="text-base font-black text-slate-800 uppercase tracking-tight mb-1">Vocabulário</h2>
+      <p class="text-[10px] font-bold text-slate-400 uppercase tracking-widest mb-3">Clique e arraste</p>
+      <div class="grid grid-cols-2 lg:grid-cols-1 gap-1.5 word-scroll" id="word-list"></div>
+    </div>
+  </aside>
+
+  <!-- Game Board -->
+  <div class="flex-grow w-full max-w-[640px] mx-auto bg-white p-4 rounded-3xl shadow-2xl border-4 border-indigo-50 relative" id="game-board">
+    <div id="grid-container"></div>
+  </div>
+
 </main>
-<!-- END: MainContent -->
-</body></html>
+
+<script>
+  // ——— Color palette (one per word slot, index 0..19) ———
+  const COLORS = [
+    '#ef4444','#f97316','#eab308','#22c55e','#06b6d4',
+    '#6366f1','#a855f7','#ec4899','#14b8a6','#f43f5e',
+    '#84cc16','#3b82f6','#d97706','#10b981','#8b5cf6',
+    '#fb7185','#0ea5e9','#65a30d','#dc2626','#7c3aed'
+  ];
+
+  const SIZE = 15;
+  const DIRECTIONS = [
+    [0,1],[1,0],[1,1],[1,-1],   // →  ↓  ↘  ↙
+    [0,-1],[-1,0],[-1,-1],[-1,1] // ←  ↑  ↖  ↗
+  ];
+
+  let words = [];
+  let grid  = [];
+  let foundWords    = [];
+  let isSelecting   = false;
+  let selStart      = null;
+  let selIndices    = [];
+
+  // ——— Load data ———
+  const urlParams = new URLSearchParams(window.location.search);
+  const topic = urlParams.get('topic') || 'base_estrutural_geografia';
+
+  const ds = document.createElement('script');
+  ds.src = '../gamedata.js';
+  ds.onload = () => {
+    if (window.windowGameData && windowGameData[topic]?.wordsearch) {
+      words = windowGameData[topic].wordsearch;
+    } else {
+      words = ['ESPACO','PAISAGEM','TERRITORIO','LUGAR','REGIAO','ESCALA','CARTOGRAFIA','MAPA'];
+    }
+    startGame();
+  };
+  ds.onerror = () => { words = ['ESPACO','PAISAGEM','TERRITORIO']; startGame(); };
+  document.head.appendChild(ds);
+
+  // ——— Init ———
+  function startGame() {
+    words = words.map(w => w.toUpperCase().normalize('NFD').replace(/[\u0300-\u036f]/g,''));
+    words.sort((a,b) => b.length - a.length);
+    document.getElementById('total-count').innerText = words.length;
+
+    grid = Array.from({length: SIZE}, () => Array(SIZE).fill(''));
+    placeWords();
+    fillRandom();
+    renderGrid();
+    renderWordList();
+  }
+
+  // ——— Word placement ———
+  function placeWords() {
+    words.forEach(w => {
+      let placed = false, tries = 0;
+      while (!placed && tries < 200) {
+        const dir = DIRECTIONS[Math.floor(Math.random() * DIRECTIONS.length)];
+        const r   = Math.floor(Math.random() * SIZE);
+        const c   = Math.floor(Math.random() * SIZE);
+        if (canPlace(w, r, c, dir)) {
+          for (let i = 0; i < w.length; i++)
+            grid[r + i*dir[0]][c + i*dir[1]] = w[i];
+          placed = true;
+        }
+        tries++;
+      }
+    });
+  }
+
+  function canPlace(w, r, c, dir) {
+    const er = r + (w.length-1)*dir[0];
+    const ec = c + (w.length-1)*dir[1];
+    if (er < 0 || er >= SIZE || ec < 0 || ec >= SIZE) return false;
+    for (let i = 0; i < w.length; i++) {
+      const ch = grid[r + i*dir[0]][c + i*dir[1]];
+      if (ch !== '' && ch !== w[i]) return false;
+    }
+    return true;
+  }
+
+  function fillRandom() {
+    const ABC = 'ABCDEFGHIJKLMNOPQRSTUVWXYZ';
+    for (let r = 0; r < SIZE; r++)
+      for (let c = 0; c < SIZE; c++)
+        if (!grid[r][c]) grid[r][c] = ABC[Math.floor(Math.random()*26)];
+  }
+
+  // ——— Render ———
+  function renderGrid() {
+    const ct = document.getElementById('grid-container');
+    ct.innerHTML = '';
+    for (let r = 0; r < SIZE; r++) {
+      for (let c = 0; c < SIZE; c++) {
+        const el = document.createElement('div');
+        el.className = 'gc';
+        el.textContent = grid[r][c];
+        el.dataset.r = r;
+        el.dataset.c = c;
+        el.addEventListener('mousedown',  e => { e.preventDefault(); onDown(r,c); });
+        el.addEventListener('mouseenter', e => { if (isSelecting) onMove(r,c); });
+        ct.appendChild(el);
+      }
+    }
+    document.addEventListener('mouseup', onUp);
+
+    // Touch
+    ct.addEventListener('touchstart',  e => { e.preventDefault(); const t = e.touches[0]; const el = document.elementFromPoint(t.clientX,t.clientY); if (el?.dataset.r) onDown(+el.dataset.r,+el.dataset.c); }, {passive:false});
+    ct.addEventListener('touchmove',   e => { e.preventDefault(); const t = e.touches[0]; const el = document.elementFromPoint(t.clientX,t.clientY); if (el?.dataset.r) onMove(+el.dataset.r,+el.dataset.c); }, {passive:false});
+    ct.addEventListener('touchend',    e => { e.preventDefault(); onUp(); }, {passive:false});
+  }
+
+  function renderWordList() {
+    const list = document.getElementById('word-list');
+    list.innerHTML = '';
+    words.forEach((w, i) => {
+      const d = document.createElement('div');
+      d.className = 'wi';
+      d.id = `wi-${w}`;
+      d.innerHTML = `<span class="dot" style="background:${COLORS[i % COLORS.length]}"></span><span>${w}</span>`;
+      list.appendChild(d);
+    });
+  }
+
+  // ——— Selection logic ———
+  function onDown(r, c) {
+    isSelecting = true;
+    selStart = {r, c};
+    selIndices = [{r, c}];
+    updateHighlight();
+  }
+
+  function onMove(r, c) {
+    if (!isSelecting) return;
+    const dr = r - selStart.r;
+    const dc = c - selStart.c;
+    if (dr === 0 || dc === 0 || Math.abs(dr) === Math.abs(dc)) {
+      const steps = Math.max(Math.abs(dr), Math.abs(dc));
+      const sr = dr === 0 ? 0 : (dr > 0 ? 1 : -1);
+      const sc = dc === 0 ? 0 : (dc > 0 ? 1 : -1);
+      selIndices = [];
+      for (let i = 0; i <= steps; i++)
+        selIndices.push({r: selStart.r + i*sr, c: selStart.c + i*sc});
+      updateHighlight();
+    }
+  }
+
+  function onUp() {
+    if (!isSelecting) return;
+    isSelecting = false;
+
+    const forward  = selIndices.map(i => grid[i.r][i.c]).join('');
+    const backward = forward.split('').reverse().join('');
+    const match = words.find(w => !foundWords.includes(w) && (w === forward || w === backward));
+
+    if (match) markFound(match, selIndices);
+
+    // Clear selecting highlight (leave found colors)
+    document.querySelectorAll('.gc.selecting').forEach(el => el.classList.remove('selecting'));
+    selIndices = [];
+  }
+
+  function updateHighlight() {
+    document.querySelectorAll('.gc.selecting').forEach(el => el.classList.remove('selecting'));
+    selIndices.forEach(({r, c}) => {
+      const el = document.querySelector(`.gc[data-r="${r}"][data-c="${c}"]`);
+      // Don't override already-found cells' color class
+      if (el && !el.dataset.found) el.classList.add('selecting');
+    });
+  }
+
+  function markFound(word, indices) {
+    foundWords.push(word);
+    const idx = words.indexOf(word);
+    const colorClass = `fc-${idx % 20}`;
+    const hexColor = COLORS[idx % COLORS.length];
+
+    indices.forEach(({r, c}) => {
+      const el = document.querySelector(`.gc[data-r="${r}"][data-c="${c}"]`);
+      if (el) {
+        el.classList.remove('selecting');
+        el.classList.add(colorClass);
+        el.dataset.found = '1';
+      }
+    });
+
+    // Update word list item
+    const wi = document.getElementById(`wi-${word}`);
+    if (wi) {
+      wi.classList.add('found');
+      wi.style.borderColor = hexColor;
+      wi.style.background  = hexColor + '18';
+    }
+
+    document.getElementById('found-count').innerText = foundWords.length;
+    if (foundWords.length === words.length) showWin();
+  }
+
+  function showWin() {
+    const board = document.getElementById('game-board');
+    const ov = document.createElement('div');
+    ov.style.cssText = 'position:absolute;inset:0;border-radius:1.5rem;background:rgba(99,102,241,0.93);backdrop-filter:blur(8px);display:flex;flex-direction:column;align-items:center;justify-content:center;gap:20px;z-index:50;padding:2rem;text-align:center;';
+    ov.innerHTML = `
+      <div style="font-size:5rem;line-height:1">🔍</div>
+      <h2 style="font-size:2.2rem;font-weight:900;color:#fff;text-transform:uppercase;letter-spacing:-0.03em;">Vocabulário Dominado!</h2>
+      <p style="color:#c7d2fe;font-weight:600;">Você encontrou todos os ${words.length} termos!</p>
+      <button onclick="location.reload()" style="background:white;color:#4f46e5;padding:12px 32px;border-radius:999px;font-weight:900;font-size:0.85rem;text-transform:uppercase;letter-spacing:0.08em;cursor:pointer;transition:all 0.2s;">Jogar Novamente</button>
+    `;
+    board.appendChild(ov);
+  }
+</script>
+
+</body>
+</html>

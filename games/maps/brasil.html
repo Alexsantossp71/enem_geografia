@@ -1,154 +1,390 @@
 <!DOCTYPE html>
-
-<html lang="pt-BR"><head>
-<meta charset="utf-8"/>
-<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
-<title>Geografia ENEM - Jogo Interativo</title>
-<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
-<script>
-    tailwind.config = {
-      theme: {
-        extend: {
-          colors: {
-            brand: {
-              green: '#27ae60',
-              darkGreen: '#1e8449',
-              purple: '#6c5ce7',
-              purpleHover: '#5b4bc4'
-            }
-          },
-          fontFamily: {
-            sans: ['Segoe UI', 'Roboto', 'Helvetica Neue', 'Arial', 'sans-serif'],
-          }
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Mapa Interativo do Brasil - GeoENEM</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;600;700;900&display=swap" rel="stylesheet">
+    <script src="https://d3js.org/d3.v7.min.js"></script>
+    <style>
+        body { font-family: 'Outfit', sans-serif; background-color: #0f172a; color: #f8fafc; overflow-x: hidden; }
+        .glass { background: rgba(30, 41, 59, 0.7); backdrop-filter: blur(16px); border: 1px solid rgba(255, 255, 255, 0.1); }
+        .state-path { fill: #334155; stroke: #0f172a; stroke-width: 1px; transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1); cursor: pointer; }
+        .state-path:hover { fill: #6366f1; stroke: #e0e7ff; stroke-width: 2px; transform: scale(1.01); transform-origin: center; z-index: 10; }
+        .state-path.correct { fill: #10b981; pointer-events: none; }
+        .state-path.error { fill: #ef4444; animation: shake 0.4s; }
+        .state-path.completed { fill: #10b981; opacity: 0.8; pointer-events: none;}
+        
+        @keyframes shake {
+            0%, 100% { transform: translateX(0); }
+            25% { transform: translateX(-5px); }
+            75% { transform: translateX(5px); }
         }
-      }
-    }
-  </script>
-<style data-purpose="custom-utilities">.drop-zone { min-height: 2.5rem }
-.map-container { position: relative; width: 100%; max-width: 600px; margin: 0 auto; aspect-ratio: 1/1; background-image: url(https://lh3.googleusercontent.com/aida-public/AB6AXuDW4McrOdjYMTEpEjt8tMMU44jsPSDS2Hqdi5XuY4cjraBts0nAPuioASmePtscrfeqfyWEpSUYvv4u9PgApdl2lLYLyMwy7ptQ8CTuQdZ_L8vt3zZmcm9HKWuQr8pgOVlHZST1EyJISys9aIEpR7XTrCRMzn6XnIvRzSXM6v3IhyNSJvCJisAsQn8YkBAP9WBoLnqQuO4n-FfhuAlDAqIsCARceyDEftG1VH7MTc6NymNRLJlsUNRDq1BSznkroe51Pd2975P2hvCy); background-size: contain; background-repeat: no-repeat; background-position: center }
-.region-label { position: absolute; text-align: center; display: flex; flex-direction: column; align-items: center; gap: 0.25rem }
-.pos-norte { top: 25%; left: 25% }
-.pos-nordeste { top: 35%; left: 75% }
-.pos-centro-oeste { top: 50%; left: 35% }
-.pos-sudeste { top: 65%; left: 65% }
-.pos-sul { top: 85%; left: 45% }</style>
+        
+        .pulse-border { animation: pulseBorder 2s infinite; }
+        @keyframes pulseBorder {
+            0% { box-shadow: 0 0 0 0 rgba(99, 102, 241, 0.4); }
+            70% { box-shadow: 0 0 0 15px rgba(99, 102, 241, 0); }
+            100% { box-shadow: 0 0 0 0 rgba(99, 102, 241, 0); }
+        }
+
+        /* Tooltip */
+        #tooltip {
+            position: absolute;
+            opacity: 0;
+            background: rgba(15, 23, 42, 0.9);
+            color: white;
+            padding: 8px 12px;
+            border-radius: 8px;
+            pointer-events: none;
+            font-size: 14px;
+            font-weight: 600;
+            transition: opacity 0.2s;
+            border: 1px solid rgba(255,255,255,0.1);
+            backdrop-filter: blur(4px);
+            z-index: 50;
+            box-shadow: 0 10px 25px -5px rgba(0, 0, 0, 0.5);
+        }
+        
+        .game-grid {
+            display: grid;
+            grid-template-columns: 1fr;
+            gap: 2rem;
+            align-items: center;
+        }
+        @media (min-width: 1024px) {
+            .game-grid { grid-template-columns: 400px 1fr; }
+        }
+    </style>
 </head>
-<body class="bg-gray-50 min-h-screen font-sans text-gray-900 flex flex-col">
-<!-- BEGIN: Header -->
-<header class="bg-brand-green text-white shadow-md">
-<div class="container mx-auto px-6 py-4 flex flex-col md:flex-row items-center justify-between">
-<div class="text-2xl font-extrabold mb-4 md:mb-0">
-        Geografia ENEM
-      </div>
-<nav class="flex flex-wrap items-center justify-center gap-4 text-sm font-medium">
-<a class="hover:text-gray-200 transition-colors" href="#">Erosão</a>
-<a class="hover:text-gray-200 transition-colors" href="#">Vegetação</a>
-<a class="hover:text-gray-200 transition-colors" href="#">Água</a>
-<a class="hover:text-gray-200 transition-colors" href="#">Atmosfera</a>
-<a class="hover:text-gray-200 transition-colors" href="#">População</a>
-<a class="hover:text-gray-200 transition-colors" href="#">Urbanização</a>
-<a class="hover:text-gray-200 transition-colors" href="#">Globalização</a>
-<div class="flex items-center gap-3 ml-2">
-<!-- Gamepad Icon Placeholder -->
-<svg class="w-5 h-5 fill-current" viewbox="0 0 24 24">
-<path d="M21.58 8.08l-2.67-4.22c-.41-.65-1.12-1.04-1.89-1.04H7.01c-.77 0-1.48.39-1.89 1.04L2.45 8.08C1.52 9.55 1 11.23 1 12.98V17c0 1.66 1.34 3 3 3h3.04l2-3h5.92l2 3H20c1.66 0 3-1.34 3-3v-4.02c0-1.75-.52-3.43-1.42-4.9zM8 12.5c-.83 0-1.5-.67-1.5-1.5S7.17 9.5 8 9.5s1.5.67 1.5 1.5-.67 1.5-1.5 1.5zm8 0c-.83 0-1.5-.67-1.5-1.5S15.17 9.5 16 9.5s1.5.67 1.5 1.5-.67 1.5-1.5 1.5z"></path>
-</svg>
-<a class="bg-brand-darkGreen px-4 py-1.5 rounded hover:bg-green-800 transition-colors" href="#">Quiz</a>
-</div>
-</nav>
-</div>
-</header>
-<!-- END: Header -->
-<!-- BEGIN: Main Content -->
-<main class="flex-grow container mx-auto px-6 py-8">
-<!-- Title Section -->
-<div class="text-center mb-10">
-<h1 class="text-4xl font-bold text-black mb-3">Jogo: Mapa Interativo do Brasil</h1>
-<p class="text-base text-gray-700">Arraste os rótulos com características para as regiões corretas do mapa do Brasil.</p>
-</div>
-<div class="flex flex-col lg:flex-row gap-12 items-start justify-center max-w-6xl mx-auto">
-<!-- Left Column: Map -->
-<div class="w-full lg:w-3/5 flex justify-center">
-<!-- Interactive Map Container -->
-<div class="map-container relative">
-<!-- Region: Norte -->
-<div class="region-label pos-norte">
-<span class="font-bold text-black text-sm drop-shadow-md">Norte</span>
-<div class="drop-zone bg-white border-2 border-dashed border-gray-400 rounded p-1 w-28 text-center text-xs text-gray-500 shadow-sm">
-              Características
+<body class="min-h-screen relative flex flex-col">
+
+    <!-- Premium Navigation Bar -->
+    <nav class="fixed top-6 left-1/2 -translate-x-1/2 z-50 w-[90%] max-w-5xl">
+        <div class="glass rounded-2xl px-6 py-4 flex items-center justify-between shadow-2xl">
+            <div class="flex items-center gap-4">
+                <a href="../../index.html" class="w-10 h-10 flex items-center justify-center rounded-xl bg-slate-800 hover:bg-slate-700 transition-colors text-slate-300">
+                    <i class="fa-solid fa-arrow-left"></i>
+                </a>
+                <div>
+                    <h1 class="text-sm font-black uppercase tracking-widest text-indigo-400">GeoENEM</h1>
+                    <p class="text-[10px] text-slate-400 font-medium uppercase tracking-wider">Cartografia Interativa • Brasil</p>
+                </div>
             </div>
-</div>
-<!-- Region: Nordeste -->
-<div class="region-label pos-nordeste">
-<span class="font-bold text-black text-sm drop-shadow-md">Nordeste</span>
-<div class="drop-zone bg-white border-2 border-dashed border-gray-400 rounded p-1 w-28 text-center text-xs text-gray-500 shadow-sm">
-              Características
+            <div class="flex items-center gap-6">
+                <div class="hidden md:flex flex-col items-end">
+                    <span class="text-[10px] font-black text-slate-400 uppercase tracking-tighter">Progresso</span>
+                    <div class="w-32 h-1.5 bg-slate-800 rounded-full mt-1 overflow-hidden">
+                        <div id="progress-bar" class="h-full bg-indigo-500 transition-all duration-500" style="width: 0%"></div>
+                    </div>
+                </div>
+                <div class="flex items-center gap-3 bg-indigo-500/10 px-4 py-2 rounded-xl border border-indigo-500/20">
+                    <i class="fa-solid fa-star text-indigo-400 text-sm"></i>
+                    <span id="score" class="text-xl font-black text-indigo-400 leading-none">0</span>
+                </div>
             </div>
-</div>
-<!-- Region: Centro-Oeste -->
-<div class="region-label pos-centro-oeste">
-<span class="font-bold text-black text-sm drop-shadow-md">Centro-Oeste</span>
-<div class="drop-zone bg-white border-2 border-dashed border-gray-400 rounded p-1 w-28 text-center text-xs text-gray-500 shadow-sm">
-              Características
+        </div>
+    </nav>
+
+    <!-- Main Game Area -->
+    <main class="flex-grow pt-32 pb-20 px-6 max-w-7xl mx-auto w-full game-grid">
+        
+        <!-- Left Sidebar: Questions & Info -->
+        <div class="flex flex-col gap-6 relative z-10 order-2 lg:order-1">
+            <div class="glass p-8 rounded-3xl border-t border-white/10 shadow-2xl relative overflow-hidden">
+                <div class="absolute top-0 right-0 w-32 h-32 bg-indigo-500/20 rounded-full blur-3xl -mr-16 -mt-16"></div>
+                
+                <div class="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-indigo-500/20 text-indigo-300 text-xs font-bold uppercase tracking-widest mb-6 border border-indigo-500/20">
+                    <i class="fa-solid fa-crosshairs"></i> Missão Atual
+                </div>
+                
+                <h2 id="question-text" class="text-2xl md:text-3xl font-black text-white leading-tight mb-4">
+                    Carregando mapa...
+                </h2>
+                
+                <p id="question-hint" class="text-slate-400 text-sm font-medium mb-8">
+                    Aguarde enquanto inicializamos os sistemas cartográficos.
+                </p>
+
+                <div class="flex gap-4 items-center mt-8 pt-6 border-t border-slate-700/50">
+                    <div class="w-12 h-12 rounded-2xl bg-slate-800 flex items-center justify-center text-slate-400 shrink-0">
+                        <i class="fa-solid fa-mouse-pointer"></i>
+                    </div>
+                    <p class="text-xs text-slate-500 leading-snug">Selecione o estado correspondente no mapa à direita para pontuar.</p>
+                </div>
             </div>
-</div>
-<!-- Region: Sudeste -->
-<div class="region-label pos-sudeste">
-<span class="font-bold text-black text-sm drop-shadow-md">Sudeste</span>
-<div class="drop-zone bg-white border-2 border-dashed border-gray-400 rounded p-1 w-28 text-center text-xs text-gray-500 shadow-sm">
-              Características
+
+            <!-- Stats/Themes studied -->
+            <div class="glass p-6 rounded-3xl grid grid-cols-2 gap-4">
+                <div class="bg-slate-800/50 p-4 rounded-2xl">
+                    <i class="fa-solid fa-leaf text-emerald-400 mb-2 text-xl block"></i>
+                    <h3 class="font-bold text-sm text-white">Domínios</h3>
+                    <p class="text-[10px] text-slate-400 uppercase">Biomas e Clima</p>
+                </div>
+                <div class="bg-slate-800/50 p-4 rounded-2xl">
+                    <i class="fa-solid fa-industry text-amber-400 mb-2 text-xl block"></i>
+                    <h3 class="font-bold text-sm text-white">Economia</h3>
+                    <p class="text-[10px] text-slate-400 uppercase">Agro e Indústria</p>
+                </div>
             </div>
-</div>
-<!-- Region: Sul -->
-<div class="region-label pos-sul">
-<span class="font-bold text-black text-sm drop-shadow-md">Sul</span>
-<div class="drop-zone bg-white border-2 border-dashed border-gray-400 rounded p-1 w-28 text-center text-xs text-gray-500 shadow-sm">
-              Características
+        </div>
+
+        <!-- Right Side: Interactive Map -->
+        <div class="relative w-full h-[500px] lg:h-[700px] flex items-center justify-center order-1 lg:order-2">
+            <div id="map-container" class="w-full h-full relative z-0 flex items-center justify-center drop-shadow-2xl">
+                <!-- D3 Map will be appended here -->
+                <div id="loader" class="absolute flex flex-col items-center gap-4">
+                    <i class="fa-solid fa-circle-notch fa-spin text-4xl text-indigo-500"></i>
+                    <span class="text-slate-400 font-bold uppercase tracking-widest text-sm">Gerando Cartografia...</span>
+                </div>
             </div>
-</div>
-</div>
-</div>
-<!-- Right Column: Labels -->
-<div class="w-full lg:w-2/5 flex flex-col items-center lg:items-start pt-8">
-<h2 class="text-2xl font-bold text-black mb-6 text-center lg:text-left w-full">Rótulos Disponíveis</h2>
-<div class="grid grid-cols-2 gap-4 w-full max-w-md">
-<!-- Draggable Labels -->
-<div class="bg-brand-purple text-white text-center py-4 px-2 rounded-lg shadow cursor-move hover:bg-brand-purpleHover transition-colors text-sm font-medium flex items-center justify-center" draggable="true">
-            Clima Tropical
-          </div>
-<div class="bg-brand-purple text-white text-center py-4 px-2 rounded-lg shadow cursor-move hover:bg-brand-purpleHover transition-colors text-sm font-medium flex items-center justify-center" draggable="true">
-            Produção de Soja
-          </div>
-<div class="bg-brand-purple text-white text-center py-4 px-2 rounded-lg shadow cursor-move hover:bg-brand-purpleHover transition-colors text-sm font-medium flex items-center justify-center" draggable="true">
-            Alta Densidade<br/>Populacional
-          </div>
-<div class="bg-brand-purple text-white text-center py-4 px-2 rounded-lg shadow cursor-move hover:bg-brand-purpleHover transition-colors text-sm font-medium flex items-center justify-center" draggable="true">
-            Floresta<br/>Amazônica
-          </div>
-<div class="bg-brand-purple text-white text-center py-4 px-2 rounded-lg shadow cursor-move hover:bg-brand-purpleHover transition-colors text-sm font-medium flex items-center justify-center" draggable="true">
-            Pampas
-          </div>
-<div class="bg-brand-purple text-white text-center py-4 px-2 rounded-lg shadow cursor-move hover:bg-brand-purpleHover transition-colors text-sm font-medium flex items-center justify-center" draggable="true">
-            Semiárido
-          </div>
-<div class="bg-brand-purple text-white text-center py-4 px-2 rounded-lg shadow cursor-move hover:bg-brand-purpleHover transition-colors text-sm font-medium flex items-center justify-center" draggable="true">
-            Economia<br/>Industrial
-          </div>
-<div class="bg-brand-purple text-white text-center py-4 px-2 rounded-lg shadow cursor-move hover:bg-brand-purpleHover transition-colors text-sm font-medium flex items-center justify-center" draggable="true">
-            Pantanal
-          </div>
-</div>
-</div>
-</div>
-<!-- Action Area -->
-<div class="max-w-4xl mx-auto mt-12 mb-6 text-center">
-<button class="w-full bg-brand-green hover:bg-brand-darkGreen text-white text-2xl font-bold py-4 rounded-lg shadow-lg transition-colors">
-        Verificar Respostas
-      </button>
-<p class="mt-4 text-sm text-gray-800 font-medium">
-<span class="font-bold">Dica:</span> Lembre-se das características econômicas e climáticas de cada região!
-      </p>
-</div>
-</main>
-<!-- END: Main Content -->
-</body></html>
+            <div id="tooltip"></div>
+        </div>
+    </main>
+
+    <!-- Feedback Modal -->
+    <div id="finish-modal" class="fixed inset-0 bg-slate-950/80 backdrop-blur-xl z-[100] hidden flex items-center justify-center p-6 opacity-0 transition-opacity duration-500">
+        <div class="glass rounded-[40px] p-12 max-w-md w-full text-center border-t border-indigo-500/30 shadow-[0_0_50px_rgba(99,102,241,0.2)] transform scale-95 transition-transform duration-500" id="modal-content">
+            <div class="w-24 h-24 bg-indigo-500/20 text-indigo-400 rounded-3xl flex items-center justify-center mx-auto mb-8 text-4xl rotate-12 pulse-border">
+                <i class="fa-solid fa-map-location-dot"></i>
+            </div>
+            <h2 class="text-4xl font-black text-white uppercase tracking-tighter mb-4">Cartografia<br>Dominada!</h2>
+            <p class="text-slate-400 font-medium mb-10 text-sm">Você identificou com precisão as principais características geográficas, econômicas e estruturais do território brasileiro.</p>
+            
+            <div class="bg-slate-800/50 rounded-2xl p-4 mb-8">
+                <span class="block text-xs text-slate-400 uppercase font-black tracking-widest mb-1">Pontuação Final</span>
+                <span id="final-score" class="text-3xl font-black text-indigo-400">0</span>
+            </div>
+
+            <button onclick="location.reload()" class="w-full bg-indigo-600 py-4 rounded-xl text-white font-black uppercase tracking-widest hover:bg-indigo-500 transition-colors shadow-lg shadow-indigo-500/25">
+                Nova Expedição
+            </button>
+        </div>
+    </div>
+
+    <!-- Background Elements -->
+    <div class="fixed inset-0 pointer-events-none z-[-1] overflow-hidden">
+        <div class="absolute top-1/4 left-0 w-[500px] h-[500px] rounded-full bg-indigo-600/10 blur-[120px]"></div>
+        <div class="absolute bottom-0 right-1/4 w-[600px] h-[600px] rounded-full bg-emerald-600/5 blur-[150px]"></div>
+    </div>
+
+    <script src="../gamedata.js"></script>
+    <script>
+        const urlParams = new URLSearchParams(window.location.search);
+        const topic = urlParams.get('topic') || 'geografia_brasil';
+        let questions = [];
+        if(window.windowGameData && window.windowGameData[topic] && window.windowGameData[topic].map_brasil) {
+            questions = window.windowGameData[topic].map_brasil;
+        } else {
+             questions = [
+                { targetSigla: "AM", text: "Abriga a maior parte da maior floresta equatorial do mundo e a bacia hidrográfica mais extensa.", hint: "Região Norte. Clima Equatorial." },
+                { targetSigla: "SP", text: "Coração industrial e financeiro do país, concentrando o maior PIB.", hint: "Região Sudeste." }
+            ];
+        }
+
+        let currentQuestion = 0;
+        let score = 0;
+        let svg, projection, path;
+        
+        // UI Elements
+        const questionText = document.getElementById('question-text');
+        const questionHint = document.getElementById('question-hint');
+        const progressBar = document.getElementById('progress-bar');
+        const scoreEl = document.getElementById('score');
+        const tooltip = document.getElementById('tooltip');
+        
+        // Audio
+        const ctx = new (window.AudioContext || window.webkitAudioContext)();
+        function playSound(type) {
+            if(ctx.state === 'suspended') ctx.resume();
+            const osc = ctx.createOscillator();
+            const gainNode = ctx.createGain();
+            osc.connect(gainNode);
+            gainNode.connect(ctx.destination);
+            
+            if (type === 'correct') {
+                osc.type = 'sine';
+                osc.frequency.setValueAtTime(523.25, ctx.currentTime); // C5
+                osc.frequency.exponentialRampToValueAtTime(880, ctx.currentTime + 0.1);
+                gainNode.gain.setValueAtTime(0.5, ctx.currentTime);
+                gainNode.gain.exponentialRampToValueAtTime(0.01, ctx.currentTime + 0.5);
+                osc.start(ctx.currentTime);
+                osc.stop(ctx.currentTime + 0.5);
+            } else if (type === 'error') {
+                osc.type = 'sawtooth';
+                osc.frequency.setValueAtTime(150, ctx.currentTime);
+                osc.frequency.exponentialRampToValueAtTime(100, ctx.currentTime + 0.2);
+                gainNode.gain.setValueAtTime(0.5, ctx.currentTime);
+                gainNode.gain.exponentialRampToValueAtTime(0.01, ctx.currentTime + 0.3);
+                osc.start(ctx.currentTime);
+                osc.stop(ctx.currentTime + 0.3);
+            }
+        }
+
+        // Initialize D3 Map
+        async function initMap() {
+            const width = 800;
+            const height = 800;
+
+            svg = d3.select("#map-container")
+                .append("svg")
+                .attr("viewBox", `0 0 ${width} ${height}`)
+                .attr("preserveAspectRatio", "xMidYMid meet")
+                .style("width", "100%")
+                .style("height", "100%");
+
+            // Use a stable TopoJSON or GeoJSON for Brazil
+            try {
+                // GeoJSON containing Brazilian states
+                const response = await fetch("https://raw.githubusercontent.com/codeforamerica/click_that_hood/master/public/data/brazil-states.geojson");
+                const brazilGeoJSON = await response.json();
+                
+                document.getElementById('loader').style.display = 'none';
+
+                projection = d3.geoMercator().fitSize([width, height], brazilGeoJSON);
+                path = d3.geoPath().projection(projection);
+
+                // Draw states
+                svg.selectAll(".state-path")
+                    .data(brazilGeoJSON.features)
+                    .enter()
+                    .append("path")
+                    .attr("class", "state-path")
+                    .attr("d", path)
+                    .attr("data-sigla", d => d.properties.sigla)
+                    .attr("data-name", d => d.properties.name)
+        // Set up interactions
+                    .on("mouseover", function(event, d) {
+                        if (this.classList.contains('completed') || this.classList.contains('correct')) return;
+                        
+                        tooltip.style.opacity = 1;
+                        tooltip.innerHTML = d.properties.name;
+                    })
+                    .on("mousemove", function(event) {
+                        tooltip.style.left = (event.pageX + 15) + "px";
+                        tooltip.style.top = (event.pageY - 15) + "px";
+                    })
+                    .on("mouseout", function(event, d) {
+                        tooltip.style.opacity = 0;
+                    })
+                    .on("click", handleStateClick);
+
+                // Start game logic
+                shuffleArray(questions);
+                loadQuestion();
+
+            } catch (error) {
+                console.error("Erro ao carregar mapa do Brasil:", error);
+                document.getElementById('question-text').innerText = "Erro ao carregar os dados geográficos. Verifique sua conexão.";
+                document.getElementById('loader').innerHTML = '<i class="fa-solid fa-triangle-exclamation text-4xl text-red-500"></i>';
+            }
+        }
+
+        function handleStateClick(event, d) {
+            if(currentQuestion >= questions.length) return;
+            
+            const siglaClicked = d.properties.sigla;
+            const targetSigla = questions[currentQuestion].targetSigla;
+            
+            const element = d3.select(this);
+
+            if (siglaClicked === targetSigla) {
+                // Correct
+                playSound('correct');
+                tooltip.style.opacity = 0;
+
+                element.attr("class", "state-path correct");
+                element.transition().duration(500).style("fill", "#10b981").attr("transform", "translate(0,0)");
+                
+                score += 1000;
+                score += Math.max(0, 500 - (Date.now() - questionStartTime) / 10); // Time bonus
+                scoreEl.innerText = Math.floor(score);
+                
+                // Show particle effect? (simplified)
+                
+                currentQuestion++;
+                updateProgress();
+                
+                // Keep the correct state highlighted but distinct eventually
+                setTimeout(() => {
+                    element.attr("class", "state-path completed");
+                    if (currentQuestion < questions.length) {
+                        loadQuestion();
+                    } else {
+                        endGame();
+                    }
+                }, 1000);
+                
+            } else {
+                // Wrong
+                playSound('error');
+                score -= 150;
+                scoreEl.innerText = Math.floor(score);
+                
+                // Temporary error class
+                const prevClass = element.attr("class");
+                element.attr("class", "state-path error");
+                setTimeout(() => {
+                    element.attr("class", prevClass);
+                }, 400);
+            }
+        }
+
+        let questionStartTime;
+        function loadQuestion() {
+            const q = questions[currentQuestion];
+            
+            // Fade out, update, fade in
+            const qEl = document.getElementById('question-text');
+            const hEl = document.getElementById('question-hint');
+            
+            qEl.style.opacity = 0;
+            hEl.style.opacity = 0;
+            
+            setTimeout(() => {
+                qEl.innerHTML = q.text;
+                hEl.innerHTML = `<i class="fa-solid fa-lightbulb text-amber-500 mr-2"></i> Dica: ${q.hint}`;
+                qEl.style.transition = 'opacity 0.4s';
+                hEl.style.transition = 'opacity 0.4s';
+                qEl.style.opacity = 1;
+                hEl.style.opacity = 1;
+                questionStartTime = Date.now();
+            }, 300);
+        }
+
+        function updateProgress() {
+            const pct = (currentQuestion / questions.length) * 100;
+            progressBar.style.width = pct + "%";
+        }
+
+        function endGame() {
+            document.getElementById('question-text').innerText = "Processamento concluído.";
+            document.getElementById('question-hint').innerText = "Analisando resultados cartográficos...";
+            
+            document.getElementById('final-score').innerText = Math.floor(score);
+            
+            const modal = document.getElementById('finish-modal');
+            const content = document.getElementById('modal-content');
+            modal.classList.remove('hidden');
+            
+            // Trigger reflow
+            void modal.offsetWidth;
+            
+            modal.classList.replace('opacity-0', 'opacity-100');
+            content.classList.replace('scale-95', 'scale-100');
+        }
+
+        function shuffleArray(array) {
+            for (let i = array.length - 1; i > 0; i--) {
+                const j = Math.floor(Math.random() * (i + 1));
+                [array[i], array[j]] = [array[j], array[i]];
+            }
+        }
+
+        // Start
+        initMap();
+    </script>
+</body>
+</html>

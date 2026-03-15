@@ -1,202 +1,531 @@
 <!DOCTYPE html>
+<html lang="pt-BR" class="scroll-smooth">
+<head>
+    <meta charset="utf-8"/>
+    <meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+    <title>Geografia ENEM | Aprendizado de Excelência</title>
+    <script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" rel="stylesheet">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;500;600;700;800&family=Inter:wght@400;500;600&display=swap" rel="stylesheet">
+    <style data-purpose="custom-fonts">
+        :root {
+            --primary: #10B981; /* Emerald 500 */
+            --primary-dark: #047857; /* Emerald 700 */
+            --primary-light: #D1FAE5; /* Emerald 100 */
+            --bg-color: #F8FAFC;
+        }
+        body {
+            font-family: 'Inter', sans-serif;
+            background-color: var(--bg-color);
+            color: #1E293B;
+            overflow-x: hidden;
+        }
+        h1, h2, h3, h4, h5, h6, .outfit {
+            font-family: 'Outfit', sans-serif;
+        }
+        /* Glassmorphism */
+        .glass {
+            background: rgba(255, 255, 255, 0.7);
+            backdrop-filter: blur(12px);
+            -webkit-backdrop-filter: blur(12px);
+            border: 1px solid rgba(255, 255, 255, 0.5);
+        }
+        .glass-card {
+            background: rgba(255, 255, 255, 0.85);
+            backdrop-filter: blur(12px);
+            -webkit-backdrop-filter: blur(12px);
+            border: 1px solid rgba(255, 255, 255, 0.6);
+            box-shadow: 0 10px 30px -10px rgba(0, 0, 0, 0.1);
+            transition: all 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+        }
+        .glass-card:hover {
+            transform: translateY(-8px);
+            box-shadow: 0 20px 40px -15px rgba(16, 185, 129, 0.3);
+            border-color: rgba(16, 185, 129, 0.4);
+        }
+        /* Custom Gradients */
+        .text-gradient {
+            background: linear-gradient(135deg, var(--primary) 0%, #059669 100%);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+        }
+        .bg-gradient-primary {
+            background: linear-gradient(135deg, var(--primary) 0%, var(--primary-dark) 100%);
+        }
+        /* Blob Animations */
+        @keyframes blob {
+            0% { transform: translate(0px, 0px) scale(1); }
+            33% { transform: translate(30px, -50px) scale(1.1); }
+            66% { transform: translate(-20px, 20px) scale(0.9); }
+            100% { transform: translate(0px, 0px) scale(1); }
+        }
+        .animate-blob {
+            animation: blob 7s infinite;
+        }
+        .animation-delay-2000 {
+            animation-delay: 2s;
+        }
+        .animation-delay-4000 {
+            animation-delay: 4s;
+        }
+        /* Shine effect on buttons */
+        .btn-shine {
+            position: relative;
+            overflow: hidden;
+            z-index: 1;
+        }
+        .btn-shine::after {
+            content: '';
+            position: absolute;
+            top: -50%;
+            left: -60%;
+            width: 20%;
+            height: 200%;
+            opacity: 0;
+            transform: rotate(30deg);
+            background: linear-gradient(
+                to right, 
+                rgba(255, 255, 255, 0.0) 0%,
+                rgba(255, 255, 255, 0.3) 50%,
+                rgba(255, 255, 255, 0.0) 100%
+            );
+            z-index: -1;
+        }
+        .btn-shine:hover::after {
+            opacity: 1;
+            left: 130%;
+            transition: all 0.7s ease-in-out;
+        }
+        
+        /* Grid overlay background */
+        .bg-grid {
+            background-size: 40px 40px;
+            background-image: linear-gradient(to right, rgba(0, 0, 0, 0.04) 1px, transparent 1px),
+                              linear-gradient(to bottom, rgba(0, 0, 0, 0.04) 1px, transparent 1px);
+        }
 
-<html lang="pt-BR"><head>
-<meta charset="utf-8"/>
-<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
-<title>Geografia ENEM</title>
-<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
-<style data-purpose="custom-fonts">
-    @import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap');
-    body {
-      font-family: 'Inter', sans-serif;
-    }
-  </style>
+        /* Hero Image floating */
+        @keyframes float {
+            0% { transform: translateY(0px); }
+            50% { transform: translateY(-15px); }
+            100% { transform: translateY(0px); }
+        }
+        .float-img {
+            animation: float 6s ease-in-out infinite;
+        }
+
+        /* Icon Wrapper */
+        .icon-wrapper {
+            background: linear-gradient(135deg, var(--primary-light) 0%, rgba(255,255,255,1) 100%);
+            box-shadow: inset 0 2px 4px rgba(255,255,255,0.5), inset 0 -2px 4px rgba(0,0,0,0.05);
+        }
+    </style>
 </head>
-<body class="bg-gray-50 text-gray-800 min-h-screen flex flex-col">
-<!-- BEGIN: Header -->
-<header class="bg-[#22a659] text-white" data-purpose="main-header">
-<div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-<div class="flex justify-between items-center py-4">
-<!-- Logo -->
-<div class="flex-shrink-0 flex items-center">
-<a class="font-bold text-xl tracking-tight" href="#">Geografia ENEM</a>
-</div>
-<!-- Navigation -->
-<nav class="hidden md:flex space-x-6 items-center text-sm font-medium">
-            <a class="hover:text-green-200 transition-colors" href="index.html">Início</a>
-            <a class="hover:text-green-200 transition-colors" href="Indice_aulas.html">Aulas</a>
-            <a class="hover:text-green-200 transition-colors" href="games/memory/index.html">Jogos</a>
-          </nav>
-</div>
-</div>
-</header>
-<!-- END: Header -->
-<!-- BEGIN: Main Content -->
-<main class="flex-grow">
-<!-- BEGIN: Hero Section -->
-<section class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-20 lg:py-28" data-purpose="hero-section">
-<div class="max-w-3xl">
-<h1 class="text-5xl lg:text-6xl font-bold leading-tight mb-6 text-gray-900">
-          <span class="text-[#22a659]">Geografia para o ENEM</span><br/>
-          Estude o Capítulo 2: Ciências Humanas
-        </h1>
-        <a class="inline-block bg-[#22a659] hover:bg-green-700 text-white font-semibold py-3 px-8 rounded-lg shadow-md transition-all transform hover:-translate-y-0.5" href="Indice_aulas.html">
-          Começar Estudos
-        </a>
-</div>
-</section>
-<!-- END: Hero Section -->
-<!-- BEGIN: Topics Section -->
-<section class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-12" data-purpose="topics-section">
-<h2 class="text-2xl font-bold mb-8 text-gray-900">Tópicos do Capítulo 2</h2>
-<div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-      <!-- Card 1 -->
-      <div class="bg-white rounded-xl shadow-sm border border-gray-100 p-6 flex flex-col h-full hover:shadow-md transition-shadow">
-        <div class="w-12 h-12 mb-4 bg-blue-50 rounded-full flex items-center justify-center text-2xl">
-          📚
-        </div>
-        <h3 class="text-xl font-bold mb-2 text-gray-900">Base Estrutural da Geografia</h3>
-        <p class="text-gray-600 mb-6 flex-grow">Conceitos fundamentais, divisões e métodos da ciência geográfica.</p>
-        <a class="inline-block bg-[#22a659] hover:bg-green-700 text-white font-medium py-2 px-4 rounded shadow-sm text-sm text-center transition-colors w-max" href="base_estrutural_geografia.html">
-          Estudar Agora
-        </a>
-      </div>
-      <!-- Card 2 -->
-      <div class="bg-white rounded-xl shadow-sm border border-gray-100 p-6 flex flex-col h-full hover:shadow-md transition-shadow">
-        <div class="w-12 h-12 mb-4 bg-green-50 rounded-full flex items-center justify-center text-2xl">
-          🌡️
-        </div>
-        <h3 class="text-xl font-bold mb-2 text-gray-900">Características Climáticas do Brasil</h3>
-        <p class="text-gray-600 mb-6 flex-grow">Climas brasileiros, fatores climáticos e regiões climáticas.</p>
-        <a class="inline-block bg-[#22a659] hover:bg-green-700 text-white font-medium py-2 px-4 rounded shadow-sm text-sm text-center transition-colors w-max" href="caracteristicas_climaticas_brasil.html">
-          Estudar Agora
-        </a>
-      </div>
-      <!-- Card 3 -->
-      <div class="bg-white rounded-xl shadow-sm border border-gray-100 p-6 flex flex-col h-full hover:shadow-md transition-shadow">
-        <div class="w-12 h-12 mb-4 bg-red-50 rounded-full flex items-center justify-center text-2xl">
-          🌍
-        </div>
-        <h3 class="text-xl font-bold mb-2 text-gray-900">Questões Ambientais Contemporâneas</h3>
-        <p class="text-gray-600 mb-6 flex-grow">Mudança climática, efeito estufa, chuva ácida e camada de ozônio.</p>
-        <a class="inline-block bg-[#22a659] hover:bg-green-700 text-white font-medium py-2 px-4 rounded shadow-sm text-sm text-center transition-colors w-max" href="questoes_ambientais_contemporaneas.html">
-          Estudar Agora
-        </a>
-      </div>
-      <!-- Card 4 -->
-      <div class="bg-white rounded-xl shadow-sm border border-gray-100 p-6 flex flex-col h-full hover:shadow-md transition-shadow">
-        <div class="w-12 h-12 mb-4 bg-yellow-50 rounded-full flex items-center justify-center text-2xl">
-          ⛰️
-        </div>
-        <h3 class="text-xl font-bold mb-2 text-gray-900">Estrutura Interna da Terra</h3>
-        <p class="text-gray-600 mb-6 flex-grow">Crosta, manto, núcleo, tectônica de placas e vulcanismo.</p>
-        <a class="inline-block bg-[#22a659] hover:bg-green-700 text-white font-medium py-2 px-4 rounded shadow-sm text-sm text-center transition-colors w-max" href="estrutura_interna_terra.html">
-          Estudar Agora
-        </a>
-      </div>
-      <!-- Card 5 -->
-      <div class="bg-white rounded-xl shadow-sm border border-gray-100 p-6 flex flex-col h-full hover:shadow-md transition-shadow">
-        <div class="w-12 h-12 mb-4 bg-brown-50 rounded-full flex items-center justify-center text-2xl">
-          🗻
-        </div>
-        <h3 class="text-xl font-bold mb-2 text-gray-900">Estruturas do Solo e Relevo</h3>
-        <p class="text-gray-600 mb-6 flex-grow">Formação do solo, tipos de relevo e agentes modeladores.</p>
-        <a class="inline-block bg-[#22a659] hover:bg-green-700 text-white font-medium py-2 px-4 rounded shadow-sm text-sm text-center transition-colors w-max" href="estruturas_solo_relevo.html">
-          Estudar Agora
-        </a>
-      </div>
-      <!-- Card 6 -->
-      <div class="bg-white rounded-xl shadow-sm border border-gray-100 p-6 flex flex-col h-full hover:shadow-md transition-shadow">
-        <div class="w-12 h-12 mb-4 bg-purple-50 rounded-full flex items-center justify-center text-2xl">
-          🇧🇷
-        </div>
-        <h3 class="text-xl font-bold mb-2 text-gray-900">Formação Territorial Brasileira</h3>
-        <p class="text-gray-600 mb-6 flex-grow">Processo histórico, regiões brasileiras e políticas territoriais.</p>
-        <a class="inline-block bg-[#22a659] hover:bg-green-700 text-white font-medium py-2 px-4 rounded shadow-sm text-sm text-center transition-colors w-max" href="formacao_territorial_brasileira.html">
-          Estudar Agora
-        </a>
-      </div>
-      <!-- Card 7 -->
-      <div class="bg-white rounded-xl shadow-sm border border-gray-100 p-6 flex flex-col h-full hover:shadow-md transition-shadow">
-        <div class="w-12 h-12 mb-4 bg-teal-50 rounded-full flex items-center justify-center text-2xl">
-          ♻️
-        </div>
-        <h3 class="text-xl font-bold mb-2 text-gray-900">Origem e Evolução da Sustentabilidade</h3>
-        <p class="text-gray-600 mb-6 flex-grow">Conceito histórico, desenvolvimento sustentável e Agenda 2030.</p>
-        <a class="inline-block bg-[#22a659] hover:bg-green-700 text-white font-medium py-2 px-4 rounded shadow-sm text-sm text-center transition-colors w-max" href="origem_evolucao_sustentabilidade.html">
-          Estudar Agora
-        </a>
-      </div>
-      <!-- Card 8 -->
-      <div class="bg-white rounded-xl shadow-sm border border-gray-100 p-6 flex flex-col h-full hover:shadow-md transition-shadow">
-        <div class="w-12 h-12 mb-4 bg-emerald-50 rounded-full flex items-center justify-center text-2xl">
-          🌳
-        </div>
-        <h3 class="text-xl font-bold mb-2 text-gray-900">Grandes Domínios de Vegetação</h3>
-        <p class="text-gray-600 mb-6 flex-grow">Biomas brasileiros e mundiais, características e conservação.</p>
-        <a class="inline-block bg-[#22a659] hover:bg-green-700 text-white font-medium py-2 px-4 rounded shadow-sm text-sm text-center transition-colors w-max" href="grandes_dominios_vegetacao.html">
-          Estudar Agora
-        </a>
-      </div>
-      <!-- Card 9 -->
-      <div class="bg-white rounded-xl shadow-sm border border-gray-100 p-6 flex flex-col h-full hover:shadow-md transition-shadow">
-        <div class="w-12 h-12 mb-4 bg-sky-50 rounded-full flex items-center justify-center text-2xl">
-          ☁️
-        </div>
-        <h3 class="text-xl font-bold mb-2 text-gray-900">Situação da Atmosfera e Classificação Climática</h3>
-        <p class="text-gray-600 mb-6 flex-grow">Composição atmosférica, dinâmica e sistemas de classificação.</p>
-        <a class="inline-block bg-[#22a659] hover:bg-green-700 text-white font-medium py-2 px-4 rounded shadow-sm text-sm text-center transition-colors w-max" href="situacao_atmosfera_classificacao_climatica.html">
-          Estudar Agora
-        </a>
-      </div>
-      <!-- Card 10 -->
-      <div class="bg-white rounded-xl shadow-sm border border-gray-100 p-6 flex flex-col h-full hover:shadow-md transition-shadow">
-        <div class="w-12 h-12 mb-4 bg-pink-50 rounded-full flex items-center justify-center text-2xl">
-          👥
-        </div>
-        <h3 class="text-xl font-bold mb-2 text-gray-900">Demografia</h3>
-        <p class="text-gray-600 mb-6 flex-grow">Crescimento populacional, estrutura etária e indicadores sociais.</p>
-        <a class="inline-block bg-[#22a659] hover:bg-green-700 text-white font-medium py-2 px-4 rounded shadow-sm text-sm text-center transition-colors w-max" href="demografia.html">
-          Estudar Agora
-        </a>
-      </div>
+<body class="relative min-h-screen flex flex-col bg-grid">
+    <!-- Background blurred shapes -->
+    <div class="fixed inset-0 w-full h-full overflow-hidden -z-10 pointer-events-none">
+        <div class="absolute top-0 left-1/4 w-[30rem] h-[30rem] bg-emerald-300 rounded-full mix-blend-multiply filter blur-3xl opacity-30 animate-blob"></div>
+        <div class="absolute top-0 right-1/4 w-[30rem] h-[30rem] bg-sky-300 rounded-full mix-blend-multiply filter blur-3xl opacity-30 animate-blob animation-delay-2000"></div>
+        <div class="absolute -bottom-32 left-1/3 w-[30rem] h-[30rem] bg-teal-300 rounded-full mix-blend-multiply filter blur-3xl opacity-30 animate-blob animation-delay-4000"></div>
     </div>
-</section>
-<!-- END: Topics Section -->
-<!-- BEGIN: Game Section -->
-<section class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-12 mb-12" data-purpose="game-section"><h2 class="text-2xl font-bold mb-8 text-gray-900">Game of the Day</h2>
-<div class="flex flex-col md:flex-row items-center md:items-start gap-8">
-<div class="flex-shrink-0 relative w-40 h-40 flex items-center justify-center">
-<div class="absolute inset-0 bg-green-100 rounded-full blur-2xl opacity-80 scale-110"></div>
-<div class="relative z-10 flex gap-2">
-<div class="w-10 h-14 bg-white border-2 border-green-500 rounded-md shadow flex items-center justify-center transform -rotate-12 text-sm">🌍</div>
-<div class="w-10 h-14 bg-white border-2 border-green-500 rounded-md shadow flex items-center justify-center transform rotate-6 font-bold text-green-600 text-sm">?</div>
-<div class="w-10 h-14 bg-white border-2 border-green-500 rounded-md shadow flex items-center justify-center transform rotate-12 font-bold text-green-600 text-sm">?</div>
-</div>
-</div>
-<div class="flex-grow text-center md:text-left pt-4">
-<h3 class="text-xl font-bold mb-2 text-gray-900">Jogo do Dia: Memória Geográfica</h3>
-<p class="text-gray-600 mb-6">Teste seus conhecimentos com nosso jogo de memória!</p>
-<a class="inline-block bg-[#22a659] hover:bg-green-700 text-white font-medium py-2 px-6 rounded shadow-sm transition-colors" href="games/memory/index.html">
-      Jogar Agora
-    </a>
-</div>
-</div></section>
-<!-- END: Game Section -->
-</main>
-<!-- END: Main Content -->
-<!-- BEGIN: Footer -->
-<footer class="bg-white border-t border-gray-200 mt-auto" data-purpose="main-footer">
-<div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-6 flex flex-col md:flex-row justify-between items-center gap-4">
-<div class="flex space-x-4 text-sm text-gray-600">
-<a class="hover:text-gray-900 transition-colors" href="#">Sobre Nós</a>
-<a class="hover:text-gray-900 transition-colors" href="#">Contato</a>
-<a class="hover:text-gray-900 transition-colors" href="#">Política de Privacidade</a>
-</div>
-<div class="text-sm text-gray-500">
-        © Copyrighta Geografia ENEM
-      </div>
-</div>
-</footer>
-<!-- END: Footer -->
-</body></html>
+
+    <!-- BEGIN: Header -->
+    <header class="fixed top-0 w-full z-50 pt-4 px-4 sm:px-6 lg:px-8 pointer-events-none">
+        <div class="max-w-7xl mx-auto glass rounded-2xl pointer-events-auto">
+            <div class="flex justify-between items-center h-16 px-6">
+                <!-- Logo -->
+                <div class="flex-shrink-0 flex items-center gap-3">
+                    <div class="w-10 h-10 rounded-xl bg-gradient-primary flex items-center justify-center text-white font-bold text-xl shadow-lg shadow-emerald-500/30">G</div>
+                    <a class="font-bold text-2xl tracking-tight outfit" href="#">Geografia<span class="text-emerald-500">ENEM</span></a>
+                </div>
+                <!-- Navigation -->
+                <nav class="hidden md:flex space-x-8 items-center text-sm font-semibold">
+                    <a class="text-emerald-600 border-b-2 border-emerald-500 pb-1" href="index.html">Início</a>
+                    <a class="text-gray-600 hover:text-emerald-600 transition-colors" href="aulas/Indice_aulas.html">Aulas</a>
+                    <a class="text-gray-600 hover:text-emerald-600 transition-colors" href="games/memory/index.html">Jogos</a>
+                    <a class="bg-gray-900 hover:bg-emerald-600 btn-shine text-white px-5 py-2.5 rounded-xl transition-all shadow-md hover:shadow-lg" href="#topicos">Começar</a>
+                </nav>
+                <!-- Mobile button -->
+                <button class="md:hidden text-gray-600 hover:text-emerald-600 focus:outline-none">
+                    <i class="fas fa-bars text-2xl"></i>
+                </button>
+            </div>
+        </div>
+    </header>
+    <!-- END: Header -->
+
+    <!-- BEGIN: Main Content -->
+    <main class="flex-grow pt-32 pb-16">
+        <!-- BEGIN: Hero Section -->
+        <section class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-12 lg:py-24 flex flex-col lg:flex-row items-center gap-12 lg:gap-20">
+            <div class="w-full lg:w-1/2 flex flex-col items-center lg:items-start text-center lg:text-left z-10">
+                <div class="inline-flex items-center gap-2 px-4 py-2 rounded-full glass border border-emerald-200 text-emerald-700 text-sm font-medium mb-6 shadow-sm">
+                    <span class="relative flex h-3 w-3">
+                      <span class="animate-ping absolute inline-flex h-full w-full rounded-full bg-emerald-400 opacity-75"></span>
+                      <span class="relative inline-flex rounded-full h-3 w-3 bg-emerald-500"></span>
+                    </span>
+                    Prepare-se para o sucesso no ENEM
+                </div>
+                <h1 class="text-5xl lg:text-7xl font-extrabold leading-tight mb-6 text-gray-900 outfit tracking-tight">
+                    Domine a <br class="hidden lg:block"/>
+                    <span class="text-gradient">Geografia</span>
+                </h1>
+                <p class="text-lg text-gray-600 mb-10 max-w-lg leading-relaxed">
+                    Explore conceitos fundamentais, mapas interativos e jogos desafiadores que vão transformar sua preparação. Aprenda de forma dinâmica e conquiste a sua nota máxima.
+                </p>
+                <div class="flex flex-col sm:flex-row gap-4 w-full sm:w-auto">
+                    <a class="btn-shine inline-flex justify-center items-center gap-2 bg-gradient-primary text-white font-semibold py-4 px-8 rounded-2xl shadow-xl shadow-emerald-500/30 transition-all transform hover:-translate-y-1 hover:shadow-2xl hover:shadow-emerald-500/40" href="aulas/Indice_aulas.html">
+                        <span>Acessar Aulas</span>
+                        <i class="fas fa-arrow-right"></i>
+                    </a>
+                    <a class="inline-flex justify-center items-center gap-2 bg-white text-gray-800 font-semibold py-4 px-8 rounded-2xl shadow-lg shadow-gray-200/50 hover:bg-gray-50 transition-all transform hover:-translate-y-1 border border-gray-100" href="#jogos">
+                        <i class="fas fa-gamepad text-emerald-500"></i>
+                        <span>Testar Jogos</span>
+                    </a>
+                </div>
+                
+                <div class="mt-12 flex items-center gap-6">
+                    <div class="flex -space-x-4">
+                        <div class="w-10 h-10 rounded-full border-2 border-white bg-blue-100 flex items-center justify-center text-xs font-bold text-blue-600">JD</div>
+                        <div class="w-10 h-10 rounded-full border-2 border-white bg-purple-100 flex items-center justify-center text-xs font-bold text-purple-600">MR</div>
+                        <div class="w-10 h-10 rounded-full border-2 border-white bg-orange-100 flex items-center justify-center text-xs font-bold text-orange-600">AL</div>
+                        <div class="w-10 h-10 rounded-full border-2 border-white bg-emerald-100 flex items-center justify-center text-xs font-bold text-emerald-600">
+                            <i class="fas fa-plus"></i>
+                        </div>
+                    </div>
+                    <div>
+                        <p class="text-sm font-semibold text-gray-800">Mais de 1.000 alunos</p>
+                        <div class="flex text-yellow-400 text-xs">
+                            <i class="fas fa-star"></i><i class="fas fa-star"></i><i class="fas fa-star"></i><i class="fas fa-star"></i><i class="fas fa-star"></i>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="w-full lg:w-1/2 relative z-10 flex justify-center">
+                <!-- Decorative elements behind image -->
+                <div class="absolute inset-0 bg-gradient-to-tr from-emerald-100 to-sky-50 rounded-[3rem] transform rotate-3 scale-105 -z-10 shadow-inner border border-white/50"></div>
+                
+                <!-- Main image -->
+                <img src="assets/images/hero_geography.png" alt="Geografia ENEM" class="rounded-[2.5rem] shadow-2xl float-img border-4 border-white object-cover aspect-[4/3] w-full max-w-lg lg:max-w-none">
+                
+                <!-- Floating badge 1 -->
+                <div class="absolute top-10 -left-6 lg:-left-12 glass p-4 rounded-2xl shadow-lg flex items-center gap-3 animate-bounce" style="animation-duration: 3s;">
+                    <div class="w-12 h-12 rounded-xl bg-emerald-500 text-white flex items-center justify-center text-xl shadow-md shadow-emerald-500/40">
+                        <i class="fas fa-globe-americas"></i>
+                    </div>
+                    <div>
+                        <p class="text-xs text-gray-500 font-medium">Conteúdo</p>
+                        <p class="font-bold text-gray-800">+15 Módulos</p>
+                    </div>
+                </div>
+
+                <!-- Floating badge 2 -->
+                <div class="absolute bottom-10 -right-6 lg:-right-12 glass p-4 rounded-2xl shadow-lg flex items-center gap-3 animate-bounce" style="animation-duration: 4s; animation-delay: 1s;">
+                    <div class="w-12 h-12 rounded-xl bg-blue-500 text-white flex items-center justify-center text-xl shadow-md shadow-blue-500/40">
+                        <i class="fas fa-puzzle-piece"></i>
+                    </div>
+                    <div>
+                        <p class="text-xs text-gray-500 font-medium">Prática</p>
+                        <p class="font-bold text-gray-800">Jogos Interativos</p>
+                    </div>
+                </div>
+            </div>
+        </section>
+        <!-- END: Hero Section -->
+
+        <!-- BEGIN: Topics Section -->
+        <section id="topicos" class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-20 relative z-10">
+            <div class="text-center mb-16">
+                <span class="text-emerald-600 font-bold tracking-wider uppercase text-sm mb-2 block">Sua Jornada começa aqui</span>
+                <h2 class="text-4xl md:text-5xl font-extrabold text-gray-900 outfit">Trilhas de <span class="text-gradient">Estudo</span></h2>
+                <p class="mt-4 text-gray-600 max-w-2xl mx-auto">Explore os principais tópicos cobrados no ENEM através de conteúdos diretos, ilustrações didáticas e material atualizado.</p>
+            </div>
+
+            <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
+                <!-- Card 1 -->
+                <a href="aulas/base_estrutural_geografia.html" class="glass-card rounded-[2rem] overflow-hidden group flex flex-col h-full border border-gray-100">
+                    <div class="h-48 overflow-hidden relative">
+                        <img src="assets/images/physical_geo.png" alt="Base Estrutural" class="w-full h-full object-cover transform group-hover:scale-110 transition-transform duration-700">
+                        <div class="absolute inset-0 bg-gradient-to-t from-black/60 to-transparent"></div>
+                        <div class="absolute bottom-4 left-4 right-4 text-white">
+                            <span class="bg-emerald-500 text-xs font-bold px-3 py-1 rounded-full uppercase tracking-wider">Módulo 1</span>
+                        </div>
+                    </div>
+                    <div class="p-8 flex flex-col flex-grow relative">
+                        <div class="absolute -top-10 right-6 w-16 h-16 rounded-2xl icon-wrapper flex items-center justify-center text-3xl shadow-lg border border-white">
+                            🌍
+                        </div>
+                        <h3 class="text-2xl font-bold mb-3 text-gray-900 outfit group-hover:text-emerald-600 transition-colors">Base Estrutural da Geografia</h3>
+                        <p class="text-gray-600 mb-6 flex-grow leading-relaxed">Conceitos fundamentais, divisões e a evolução dos métodos da ciência geográfica.</p>
+                        <div class="flex items-center text-emerald-600 font-semibold group-hover:translate-x-2 transition-transform">
+                            Estudar Módulo <i class="fas fa-arrow-right ml-2 opacity-0 group-hover:opacity-100 transition-opacity"></i>
+                        </div>
+                    </div>
+                </a>
+
+                <!-- Card 2 -->
+                <a href="aulas/caracteristicas_climaticas_brasil.html" class="glass-card p-8 rounded-[2rem] group flex flex-col h-full relative overflow-hidden">
+                    <div class="absolute top-0 right-0 w-32 h-32 bg-yellow-100 rounded-full filter blur-3xl opacity-50 group-hover:opacity-80 transition-opacity -mr-10 -mt-10"></div>
+                    <div class="w-16 h-16 mb-6 rounded-2xl icon-wrapper flex items-center justify-center text-3xl shadow-md border border-white">
+                        🌡️
+                    </div>
+                    <h3 class="text-2xl font-bold mb-3 text-gray-900 outfit group-hover:text-emerald-600 transition-colors">Climas do Brasil</h3>
+                    <p class="text-gray-600 mb-6 flex-grow leading-relaxed">Entenda a diversidade climática brasileira, os fatores influenciadores e seus impactos.</p>
+                    <div class="flex items-center text-emerald-600 font-semibold group-hover:translate-x-2 transition-transform">
+                        Estudar Módulo <i class="fas fa-arrow-right ml-2 transition-transform"></i>
+                    </div>
+                </a>
+
+                <!-- Card 3 -->
+                <a href="aulas/questoes_ambientais_contemporaneas.html" class="glass-card rounded-[2rem] overflow-hidden group flex flex-col h-full border border-gray-100">
+                    <div class="h-48 overflow-hidden relative">
+                        <img src="assets/images/environmental.png" alt="Sustentabilidade" class="w-full h-full object-cover transform group-hover:scale-110 transition-transform duration-700">
+                        <div class="absolute inset-0 bg-gradient-to-t from-black/60 to-transparent"></div>
+                        <div class="absolute bottom-4 left-4 right-4 text-white">
+                            <span class="bg-red-500 text-xs font-bold px-3 py-1 rounded-full uppercase tracking-wider">Atenção ENEM</span>
+                        </div>
+                    </div>
+                    <div class="p-8 flex flex-col flex-grow relative">
+                        <div class="absolute -top-10 right-6 w-16 h-16 rounded-2xl icon-wrapper flex items-center justify-center text-3xl shadow-lg border border-white">
+                            ⚠️
+                        </div>
+                        <h3 class="text-2xl font-bold mb-3 text-gray-900 outfit group-hover:text-emerald-600 transition-colors">Questões Ambientais</h3>
+                        <p class="text-gray-600 mb-6 flex-grow leading-relaxed">Mudança climática, efeito estufa, chuva ácida, desmatamento e o Antropoceno.</p>
+                        <div class="flex items-center text-emerald-600 font-semibold group-hover:translate-x-2 transition-transform">
+                            Estudar Módulo <i class="fas fa-arrow-right ml-2 opacity-0 group-hover:opacity-100 transition-opacity"></i>
+                        </div>
+                    </div>
+                </a>
+
+                <!-- Card 4 -->
+                <a href="aulas/estrutura_interna_terra.html" class="glass-card p-8 rounded-[2rem] group flex flex-col h-full relative overflow-hidden">
+                    <div class="absolute top-0 right-0 w-32 h-32 bg-orange-100 rounded-full filter blur-3xl opacity-50 group-hover:opacity-80 transition-opacity -mr-10 -mt-10"></div>
+                    <div class="w-16 h-16 mb-6 rounded-2xl icon-wrapper flex items-center justify-center text-3xl shadow-md border border-white">
+                        🌋
+                    </div>
+                    <h3 class="text-2xl font-bold mb-3 text-gray-900 outfit group-hover:text-emerald-600 transition-colors">Estrutura da Terra</h3>
+                    <p class="text-gray-600 mb-6 flex-grow leading-relaxed">Crosta, manto, núcleo, movimento das placas tectônicas e ciclo das rochas.</p>
+                    <div class="flex items-center text-emerald-600 font-semibold group-hover:translate-x-2 transition-transform">
+                        Estudar Módulo <i class="fas fa-arrow-right ml-2 transition-transform"></i>
+                    </div>
+                </a>
+
+                <!-- Card 5 -->
+                <a href="aulas/estruturas_solo_relevo.html" class="glass-card p-8 rounded-[2rem] group flex flex-col h-full relative overflow-hidden">
+                    <div class="absolute top-0 right-0 w-32 h-32 bg-amber-100 rounded-full filter blur-3xl opacity-50 group-hover:opacity-80 transition-opacity -mr-10 -mt-10"></div>
+                    <div class="w-16 h-16 mb-6 rounded-2xl icon-wrapper flex items-center justify-center text-3xl shadow-md border border-white">
+                        ⛰️
+                    </div>
+                    <h3 class="text-2xl font-bold mb-3 text-gray-900 outfit group-hover:text-emerald-600 transition-colors">Solos e Relevo</h3>
+                    <p class="text-gray-600 mb-6 flex-grow leading-relaxed">Pedogênese, tipos de relevo, planaltos, planícies e agentes modeladores.</p>
+                    <div class="flex items-center text-emerald-600 font-semibold group-hover:translate-x-2 transition-transform">
+                        Estudar Módulo <i class="fas fa-arrow-right ml-2 transition-transform"></i>
+                    </div>
+                </a>
+
+                <!-- Card 6 -->
+                <a href="aulas/formacao_territorial_brasileira.html" class="glass-card p-8 rounded-[2rem] group flex flex-col h-full relative overflow-hidden">
+                    <div class="absolute flex items-center justify-center right-0 opacity-5 -mr-10 -mt-10 text-[10rem] group-hover:scale-110 transition-transform duration-500">🇧🇷</div>
+                    <div class="w-16 h-16 mb-6 rounded-2xl icon-wrapper flex items-center justify-center text-3xl shadow-md border border-white">
+                        🗺️
+                    </div>
+                    <h3 class="text-2xl font-bold mb-3 text-gray-900 outfit group-hover:text-emerald-600 transition-colors">Território Brasileiro</h3>
+                    <p class="text-gray-600 mb-6 flex-grow leading-relaxed">A construção histórica das fronteiras e a divisão regional oficial do IBGE.</p>
+                    <div class="flex items-center text-emerald-600 font-semibold group-hover:translate-x-2 transition-transform">
+                        Estudar Módulo <i class="fas fa-arrow-right ml-2 transition-transform"></i>
+                    </div>
+                </a>
+
+                <!-- Card 7 -->
+                <a href="aulas/origem_evolucao_sustentabilidade.html" class="glass-card p-8 rounded-[2rem] group flex flex-col h-full relative overflow-hidden">
+                    <div class="absolute top-0 right-0 w-32 h-32 bg-emerald-100 rounded-full filter blur-3xl opacity-50 group-hover:opacity-80 transition-opacity -mr-10 -mt-10"></div>
+                    <div class="w-16 h-16 mb-6 rounded-2xl icon-wrapper flex items-center justify-center text-3xl shadow-md border border-white">
+                        ♻️
+                    </div>
+                    <h3 class="text-2xl font-bold mb-3 text-gray-900 outfit group-hover:text-emerald-600 transition-colors">Sustentabilidade</h3>
+                    <p class="text-gray-600 mb-6 flex-grow leading-relaxed">O desenvolvimento histórico da pauta ambiental e os desafios da Agenda 2030.</p>
+                    <div class="flex items-center text-emerald-600 font-semibold group-hover:translate-x-2 transition-transform">
+                        Estudar Módulo <i class="fas fa-arrow-right ml-2 transition-transform"></i>
+                    </div>
+                </a>
+
+                <!-- Card 8 -->
+                <a href="aulas/grandes_dominios_vegetacao.html" class="glass-card p-8 rounded-[2rem] group flex flex-col h-full relative overflow-hidden">
+                    <div class="absolute top-0 right-0 w-32 h-32 bg-green-200 rounded-full filter blur-3xl opacity-50 group-hover:opacity-80 transition-opacity -mr-10 -mt-10"></div>
+                    <div class="w-16 h-16 mb-6 rounded-2xl icon-wrapper flex items-center justify-center text-3xl shadow-md border border-white">
+                        🌳
+                    </div>
+                    <h3 class="text-2xl font-bold mb-3 text-gray-900 outfit group-hover:text-emerald-600 transition-colors">Domínios de Vegetação</h3>
+                    <p class="text-gray-600 mb-6 flex-grow leading-relaxed">Biomas mundiais e os domínios morfoclimáticos do território brasileiro.</p>
+                    <div class="flex items-center text-emerald-600 font-semibold group-hover:translate-x-2 transition-transform">
+                        Estudar Módulo <i class="fas fa-arrow-right ml-2 transition-transform"></i>
+                    </div>
+                </a>
+
+                <!-- Card 9 -->
+                <a href="aulas/situacao_atmosfera_classificacao_climatica.html" class="glass-card p-8 rounded-[2rem] group flex flex-col h-full relative overflow-hidden">
+                    <div class="absolute top-0 right-0 w-32 h-32 bg-sky-200 rounded-full filter blur-3xl opacity-50 group-hover:opacity-80 transition-opacity -mr-10 -mt-10"></div>
+                    <div class="w-16 h-16 mb-6 rounded-2xl icon-wrapper flex items-center justify-center text-3xl shadow-md border border-white">
+                        ☁️
+                    </div>
+                    <h3 class="text-2xl font-bold mb-3 text-gray-900 outfit group-hover:text-emerald-600 transition-colors">Dinâmica Atmosférica</h3>
+                    <p class="text-gray-600 mb-6 flex-grow leading-relaxed">A estrutura da atmosfera, circulação global e classificações climáticas de Köppen.</p>
+                    <div class="flex items-center text-emerald-600 font-semibold group-hover:translate-x-2 transition-transform">
+                        Estudar Módulo <i class="fas fa-arrow-right ml-2 transition-transform"></i>
+                    </div>
+                </a>
+
+                <!-- Card 10 -->
+                <a href="aulas/demografia.html" class="glass-card rounded-[2rem] overflow-hidden group flex flex-col h-full border border-gray-100 md:col-span-2 lg:col-span-3">
+                    <div class="flex flex-col md:flex-row h-full">
+                        <div class="md:w-1/3 object-cover h-48 md:h-auto overflow-hidden relative">
+                            <img src="assets/images/human_geo.png" alt="Demografia" class="w-full h-full object-cover transform group-hover:scale-105 transition-transform duration-700">
+                        </div>
+                        <div class="p-8 md:w-2/3 flex flex-col justify-center relative">
+                            <span class="text-blue-500 font-bold tracking-wider uppercase text-xs mb-2 block">Cai muito na prova</span>
+                            <h3 class="text-3xl font-bold mb-4 text-gray-900 outfit group-hover:text-emerald-600 transition-colors">Demografia & Geografia Humana</h3>
+                            <p class="text-gray-600 mb-6 text-lg max-w-2xl leading-relaxed">Crescimento populacional, transição demográfica, pirâmides etárias, mobilidade espacial e os indicadores de desenvolvimento no mundo moderno.</p>
+                            <div class="flex items-center">
+                                <span class="btn-shine bg-gray-900 text-white font-medium py-3 px-6 rounded-xl shadow-md">
+                                    Explorar Aula Completa <i class="fas fa-arrow-right ml-2"></i>
+                                </span>
+                            </div>
+                        </div>
+                    </div>
+                </a>
+
+            </div>
+            
+            <div class="mt-16 text-center">
+                <a href="aulas/Indice_aulas.html" class="inline-flex items-center gap-2 text-gray-600 hover:text-emerald-600 font-bold transition-colors border-b-2 border-transparent hover:border-emerald-600 pb-1">
+                    Ver todos os 15 Módulos de Geografia <i class="fas fa-chevron-right text-xs"></i>
+                </a>
+            </div>
+        </section>
+        <!-- END: Topics Section -->
+
+        <!-- BEGIN: Game Section -->
+        <section id="jogos" class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-12 mb-12 relative z-10">
+            <div class="bg-gradient-to-br from-emerald-900 to-emerald-700 rounded-[3rem] p-8 md:p-16 relative overflow-hidden shadow-2xl flex flex-col lg:flex-row items-center justify-between gap-12">
+                <!-- Background decorative shapes -->
+                <div class="absolute inset-0 z-0">
+                    <div class="absolute -top-32 -left-32 w-96 h-96 bg-emerald-500 rounded-full opacity-20 blur-3xl"></div>
+                    <div class="absolute bottom-0 right-0 w-[40rem] h-[40rem] bg-emerald-400 rounded-full opacity-10 blur-3xl translate-x-1/3 translate-y-1/3"></div>
+                </div>
+
+                <div class="relative z-10 lg:w-3/5 text-center lg:text-left">
+                    <span class="inline-block py-1 px-3 rounded-full bg-white/20 text-white/90 text-sm font-bold tracking-wider mb-6 border border-white/30 backdrop-blur-sm">
+                        <i class="fas fa-gamepad mr-2 text-yellow-300"></i> GAMIFICAÇÃO
+                    </span>
+                    <h2 class="text-4xl md:text-5xl font-bold mb-6 text-white outfit">Pratique Brincando</h2>
+                    <p class="text-emerald-50 text-xl leading-relaxed mb-10 max-w-xl mx-auto lg:mx-0">
+                        Os jogos premium são essenciais para fixar o conteúdo. Descubra uma nova forma de memorizar mapas, capitais e conceitos chaves.
+                    </p>
+                    
+                    <div class="flex flex-wrap gap-4 justify-center lg:justify-start">
+                        <a href="games/memory/index.html" class="bg-white text-emerald-800 hover:bg-emerald-50 font-bold py-4 px-8 rounded-2xl shadow-xl transition-all transform hover:scale-105 hover:shadow-2xl inline-flex items-center gap-3">
+                            <i class="fas fa-brain text-emerald-500 text-xl"></i>
+                            Jogo da Memória
+                        </a>
+                        <a href="aulas/Indice_aulas.html" class="bg-emerald-800 bg-opacity-50 hover:bg-opacity-80 border border-emerald-400/50 text-white font-bold py-4 px-8 rounded-2xl transition-all inline-flex items-center gap-3 backdrop-blur-md">
+                            Ver mais jogos
+                        </a>
+                    </div>
+                </div>
+
+                <!-- Floating Cards Illustration -->
+                <div class="relative z-10 lg:w-2/5 flex items-center justify-center">
+                    <div class="relative w-64 h-64 lg:w-80 lg:h-80 perspective-1000">
+                        <div class="absolute inset-0 bg-emerald-400 rounded-full filter blur-[100px] opacity-40 animate-pulse"></div>
+                        
+                        <!-- Center Card -->
+                        <div class="absolute left-1/2 top-1/2 -translate-x-1/2 -translate-y-1/2 w-40 h-56 bg-white rounded-2xl shadow-2xl rotate-3 border-2 border-emerald-100 flex flex-col items-center justify-center z-30 transform hover:-translate-y-6 hover:rotate-6 transition-transform duration-500">
+                            <div class="w-16 h-16 bg-blue-100 rounded-full flex items-center justify-center text-3xl mb-4 shadow-inner">
+                                🌎
+                            </div>
+                            <div class="w-20 h-2 bg-gray-200 rounded-full mb-2"></div>
+                            <div class="w-12 h-2 bg-gray-200 rounded-full"></div>
+                        </div>
+
+                        <!-- Left Card -->
+                        <div class="absolute left-[10%] top-[40%] -translate-y-1/2 w-32 h-44 bg-emerald-50 rounded-2xl shadow-xl -rotate-12 border-2 border-white flex items-center justify-center z-20 transform hover:-translate-y-6 hover:-rotate-6 transition-transform duration-500">
+                            <div class="text-4xl filter drop-shadow">🌱</div>
+                        </div>
+
+                        <!-- Right Card -->
+                        <div class="absolute right-[5%] top-[55%] -translate-y-1/2 w-36 h-48 bg-sky-50 rounded-2xl shadow-xl rotate-12 border-2 border-white flex items-center justify-center z-20 transform hover:-translate-y-6 hover:rotate-24 transition-transform duration-500">
+                            <div class="text-4xl filter drop-shadow">🗺️</div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+        <!-- END: Game Section -->
+
+        <!-- BEGIN: Call to Action -->
+        <section class="max-w-4xl mx-auto px-4 sm:px-6 py-16 text-center relative z-10">
+            <h2 class="text-3xl font-bold text-gray-900 mb-6 outfit">Pronto para a nota 1000?</h2>
+            <p class="text-lg text-gray-600 mb-8 max-w-2xl mx-auto">Sua aprovação na universidade dos sonhos começa aqui. Preparação completa, gratuita e feita com o máximo nível de excelência.</p>
+            <a href="aulas/Indice_aulas.html" class="inline-block bg-gray-900 border border-transparent hover:border-emerald-500 text-white rounded-full px-10 py-4 font-bold tracking-wide transition-all hover:bg-gray-800 shadow-xl hover:shadow-2xl">
+                Começar Todos os Módulos
+            </a>
+        </section>
+        <!-- END: Call to Action -->
+    </main>
+    <!-- END: Main Content -->
+
+    <!-- BEGIN: Footer -->
+    <footer class="bg-white border-t border-gray-100 relative z-10">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-12">
+            <div class="grid grid-cols-1 md:grid-cols-4 gap-8 mb-8">
+                <div class="md:col-span-2">
+                    <div class="flex items-center gap-2 mb-4">
+                        <div class="w-8 h-8 rounded-lg bg-emerald-500 flex items-center justify-center text-white font-bold">G</div>
+                        <span class="font-bold text-xl outfit">Geografia ENEM</span>
+                    </div>
+                    <p class="text-gray-500 text-sm max-w-xs leading-relaxed">
+                        A plataforma definitiva para estudantes que buscam a nota máxima em Geografia e Ciências Humanas.
+                    </p>
+                </div>
+                <div>
+                    <h4 class="font-bold text-gray-900 mb-4 outfit">Navegação</h4>
+                    <ul class="space-y-2 text-sm text-gray-600">
+                        <li><a href="#" class="hover:text-emerald-500 transition-colors">Início</a></li>
+                        <li><a href="aulas/Indice_aulas.html" class="hover:text-emerald-500 transition-colors">Todas as Aulas</a></li>
+                        <li><a href="games/memory/index.html" class="hover:text-emerald-500 transition-colors">Minigames</a></li>
+                    </ul>
+                </div>
+                <div>
+                    <h4 class="font-bold text-gray-900 mb-4 outfit">Legal</h4>
+                    <ul class="space-y-2 text-sm text-gray-600">
+                        <li><a href="#" class="hover:text-emerald-500 transition-colors">Termos de Uso</a></li>
+                        <li><a href="#" class="hover:text-emerald-500 transition-colors">Privacidade</a></li>
+                        <li><a href="#" class="hover:text-emerald-500 transition-colors">Contato</a></li>
+                    </ul>
+                </div>
+            </div>
+            <div class="border-t border-gray-100 pt-8 flex flex-col md:flex-row justify-between items-center gap-4">
+                <div class="text-sm text-gray-400">
+                    &copy; 2026 Geografia ENEM. Quase todos os direitos reservados.
+                </div>
+                <div class="flex space-x-4 text-gray-400">
+                    <a href="#" class="hover:text-emerald-500 transition-colors"><i class="fab fa-instagram text-xl"></i></a>
+                    <a href="#" class="hover:text-emerald-500 transition-colors"><i class="fab fa-youtube text-xl"></i></a>
+                    <a href="#" class="hover:text-emerald-500 transition-colors"><i class="fab fa-tiktok text-xl"></i></a>
+                </div>
+            </div>
+        </div>
+    </footer>
+    <!-- END: Footer -->
+    
+    <!-- Add some extra perspective utility -->
+    <style>
+        .perspective-1000 {
+            perspective: 1000px;
+        }
+    </style>
+</body>
+</html>

@@ -1,151 +1,181 @@
 <!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="utf-8"/>
+  <meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+  <title>GeoENEM - Flashcards Premium</title>
+  <script src="../gamedata.js"></script>
+  <script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+  <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" rel="stylesheet"/>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet"/>
+  <style>
+    body { font-family: 'Inter', sans-serif; background-color: #f8fafc; }
+    .glass-nav { background: rgba(255, 255, 255, 0.8); backdrop-filter: blur(12px); border-bottom: 1px solid rgba(0,0,0,0.05); }
+    
+    .card-scene { width: 100%; max-width: 600px; height: 400px; perspective: 2000px; margin: 0 auto; cursor: pointer; }
+    .card { width: 100%; height: 100%; position: relative; transition: transform 0.8s cubic-bezier(0.4, 0, 0.2, 1); transform-style: preserve-3d; }
+    .card.is-flipped { transform: rotateY(180deg); }
+    
+    .card-face { position: absolute; width: 100%; height: 100%; -webkit-backface-visibility: hidden; backface-visibility: hidden; border-radius: 40px; display: flex; flex-direction: column; align-items: center; justify-content: center; padding: 40px; box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.15); border: 2px solid white; transition: all 0.3s ease; }
+    
+    .card-front { background: linear-gradient(135deg, #4f46e5 0%, #7c3aed 100%); color: white; }
+    .card-back { background: white; color: #1e293b; transform: rotateY(180deg); }
+    
+    .card-scene:hover .card:not(.is-flipped) { transform: translateY(-5px) rotateX(5deg); }
+    .card-scene:hover .card.is-flipped { transform: rotateY(180deg) translateY(-5px) rotateX(5deg); }
 
-<html lang="pt-BR"><head>
-<meta charset="utf-8"/>
-<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
-<title>Flashcards Memory Game</title>
-<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
-<link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" rel="stylesheet"/>
-<script>
-    tailwind.config = {
-      theme: {
-        extend: {
-          colors: {
-            'brand-green': '#3ba563',
-            'brand-dark': '#1a5632',
-            'brand-light': '#eaf5ee',
-            'brand-card-bg': '#d8efe1'
-          },
-          fontFamily: {
-            sans: ['Inter', 'sans-serif'],
-          }
-        }
-      }
-    }
-  </script>
-<style data-purpose="custom-utilities">
-    @import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap');
+    .glow { position: absolute; width: 100%; height: 100%; border-radius: 40px; background: radial-gradient(circle at 50% 0%, rgba(255,255,255,0.2), transparent); pointer-events: none; }
     
-    body {
-      font-family: 'Inter', sans-serif;
-      background-color: #f7fcfa;
-      min-height: 100vh;
-      display: flex;
-      flex-direction: column;
-    }
-
-    .flashcard-container {
-      perspective: 1000px;
-    }
-    
-    .flashcard-inner {
-      position: relative;
-      width: 100%;
-      height: 100%;
-      transition: transform 0.6s;
-      transform-style: preserve-3d;
-      cursor: pointer;
-    }
-    
-    .flashcard-front, .flashcard-back {
-      position: absolute;
-      width: 100%;
-      height: 100%;
-      -webkit-backface-visibility: hidden;
-      backface-visibility: hidden;
-    }
-    
-    .flashcard-back {
-      transform: rotateY(180deg);
-    }
-
-    .flipped {
-      transform: rotateY(180deg);
-    }
+    @keyframes float { 0% { transform: translateY(0px); } 50% { transform: translateY(-10px); } 100% { transform: translateY(0px); } }
+    .animate-float { animation: float 4s ease-in-out infinite; }
   </style>
 </head>
-<body class="text-gray-800">
-<!-- BEGIN: MainHeader -->
-<header class="bg-brand-green text-white py-3 px-6 flex justify-between items-center shadow-md z-10 relative">
-<div class="font-bold text-lg md:text-xl tracking-tight">
-      Geografia ENEM: Preparação Completa
+<body class="min-h-screen flex flex-col">
+
+<header class="glass-nav sticky top-0 z-50 py-4 px-8">
+  <div class="max-w-7xl mx-auto flex justify-between items-center">
+    <div class="flex items-center gap-4">
+      <h1 class="text-2xl font-black tracking-tighter italic text-indigo-600">GeoENEM</h1>
+      <div class="h-6 w-px bg-slate-200 hidden md:block"></div>
+      <span class="text-xs font-bold uppercase tracking-widest text-slate-400 hidden md:block">Interactive Flashcards</span>
     </div>
-<div class="flex items-center gap-2 cursor-pointer hover:opacity-80 transition-opacity">
-<div class="w-8 h-8 rounded-full bg-gray-300 text-gray-600 flex items-center justify-center overflow-hidden">
-<i class="fa-solid fa-user text-sm"></i>
-</div>
-<i class="fa-solid fa-chevron-down text-xs"></i>
-</div>
+    <nav class="flex gap-6 items-center">
+      <a href="../../aulas/Indice_aulas.html" class="text-sm font-bold text-slate-600 hover:text-indigo-600 transition-colors uppercase tracking-widest">Sair do Jogo</a>
+      <div class="bg-indigo-100 text-indigo-700 px-4 py-1.5 rounded-full text-xs font-black uppercase tracking-tighter">Módulo: Conceitos Base</div>
+    </nav>
+  </div>
 </header>
-<!-- END: MainHeader -->
-<!-- BEGIN: ProgressBar -->
-<div class="bg-white px-6 py-2 border-b border-gray-200 shadow-sm relative z-0">
-<div class="max-w-5xl mx-auto flex items-center justify-between text-sm font-medium text-gray-600 mb-1">
-<span>Progresso: 5/20 Cartas Restantes</span>
-<span>25%</span>
-</div>
-<div class="max-w-5xl mx-auto w-full bg-gray-200 rounded-full h-2 overflow-hidden">
-<div class="bg-brand-green h-2 rounded-full" style="width: 25%"></div>
-</div>
-</div>
-<!-- END: ProgressBar -->
-<!-- BEGIN: MainContent -->
-<main class="flex-grow flex flex-col items-center justify-center p-6 relative">
-<div class="text-center mb-8 z-10">
-<h1 class="text-3xl md:text-4xl font-extrabold text-brand-dark mb-2">Flashcards Memory Game - Urbanização</h1>
-</div>
-<!-- Flashcard Area -->
-<div class="relative w-full max-w-2xl aspect-[3/2] sm:aspect-[16/9] md:aspect-[2/1] mb-8 flashcard-container group">
-<!-- Decorative background card (rotated) -->
-<div class="absolute -inset-2 bg-[#e0f2e9] rounded-[32px] transform rotate-3 transition-transform duration-300 group-hover:rotate-6 z-0"></div>
-<!-- Actual Flashcard -->
-<div class="flashcard-inner z-10 bg-white border-[4px] border-[#3ba563] rounded-[32px] shadow-xl flex flex-col items-center justify-center p-8 md:p-12 hover:shadow-2xl transition-shadow w-full h-full" onclick="this.classList.toggle('flipped')">
-<!-- Front side -->
-<div class="flashcard-front flex flex-col items-center justify-center bg-white rounded-2xl">
-<h2 class="text-4xl md:text-6xl font-extrabold text-[#114a2a] text-center leading-tight mb-8">
-            O que é<br/>Gentrificação?
-          </h2>
-<p class="text-gray-500 text-base absolute bottom-6 text-center w-full">Clique para virar e ver a resposta</p>
-</div>
-<!-- Back side (hidden by default, revealed on click) -->
-<div class="flashcard-back flex flex-col items-center justify-center bg-white rounded-2xl px-6 text-center">
-<h3 class="text-xl md:text-2xl font-bold text-brand-dark mb-4 border-b pb-2 inline-block">Gentrificação</h3>
-<p class="text-gray-700 md:text-lg">
-             Processo de transformação de áreas urbanas que leva ao encarecimento do custo de vida e à consequente expulsão dos moradores de baixa renda, substituídos por classes mais abastadas.
-           </p>
-<p class="text-gray-500 text-sm md:text-base mt-8">Clique novamente para voltar</p>
-</div>
-</div>
-</div>
-<!-- Controls -->
-<div class="flex flex-wrap justify-center items-center gap-4 z-10 w-full max-w-2xl px-4">
-<button class="flex items-center gap-2 px-6 py-3 rounded-lg border-2 border-brand-green text-brand-green font-semibold hover:bg-brand-light transition-colors focus:ring-4 focus:ring-brand-green/20">
-<i class="fa-solid fa-arrow-left"></i>
-        Anterior
-      </button>
-<button class="flex items-center gap-2 px-6 py-3 rounded-lg bg-brand-green border-2 border-brand-green text-white font-semibold hover:bg-brand-dark hover:border-brand-dark transition-colors shadow-md focus:ring-4 focus:ring-brand-green/30 flex-grow md:flex-grow-0 justify-center">
-<i class="fa-solid fa-check"></i>
-        Marcar como Aprendido
-      </button>
-<button class="flex items-center gap-2 px-6 py-3 rounded-lg border-2 border-brand-green text-brand-green font-semibold hover:bg-brand-light transition-colors focus:ring-4 focus:ring-brand-green/20">
-        Próximo
-        <i class="fa-solid fa-arrow-right"></i>
-</button>
-</div>
-</main>
-<!-- END: MainContent -->
-<!-- BEGIN: Footer -->
-<footer class="bg-white border-t border-gray-200 py-6 px-6 mt-auto">
-<div class="max-w-6xl mx-auto flex flex-col md:flex-row justify-between items-center gap-4">
-<div class="text-gray-400 text-sm font-semibold tracking-wider uppercase hidden md:block">
-        Geografia
+
+<main class="flex-grow flex flex-col items-center justify-center p-6 gap-12">
+  
+  <!-- Content Info -->
+  <div class="text-center max-w-2xl px-4">
+    <h2 class="text-4xl font-black text-slate-900 mb-2 tracking-tight uppercase">Dominando Conceitos</h2>
+    <p class="text-slate-500 font-medium">Toque na carta para revelar a definição. Use as setas para navegar entre as questões essenciais para o ENEM.</p>
+  </div>
+
+  <!-- Progress -->
+  <div class="w-full max-w-md px-4 flex flex-col gap-2">
+    <div class="flex justify-between text-[10px] font-black uppercase tracking-widest text-slate-400">
+      <span>Progresso na Trilha</span>
+      <span id="progress-text">1 / 5</span>
+    </div>
+    <div class="h-2 bg-slate-200 rounded-full overflow-hidden">
+      <div id="progress-bar" class="h-full bg-indigo-600 transition-all duration-700 ease-out" style="width: 20%"></div>
+    </div>
+  </div>
+
+  <!-- Game Canvas -->
+  <div class="w-full h-[500px] flex items-center justify-center relative">
+    
+    <div class="card-scene" onclick="toggleCard()">
+      <div class="card" id="main-card">
+        <!-- Front -->
+        <div class="card-face card-front">
+          <div class="glow"></div>
+          <i class="fa-solid fa-earth-americas text-6xl opacity-30 mb-8"></i>
+          <h3 id="card-question" class="text-4xl font-black text-center leading-tight tracking-tight px-4 uppercase">Escala Cartográfica</h3>
+          <span class="absolute bottom-10 text-[10px] font-bold uppercase tracking-[0.3em] opacity-40">Clique para Virar</span>
+        </div>
+        <!-- Back -->
+        <div class="card-face card-back">
+          <div class="w-12 h-1 bg-indigo-600 mb-8 rounded-full"></div>
+          <h4 class="text-sm font-bold text-indigo-600 uppercase tracking-widest mb-4">Definição Acadêmica</h4>
+          <p id="card-answer" class="text-xl md:text-2xl text-slate-700 text-center leading-relaxed font-medium">
+            Relação matemática entre as dimensões do objeto real e a sua representação no mapa.
+          </p>
+          <div class="mt-auto flex gap-4">
+            <span class="bg-slate-100 text-slate-500 text-[10px] font-bold px-3 py-1 rounded-md uppercase">Mapas</span>
+            <span class="bg-indigo-50 text-indigo-600 text-[10px] font-bold px-3 py-1 rounded-md uppercase">Cálculo</span>
+          </div>
+        </div>
       </div>
-<nav class="flex gap-6 text-sm font-medium text-gray-600">
-<a class="hover:text-brand-green transition-colors" href="#">Sobre o Curso</a>
-<a class="hover:text-brand-green transition-colors" href="#">Termos de Uso</a>
-<a class="hover:text-brand-green transition-colors" href="#">Contato</a>
-</nav>
-</div>
-</footer>
-<!-- END: Footer -->
-</body></html>
+    </div>
+
+    <!-- UI Overlay Navigation -->
+    <div class="absolute inset-x-0 bottom-0 top-0 pointer-events-none flex items-center justify-between px-4 md:px-20">
+        <button onclick="prevCard()" class="pointer-events-auto w-14 h-14 bg-white shadow-xl rounded-full flex items-center justify-center text-slate-400 hover:text-indigo-600 hover:scale-110 transition-all border border-slate-100 group">
+          <i class="fa-solid fa-chevron-left text-xl group-active:-translate-x-1 transition-transform"></i>
+        </button>
+        <button onclick="nextCard()" class="pointer-events-auto w-14 h-14 bg-indigo-600 shadow-2xl shadow-indigo-200 rounded-full flex items-center justify-center text-white hover:bg-indigo-700 hover:scale-110 transition-all group">
+          <i class="fa-solid fa-chevron-right text-xl group-active:translate-x-1 transition-transform"></i>
+        </button>
+    </div>
+
+  </div>
+
+  <!-- Quick Stats -->
+  <div class="flex gap-8 text-center text-[10px] font-black uppercase tracking-widest text-slate-400">
+    <div class="flex flex-col gap-1">
+      <span class="text-xl text-slate-900 leading-none"><span id="total-cards-indicator"></span></span>
+      <span>Cartas Totais</span>
+    </div>
+    <div class="w-px bg-slate-200"></div>
+    <div class="flex flex-col gap-1">
+      <span class="text-xl text-emerald-600 leading-none" id="learned-count">00</span>
+      <span>Aprendidas</span>
+    </div>
+  </div>
+
+</main>
+
+<script>
+  
+  const urlParams = new URLSearchParams(window.location.search);
+  const topicReq = urlParams.get('topic') || 'base_estrutural_geografia';
+  
+  let cards = windowGameData[topicReq] ? windowGameData[topicReq].flashcards : windowGameData['base_estrutural_geografia'].flashcards;
+    
+
+  let currentIndex = 0;
+  
+  function updateProgress() {
+    const progress = ((currentIndex + 1) / cards.length) * 100;
+    document.getElementById('progress-bar').style.width = progress + '%';
+    document.getElementById('progress-text').innerText = `${currentIndex + 1} / ${cards.length}`;
+  }
+
+  // Init first card
+  setTimeout(() => {
+    updateCard();
+    const ind = document.getElementById('total-cards-indicator');
+    if (ind) ind.innerText = (cards.length < 10 ? '0' : '') + cards.length;
+  }, 100);
+
+  function toggleCard() {
+    document.getElementById('main-card').classList.toggle('is-flipped');
+  }
+
+  function nextCard() {
+    if(currentIndex < cards.length - 1) {
+      currentIndex++;
+      updateCard();
+    }
+  }
+
+  function prevCard() {
+    if(currentIndex > 0) {
+      currentIndex--;
+      updateCard();
+    }
+  }
+
+  function updateCard() {
+    const cardElement = document.getElementById('main-card');
+    cardElement.style.transition = 'none';
+    cardElement.classList.add('opacity-0');
+    cardElement.classList.remove('is-flipped');
+    
+    setTimeout(() => {
+      document.getElementById('card-question').innerText = cards[currentIndex].q;
+      document.getElementById('card-answer').innerText = cards[currentIndex].a;
+      
+      cardElement.style.transition = 'all 0.5s ease';
+      cardElement.classList.remove('opacity-0');
+      updateProgress();
+    }, 100);
+  }
+</script>
+
+</body>
+</html>

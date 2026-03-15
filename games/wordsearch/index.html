@@ -1,0 +1,750 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="utf-8"/>
+  <meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+  <title>GeoENEM - Caça-Palavras</title>
+  <link href="https://fonts.googleapis.com/css2?family=Nunito:wght@400;600;700;800;900&display=swap" rel="stylesheet"/>
+  <style>
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+    body {
+      font-family: 'Nunito', sans-serif;
+      background: #39b5d5;
+      min-height: 100vh;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      padding-top: 80px; /* Header height + space */
+      padding-bottom: 20px;
+      padding-left: 10px;
+      padding-right: 10px;
+      user-select: none;
+      -webkit-user-select: none;
+    }
+
+    /* ─── NEW TOP BAR ─── */
+    .top-bar {
+      width: 100%;
+      height: 64px;
+      background: #ffffff;
+      border-bottom: 1px solid rgba(0,0,0,0.05);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      position: fixed;
+      top: 0;
+      left: 0;
+      z-index: 100;
+      padding: 0 20px;
+    }
+    .top-bar-inner {
+      width: 100%;
+      max-width: 1200px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+    }
+    .top-bar-left { display: flex; align-items: center; gap: 16px; }
+    .top-bar-logo { 
+      font-size: 1.5rem; font-weight: 900; color: #10b981; font-style: italic; 
+      letter-spacing: -1px;
+    }
+    .top-bar-divider { width: 1px; height: 24px; background: #e2e8f0; }
+    .top-bar-title { 
+      font-size: 0.75rem; font-weight: 800; color: #94a3b8; text-transform: uppercase; 
+      letter-spacing: 1.5px; 
+    }
+    
+    .top-bar-right { display: flex; align-items: center; gap: 24px; }
+    .btn-sair { 
+      font-size: 0.8rem; font-weight: 800; color: #64748b; text-decoration: none; 
+      text-transform: uppercase; letter-spacing: 1px; transition: color 0.15s;
+    }
+    .btn-sair:hover { color: #10b981; }
+    .score-pill {
+      background: #d1fae5;
+      color: #065f46;
+      padding: 6px 16px;
+      border-radius: 999px;
+      font-weight: 900;
+      font-size: 0.75rem;
+      letter-spacing: 0.5px;
+      text-transform: uppercase;
+    }
+
+    /* ─── MAIN ─── */
+    .main-area {
+      display: flex;
+      gap: 14px;
+      width: 100%;
+      max-width: 940px;
+      align-items: flex-start;
+    }
+
+    /* ─── LEFT PANEL ─── */
+    .left-panel {
+      background: #ffffff;
+      border-radius: 14px;
+      padding: 14px;
+      width: 190px;
+      min-width: 150px;
+      flex-shrink: 0;
+      box-shadow: 0 4px 18px rgba(0,0,0,0.15);
+    }
+    .btn-novo-jogo {
+      display: block;
+      width: 100%;
+      margin-bottom: 14px;
+      background: linear-gradient(135deg, #7c3aed, #a855f7);
+      border: none;
+      border-radius: 12px;
+      padding: 14px 10px;
+      font-family: 'Nunito', sans-serif;
+      font-size: 1.1rem;
+      font-weight: 900;
+      color: #fff;
+      letter-spacing: 1px;
+      cursor: pointer;
+      text-transform: uppercase;
+      text-align: center;
+      line-height: 1.2;
+      transition: opacity 0.15s, transform 0.1s;
+      box-shadow: 0 4px 14px rgba(124,58,237,0.35);
+    }
+    .btn-novo-jogo:hover { opacity: 0.9; transform: translateY(-1px); }
+    .btn-novo-jogo:active { transform: translateY(0); }
+
+    .word-list {
+      list-style: none;
+      display: flex;
+      flex-direction: column;
+      gap: 1px;
+      max-height: 520px;
+      overflow-y: auto;
+    }
+    .word-list::-webkit-scrollbar { width: 3px; }
+    .word-list::-webkit-scrollbar-thumb { background: #c4b5fd; border-radius: 2px; }
+
+    .word-item {
+      font-size: 0.8rem;
+      font-weight: 600;
+      color: #374151;
+      padding: 4px 8px;
+      border-radius: 4px;
+      letter-spacing: 0.3px;
+      transition: all 0.3s;
+      cursor: default;
+      line-height: 1.5;
+    }
+    .word-item.found {
+      text-decoration: line-through;
+      text-decoration-thickness: 2px;
+      color: #aaa;
+    }
+
+    /* ─── BOARD ─── */
+    .board-wrap {
+      flex: 1;
+      background: #3ab8d5;
+      border-radius: 14px;
+      padding: 10px;
+      box-shadow: 0 4px 20px rgba(0,0,0,0.15);
+      position: relative;
+    }
+
+    .board-inner {
+      position: relative;
+      background: #ffffff;
+      border-radius: 10px;
+      overflow: visible;
+      box-shadow: inset 0 0 0 1px rgba(0,0,0,0.06);
+    }
+
+    #grid-table {
+      border-collapse: collapse;
+      table-layout: fixed;
+      width: 100%;
+    }
+    #grid-table td {
+      text-align: center;
+      vertical-align: middle;
+      font-size: clamp(0.7rem, 1.6vw, 1rem);
+      font-weight: 800;
+      color: #374151;
+      cursor: crosshair;
+      padding: 0;
+      position: relative;
+      z-index: 1;
+      border: 1px solid rgba(180,200,220,0.35);
+    }
+    #grid-table td .cell-letter {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      width: 100%;
+      aspect-ratio: 1/1;
+      position: relative;
+      z-index: 2;
+    }
+
+    /* Canvas overlay for drawing highlights */
+    #highlight-canvas {
+      position: absolute;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      pointer-events: none;
+      z-index: 10;
+      border-radius: 10px;
+    }
+
+    /* ─── WIN MODAL ─── */
+    .win-modal {
+      display: none;
+      position: fixed;
+      inset: 0;
+      background: rgba(0,0,0,0.6);
+      z-index: 100;
+      align-items: center;
+      justify-content: center;
+    }
+    .win-modal.show { display: flex; }
+    .win-box {
+      background: white;
+      border-radius: 20px;
+      padding: 40px 50px;
+      text-align: center;
+      box-shadow: 0 20px 60px rgba(0,0,0,0.3);
+    }
+    .win-box .win-icon { font-size: 4rem; }
+    .win-box h2 { font-size: 1.8rem; font-weight: 900; color: #7c3aed; margin: 12px 0 8px; }
+    .win-box p { color: #6b7280; font-weight: 600; margin-bottom: 24px; }
+    .win-box button {
+      background: linear-gradient(135deg, #7c3aed, #a855f7);
+      border: none;
+      border-radius: 999px;
+      padding: 12px 36px;
+      font-family: 'Nunito', sans-serif;
+      font-size: 0.9rem;
+      font-weight: 800;
+      color: white;
+      cursor: pointer;
+      text-transform: uppercase;
+      letter-spacing: 1px;
+    }
+
+    /* ─── AJUDA MODAL ─── */
+    .help-modal {
+      display: none;
+      position: fixed;
+      inset: 0;
+      background: rgba(0,0,0,0.5);
+      z-index: 100;
+      align-items: center;
+      justify-content: center;
+    }
+    .help-modal.show { display: flex; }
+    .help-box {
+      background: white;
+      border-radius: 16px;
+      padding: 30px 36px;
+      max-width: 360px;
+      text-align: center;
+      box-shadow: 0 10px 40px rgba(0,0,0,0.25);
+    }
+    .help-box h3 { font-size: 1.2rem; font-weight: 900; color: #333; margin-bottom: 12px; }
+    .help-box p { font-size: 0.88rem; color: #555; line-height: 1.6; margin-bottom: 18px; }
+    .help-box button {
+      background: #6dd35a;
+      border: none;
+      border-radius: 8px;
+      padding: 10px 28px;
+      font-family: 'Nunito', sans-serif;
+      font-weight: 800;
+      color: white;
+      cursor: pointer;
+      font-size: 0.85rem;
+    }
+
+    /* ─── SCORE BAR ─── */
+    .score-bar {
+      text-align: right;
+      color: #fff;
+      font-size: 0.8rem;
+      font-weight: 700;
+      margin-bottom: 6px;
+      opacity: 0.9;
+    }
+
+    @media (max-width: 640px) {
+      .main-area { flex-direction: column; }
+      .left-panel { width: 100%; }
+      .word-list { flex-direction: row; flex-wrap: wrap; max-height: none; }
+    }
+  </style>
+</head>
+<body>
+
+<!-- Win Modal -->
+<div class="win-modal" id="win-modal">
+  <div class="win-box">
+    <div class="win-icon">🎉</div>
+    <h2>Parabéns!</h2>
+    <p id="win-msg">Você encontrou todas as palavras!</p>
+    <button onclick="newGame()">Novo Jogo</button>
+  </div>
+</div>
+
+<!-- Help Modal -->
+<div class="help-modal" id="help-modal">
+  <div class="help-box">
+    <h3>Como jogar</h3>
+    <p>Clique em uma letra e arraste até outra para selecionar uma palavra. As palavras podem estar em qualquer direção: horizontal, vertical ou diagonal — para frente ou para trás!</p>
+    <button onclick="document.getElementById('help-modal').classList.remove('show')">Entendi!</button>
+  </div>
+</div>
+
+<!-- Header -->
+<header class="top-bar">
+  <div class="top-bar-inner">
+    <div class="top-bar-left">
+      <span class="top-bar-logo">GeoENEM</span>
+      <div class="top-bar-divider"></div>
+      <span class="top-bar-title">Caça-Palavras</span>
+    </div>
+    <div class="top-bar-right">
+      <a href="../../aulas/Indice_aulas.html" id="btn-sair-aula" class="btn-sair">Sair</a>
+      <div class="score-pill">
+        PALAVRAS: <span id="found-count">0</span> / <span id="total-count">0</span>
+      </div>
+    </div>
+  </div>
+</header>
+
+<!-- Main -->
+<div class="main-area">
+
+  <!-- Left: Word list + Novo Jogo -->
+  <div class="left-panel">
+    <button class="btn-novo-jogo" onclick="newGame()">
+      NOVO<br>JOGO
+    </button>
+    <ul class="word-list" id="word-list"></ul>
+  </div>
+
+  <!-- Board -->
+  <div style="flex:1">
+    <div class="score-bar" style="display:none">
+      <span id="found-count-old">0</span> / <span id="total-count-old">0</span> palavras
+    </div>
+    <div class="board-wrap">
+      <div class="board-inner" id="board-inner">
+        <table id="grid-table"></table>
+        <canvas id="highlight-canvas"></canvas>
+      </div>
+    </div>
+  </div>
+
+</div>
+
+<script>
+// ─── Config ───────────────────────────────────────────────────────────────────
+const SIZE = 15;
+const DIRECTIONS = [
+  [0,1],[1,0],[1,1],[1,-1],
+  [0,-1],[-1,0],[-1,-1],[-1,1]
+];
+
+// Coquetel-style colors (semi-transparent with colored border)
+const HIGHLIGHT_COLORS = [
+  { fill: 'rgba(255, 80,  80,  0.22)', stroke: 'rgba(220, 40, 40, 0.85)'  },  // red
+  { fill: 'rgba(255, 160,  0,  0.22)', stroke: 'rgba(220,130,  0, 0.85)'  },  // orange
+  { fill: 'rgba(255, 210,  0,  0.22)', stroke: 'rgba(200,170,  0, 0.85)'  },  // yellow
+  { fill: 'rgba( 60, 200, 80,  0.22)', stroke: 'rgba( 30,160, 50, 0.85)'  },  // green
+  { fill: 'rgba(  0, 190, 210, 0.22)', stroke: 'rgba(  0,160,190, 0.85)'  },  // cyan
+  { fill: 'rgba( 90, 100, 240, 0.22)', stroke: 'rgba( 70, 80, 210, 0.85)' },  // indigo
+  { fill: 'rgba(170,  70, 240, 0.22)', stroke: 'rgba(140, 40, 210, 0.85)' },  // purple
+  { fill: 'rgba(230,  60, 160, 0.22)', stroke: 'rgba(200, 30, 130, 0.85)' },  // pink
+  { fill: 'rgba( 20, 190, 160, 0.22)', stroke: 'rgba(  0,160,130, 0.85)'  },  // teal
+  { fill: 'rgba(250,  70, 100, 0.22)', stroke: 'rgba(220, 40,  70, 0.85)' },  // rose
+  { fill: 'rgba(130, 200,  20, 0.22)', stroke: 'rgba(100,170,  0, 0.85)'  },  // lime
+  { fill: 'rgba( 50, 130, 240, 0.22)', stroke: 'rgba( 20, 100, 210, 0.85)' }, // blue
+  { fill: 'rgba(220, 120,   0, 0.22)', stroke: 'rgba(190,  90,  0, 0.85)' },  // amber
+  { fill: 'rgba( 16, 185, 130, 0.22)', stroke: 'rgba(  0,155,100, 0.85)'  },  // emerald
+  { fill: 'rgba(140,  90, 240, 0.22)', stroke: 'rgba(110, 60, 210, 0.85)' },  // violet
+  { fill: 'rgba(251, 113, 133, 0.22)', stroke: 'rgba(221, 83, 103, 0.85)' },  // light-rose
+  { fill: 'rgba( 14, 165, 233, 0.22)', stroke: 'rgba(  0,135, 203, 0.85)' },  // sky
+  { fill: 'rgba(100, 160,  10, 0.22)', stroke: 'rgba( 70, 130,  0, 0.85)' },  // dark-lime
+  { fill: 'rgba(220,  50,  50, 0.22)', stroke: 'rgba(190,  20, 20, 0.85)'  },  // dark-red
+  { fill: 'rgba(124,  58, 237, 0.22)', stroke: 'rgba( 94, 28, 207, 0.85)' },  // dark-violet
+];
+
+// ─── State ────────────────────────────────────────────────────────────────────
+let words = [];
+let grid  = [];
+let wordPlacements = {};  // word -> [{r,c}]
+let foundWords    = [];
+let isSelecting   = false;
+let selStart      = null;
+let selIndices    = [];
+
+// Canvas drawing
+let foundHighlights = []; // [{indices, colorIdx}]
+
+// ─── Load game data ───────────────────────────────────────────────────────────
+const urlParams = new URLSearchParams(window.location.search);
+const topic = urlParams.get('topic') || 'base_estrutural_geografia';
+
+const ds = document.createElement('script');
+ds.src = '../gamedata.js';
+ds.onload = () => {
+  if (window.windowGameData && windowGameData[topic]?.wordsearch) {
+    words = windowGameData[topic].wordsearch;
+  } else {
+    words = ['ESPACO','PAISAGEM','TERRITORIO','LUGAR','REGIAO','ESCALA','MILTONSANTOS','CARTOGRAFIA','TECNICO','CIENTIFICO'];
+  }
+  
+  // Set Sair link back to the specific lesson
+  const btnSair = document.getElementById('btn-sair-aula');
+  if (topic && topic !== 'base_estrutural_geografia') {
+    btnSair.href = `../../aulas/${topic}.html`;
+  }
+
+  startGame();
+};
+ds.onerror = () => { words = ['ESPACO','PAISAGEM','TERRITORIO','LUGAR','REGIAO']; startGame(); };
+document.head.appendChild(ds);
+
+// ─── Game init ────────────────────────────────────────────────────────────────
+function newGame() {
+  document.getElementById('win-modal').classList.remove('show');
+  foundWords = [];
+  foundHighlights = [];
+  wordPlacements = {};
+  startGame();
+}
+
+function startGame() {
+  words = words.map(w => w.toUpperCase().normalize('NFD').replace(/[\u0300-\u036f]/g,''));
+  words.sort((a,b) => b.length - a.length);
+  document.getElementById('total-count').textContent = words.length;
+  document.getElementById('found-count').textContent = 0;
+  foundWords = [];
+  foundHighlights = [];
+  wordPlacements = {};
+
+  grid = Array.from({length: SIZE}, () => Array(SIZE).fill(''));
+  placeWords();
+  fillRandom();
+  renderGrid();
+  renderWordList();
+  
+  // Draw canvas after render
+  requestAnimationFrame(() => { setupCanvas(); redrawCanvas(); });
+}
+
+// ─── Word placement ───────────────────────────────────────────────────────────
+function placeWords() {
+  words.forEach(w => {
+    let placed = false, tries = 0;
+    while (!placed && tries < 300) {
+      const dir = DIRECTIONS[Math.floor(Math.random() * DIRECTIONS.length)];
+      const r = Math.floor(Math.random() * SIZE);
+      const c = Math.floor(Math.random() * SIZE);
+      if (canPlace(w, r, c, dir)) {
+        const indices = [];
+        for (let i = 0; i < w.length; i++) {
+          const nr = r + i*dir[0], nc = c + i*dir[1];
+          grid[nr][nc] = w[i];
+          indices.push({r:nr, c:nc});
+        }
+        wordPlacements[w] = indices;
+        placed = true;
+      }
+      tries++;
+    }
+  });
+}
+
+function canPlace(w, r, c, dir) {
+  const er = r + (w.length-1)*dir[0];
+  const ec = c + (w.length-1)*dir[1];
+  if (er < 0 || er >= SIZE || ec < 0 || ec >= SIZE) return false;
+  for (let i = 0; i < w.length; i++) {
+    const ch = grid[r + i*dir[0]][c + i*dir[1]];
+    if (ch !== '' && ch !== w[i]) return false;
+  }
+  return true;
+}
+
+function fillRandom() {
+  const ABC = 'ABCDEFGHIJKLMNOPQRSTUVWXYZ';
+  for (let r = 0; r < SIZE; r++)
+    for (let c = 0; c < SIZE; c++)
+      if (!grid[r][c]) grid[r][c] = ABC[Math.floor(Math.random()*26)];
+}
+
+// ─── Grid rendering ───────────────────────────────────────────────────────────
+function renderGrid() {
+  const tbl = document.getElementById('grid-table');
+  tbl.innerHTML = '';
+  const tbody = document.createElement('tbody');
+  for (let r = 0; r < SIZE; r++) {
+    const tr = document.createElement('tr');
+    for (let c = 0; c < SIZE; c++) {
+      const td = document.createElement('td');
+      const span = document.createElement('div');
+      span.className = 'cell-letter';
+      span.textContent = grid[r][c];
+      td.appendChild(span);
+      td.dataset.r = r;
+      td.dataset.c = c;
+      tr.appendChild(td);
+    }
+    tbody.appendChild(tr);
+  }
+  tbl.appendChild(tbody);
+  setupEvents();
+}
+
+// ─── Event setup — delegation, registered only once on first game ─────────────
+let _eventsReady = false;
+function setupEvents() {
+  if (_eventsReady) return;
+  _eventsReady = true;
+
+  const tbl = document.getElementById('grid-table');
+
+  function tdAt(x, y) {
+    const el = document.elementFromPoint(x, y);
+    return el ? el.closest('td[data-r]') : null;
+  }
+
+  // Mouse: mousedown on table (catches clicks on child span too via closest)
+  tbl.addEventListener('mousedown', e => {
+    e.preventDefault();
+    const td = e.target.closest('td[data-r]');
+    if (!td) return;
+    onDown(+td.dataset.r, +td.dataset.c);
+  });
+
+  // mousemove on document so dragging outside table still updates selection
+  document.addEventListener('mousemove', e => {
+    if (!isSelecting) return;
+    const td = tdAt(e.clientX, e.clientY);
+    if (td) onMove(+td.dataset.r, +td.dataset.c);
+  });
+
+  document.addEventListener('mouseup', () => onUp());
+
+  // Touch
+  tbl.addEventListener('touchstart', e => {
+    e.preventDefault();
+    const t = e.touches[0];
+    const td = tdAt(t.clientX, t.clientY);
+    if (td) onDown(+td.dataset.r, +td.dataset.c);
+  }, { passive: false });
+
+  tbl.addEventListener('touchmove', e => {
+    e.preventDefault();
+    const t = e.touches[0];
+    const td = tdAt(t.clientX, t.clientY);
+    if (td) onMove(+td.dataset.r, +td.dataset.c);
+  }, { passive: false });
+
+  tbl.addEventListener('touchend', e => {
+    e.preventDefault();
+    onUp();
+  }, { passive: false });
+}
+
+function renderWordList() {
+  const list = document.getElementById('word-list');
+  list.innerHTML = '';
+  words.forEach((w, i) => {
+    const li = document.createElement('li');
+    li.className = 'word-item';
+    li.id = `wi-${w}`;
+    li.textContent = w;
+    if (foundWords.includes(w)) li.classList.add('found');
+    list.appendChild(li);
+  });
+}
+
+// ─── Canvas setup & drawing ───────────────────────────────────────────────────
+function setupCanvas() {
+  const boardInner = document.getElementById('board-inner');
+  const canvas = document.getElementById('highlight-canvas');
+  const rect = boardInner.getBoundingClientRect();
+  canvas.width  = boardInner.offsetWidth;
+  canvas.height = boardInner.offsetHeight;
+}
+
+function getCellCenter(r, c) {
+  const tbl = document.getElementById('grid-table');
+  const td = tbl.querySelector(`td[data-r="${r}"][data-c="${c}"]`);
+  if (!td) return null;
+  const boardRect = document.getElementById('board-inner').getBoundingClientRect();
+  const tdRect = td.getBoundingClientRect();
+  return {
+    x: tdRect.left - boardRect.left + tdRect.width  / 2,
+    y: tdRect.top  - boardRect.top  + tdRect.height / 2,
+    w: tdRect.width,
+    h: tdRect.height
+  };
+}
+
+function drawCapsule(ctx, indices, color, lineWidth) {
+  if (!indices || indices.length === 0) return;
+  if (indices.length === 1) {
+    const c = getCellCenter(indices[0].r, indices[0].c);
+    if (!c) return;
+    const r = Math.min(c.w, c.h) * 0.50;
+    ctx.beginPath();
+    ctx.arc(c.x, c.y, r, 0, Math.PI*2);
+    ctx.fillStyle = color.fill;
+    ctx.fill();
+    ctx.strokeStyle = color.stroke;
+    ctx.lineWidth = lineWidth;
+    ctx.stroke();
+    return;
+  }
+
+  const first = getCellCenter(indices[0].r, indices[0].c);
+  const last  = getCellCenter(indices[indices.length-1].r, indices[indices.length-1].c);
+  if (!first || !last) return;
+
+  const cellSize = Math.min(first.w, first.h);
+  const radius = cellSize * 0.50;
+
+  const dx = last.x - first.x;
+  const dy = last.y - first.y;
+  const len = Math.sqrt(dx*dx + dy*dy);
+  const ux = dx / len;
+  const uy = dy / len;
+  // perpendicular
+  const px = -uy;
+  const py =  ux;
+
+  const sx = first.x, sy = first.y;
+  const ex = last.x, ey = last.y;
+  const angle = Math.atan2(dy, dx);
+
+  // 1. Desenha o corpo da pílula (fundo)
+  ctx.beginPath();
+  ctx.arc(sx, sy, radius, angle + Math.PI/2, angle - Math.PI/2, false);
+  ctx.arc(ex, ey, radius, angle - Math.PI/2, angle + Math.PI/2, false);
+  ctx.closePath();
+  ctx.fillStyle = color.fill;
+  ctx.fill();
+
+  // 2. Desenha o contorno da pílula
+  ctx.strokeStyle = color.stroke;
+  ctx.lineWidth = lineWidth;
+  ctx.stroke();
+
+  // 3. Desenha círculos completos nas pontas para destaque extra
+  ctx.beginPath();
+  ctx.arc(sx, sy, radius, 0, Math.PI * 2);
+  ctx.stroke();
+  
+  ctx.beginPath();
+  ctx.arc(ex, ey, radius, 0, Math.PI * 2);
+  ctx.stroke();
+}
+
+function redrawCanvas() {
+  const canvas = document.getElementById('highlight-canvas');
+  const ctx = canvas.getContext('2d');
+  ctx.clearRect(0, 0, canvas.width, canvas.height);
+
+  // Draw found highlights
+  foundHighlights.forEach(h => {
+    drawCapsule(ctx, h.indices, HIGHLIGHT_COLORS[h.colorIdx % HIGHLIGHT_COLORS.length], 3);
+  });
+
+  // Draw current selection
+  if (isSelecting && selIndices.length > 0) {
+    const selColor = { fill: 'rgba(100,100,100,0.18)', stroke: 'rgba(100,100,100,0.6)' };
+    drawCapsule(ctx, selIndices, selColor, 2.5);
+  }
+}
+
+// ─── Selection ────────────────────────────────────────────────────────────────
+function onDown(r, c) {
+  isSelecting = true;
+  selStart = {r, c};
+  selIndices = [{r, c}];
+  redrawCanvas();
+}
+
+function onMove(r, c) {
+  if (!isSelecting) return;
+  const dr = r - selStart.r;
+  const dc = c - selStart.c;
+  if (dr === 0 || dc === 0 || Math.abs(dr) === Math.abs(dc)) {
+    const steps = Math.max(Math.abs(dr), Math.abs(dc));
+    const sr = dr === 0 ? 0 : (dr > 0 ? 1 : -1);
+    const sc = dc === 0 ? 0 : (dc > 0 ? 1 : -1);
+    selIndices = [];
+    for (let i = 0; i <= steps; i++)
+      selIndices.push({r: selStart.r + i*sr, c: selStart.c + i*sc});
+    redrawCanvas();
+  }
+}
+
+function onUp() {
+  if (!isSelecting) return;
+  isSelecting = false;
+
+  const forward  = selIndices.map(i => grid[i.r][i.c]).join('');
+  const backward = forward.split('').reverse().join('');
+  const match = words.find(w => !foundWords.includes(w) && (w === forward || w === backward));
+
+  if (match) {
+    markFound(match, selIndices);
+  }
+
+  selIndices = [];
+  redrawCanvas();
+}
+
+function markFound(word, indices) {
+  foundWords.push(word);
+  const colorIdx = words.indexOf(word) % HIGHLIGHT_COLORS.length;
+
+  // If backward, reverse so highlight goes start→end
+  // Already fine since we store the indices as-is
+
+  foundHighlights.push({ indices: [...indices], colorIdx });
+  redrawCanvas();
+
+  // Update word list
+  const el = document.getElementById(`wi-${word}`);
+  if (el) el.classList.add('found');
+
+  // Update counter
+  document.getElementById('found-count').textContent = foundWords.length;
+
+  if (foundWords.length === words.length) {
+    setTimeout(() => {
+      document.getElementById('win-msg').textContent = `Você encontrou todas as ${words.length} palavras!`;
+      document.getElementById('win-modal').classList.add('show');
+    }, 600);
+  }
+}
+
+// ─── Resize ───────────────────────────────────────────────────────────────────
+let resizeTimer;
+window.addEventListener('resize', () => {
+  clearTimeout(resizeTimer);
+  resizeTimer = setTimeout(() => {
+    setupCanvas();
+    redrawCanvas();
+  }, 150);
+});
+</script>
+</body>
+</html>

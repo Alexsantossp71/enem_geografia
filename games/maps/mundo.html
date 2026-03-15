@@ -1,201 +1,370 @@
 <!DOCTYPE html>
-
-<html lang="pt-BR"><head>
-<meta charset="utf-8"/>
-<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
-<title>Geografia para o ENEM: Jogo de Industrialização</title>
-<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
-<style data-purpose="custom-styles">
-    @import url('https://fonts.googleapis.com/css2?family=Roboto:wght@400;500;700&display=swap');
-
-    * {
-      box-sizing: border-box;
-    }
-
-    body {
-      font-family: 'Roboto', sans-serif;
-      background-color: #fafafa;
-      margin: 0;
-      padding: 0;
-    }
-
-    .glow-green {
-      box-shadow: 0 0 20px 5px rgba(0, 255, 0, 0.4);
-    }
-
-    .glow-red {
-      box-shadow: 0 0 20px 5px rgba(255, 0, 0, 0.4);
-    }
-    
-    .map-container {
-      position: relative;
-      width: 100%;
-      height: 100%;
-      margin: 0 auto;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-    }
-    
-    .pin {
-      position: absolute;
-      transform: translate(-50%, -100%);
-      display: flex;
-      flex-direction: column;
-      align-items: center;
-      z-index: 10;
-    }
-
-    .pin-marker {
-      width: 40px;
-      height: 48px;
-      background-size: contain;
-      background-repeat: no-repeat;
-      background-position: center bottom;
-      display: flex;
-      justify-content: center;
-      align-items: center;
-      padding-bottom: 8px;
-      border: 3px solid white;
-      border-radius: 50%;
-      background-color: transparent;
-    }
-
-    .pin-empty .pin-marker {
-      background-image: url('data:image/svg+xml;utf8,<svg fill="none" stroke="%232A8855" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" viewbox="0 0 24 36" xmlns="http://www.w3.org/2000/svg"><path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0 1 18 0z" fill="%232A8855"></path><circle cx="12" cy="10" fill="white" r="4"></circle></svg>');
-      border-color: transparent;
-    }
-    
-    .pin-correct .pin-marker {
-      background-image: url('data:image/svg+xml;utf8,<svg fill="none" stroke="%2322C55E" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" viewbox="0 0 24 36" xmlns="http://www.w3.org/2000/svg"><path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0 1 18 0z" fill="%2322C55E"></path><circle cx="12" cy="10" fill="white" r="5"></circle><path d="M9 10l2 2 4-4" stroke="%2322C55E" stroke-width="2"></path></svg>');
-    }
-
-    .pin-incorrect .pin-marker {
-      background-image: url('data:image/svg+xml;utf8,<svg fill="none" stroke="%23EF4444" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" viewbox="0 0 24 36" xmlns="http://www.w3.org/2000/svg"><path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0 1 18 0z" fill="%23EF4444"></path><circle cx="12" cy="10" fill="white" r="5"></circle><path d="M10 8l4 4m0-4l-4 4" stroke="%23EF4444" stroke-width="2"></path></svg>');
-    }
-
-    .pin-label {
-      background: white;
-      padding: 4px 12px;
-      border-radius: 6px;
-      font-weight: 500;
-      font-size: 14px;
-      margin-top: 4px;
-      border: 1px solid #e5e7eb;
-      white-space: nowrap;
-    }
-  </style>
-<script>
-    tailwind.config = {
-      theme: {
-        extend: {
-          colors: {
-            brand: {
-              green: '#2A8855',
-              dark: '#1e6640',
-              light: '#dcfce7',
-            }
-          }
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Mapa Mundial Interativo - GeoENEM</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;600;700;900&display=swap" rel="stylesheet">
+    <script src="https://d3js.org/d3.v7.min.js"></script>
+    <style>
+        body { font-family: 'Outfit', sans-serif; background-color: #020617; color: #f8fafc; overflow-x: hidden; }
+        .glass { background: rgba(15, 23, 42, 0.7); backdrop-filter: blur(16px); border: 1px solid rgba(255, 255, 255, 0.05); }
+        .country-path { fill: #1e293b; stroke: #020617; stroke-width: 0.5px; transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1); cursor: pointer; }
+        .country-path:hover { fill: #38bdf8; stroke: #bae6fd; stroke-width: 1.5px; transform: scale(1.005); transform-origin: center; z-index: 10; filter: drop-shadow(0 0 8px rgba(56, 189, 248, 0.5)); }
+        .country-path.correct { fill: #10b981; pointer-events: none; }
+        .country-path.error { fill: #ef4444; animation: shake 0.4s; }
+        .country-path.completed { fill: #059669; opacity: 0.8; pointer-events: none;}
+        
+        @keyframes shake {
+            0%, 100% { transform: translateX(0); }
+            25% { transform: translateX(-5px); }
+            75% { transform: translateX(5px); }
         }
-      }
-    }
-  </script>
+
+        /* Tooltip */
+        #tooltip {
+            position: absolute;
+            opacity: 0;
+            background: rgba(2, 6, 23, 0.95);
+            color: #38bdf8;
+            padding: 8px 12px;
+            border-radius: 8px;
+            pointer-events: none;
+            font-size: 14px;
+            font-weight: 700;
+            text-transform: uppercase;
+            letter-spacing: 0.05em;
+            transition: opacity 0.2s;
+            border: 1px solid rgba(56,189,248,0.3);
+            backdrop-filter: blur(4px);
+            z-index: 50;
+            box-shadow: 0 10px 25px -5px rgba(0, 0, 0, 0.8);
+        }
+        
+    </style>
 </head>
-<body class="min-h-screen flex flex-col overflow-x-hidden">
-<!-- BEGIN: HeaderSection -->
-<header class="bg-white border-b border-gray-200 px-6 py-4 sticky top-0 z-50">
-<div class="max-w-7xl mx-auto flex flex-col md:flex-row justify-between items-center gap-4">
-<div class="text-[#2A8855] font-bold text-xl md:text-2xl">
-        Geografia para o ENEM: Jogo de Industrialização
-      </div>
-<div class="flex flex-col items-center min-w-[200px]">
-<div class="flex justify-start w-full text-sm mb-1">
-<span class="text-black">Regiões Corretas: <span class="font-bold">2/8</span></span>
-</div>
-<div class="w-full bg-[#dcfce7] rounded-full h-2">
-<div class="bg-[#2A8855] h-2 rounded-full" style="width: 25%"></div>
-</div>
-</div>
-<div class="text-black text-lg">
-        Tempo Restante: <span class="font-bold">10:45</span>
-</div>
-</div>
-</header>
-<!-- END: HeaderSection -->
-<!-- BEGIN: MainContent -->
-<main class="flex-grow w-full h-full flex flex-col items-center justify-center p-0 m-0 relative overflow-hidden">
-<!-- Map Area -->
-<div class="map-container flex-grow flex items-center justify-center">
-<!-- We use the provided image as the map background -->
-<img alt="World Map" class="w-full h-auto object-contain opacity-80" src="https://lh3.googleusercontent.com/aida-public/AB6AXuA4iGd-qguGQaVyxIlSDMB2PgOMIo29WAOpL9AwpNQkjyTpuwvzNgqPyOu5H9bS02qn3MO6t_I4mafgyrIRukMLzLE28PRAp93jBZvC3KTSSVCpwojZmkA2FHPf50dT4Kk6H2PP8mRLJp9iQdmahF2bCtQfUjblOqg6TV_PN6E5awf2AtqL1d-xlYFateVTx2TzNjyC9gsFRGK5dB6yfWWCeIVjLjeRDG82RpGw_xXbefPrEOp0hMnilRqa2EKHahbBaLGqQ06q3xT6"/>
-<!-- Pins Overlay -->
-<!-- Note: Positioning is approximate based on visual center of the map image -->
-<div class="absolute inset-0">
-<!-- Silicon Valley (Correct) -->
-<div class="pin pin-correct" style="top: 38%; left: 19%;">
-<div class="pin-marker glow-green rounded-full"></div>
-<div class="pin-label glow-green text-green-700 border-green-600 bg-white border-2">Vale do Silício</div>
-</div>
-<!-- Ruhr (Incorrect - Placed in Brazil for the error state) -->
-<div class="pin pin-incorrect" style="top: 65%; left: 36%;">
-<div class="pin-marker glow-red rounded-full"></div>
-<div class="pin-label glow-red text-red-700 border-red-600 bg-white border-2">Ruhr</div>
-</div>
-<!-- Empty Pins -->
-<!-- Germany/Europe -->
-<div class="pin pin-empty" style="top: 30%; left: 49%;">
-<div class="pin-marker"></div>
-</div>
-<!-- Italy/Lombardia -->
-<div class="pin pin-empty" style="top: 35%; left: 51%;">
-<div class="pin-marker"></div>
-</div>
-<!-- India/Mumbai -->
-<div class="pin pin-empty" style="top: 48%; left: 65%;">
-<div class="pin-marker"></div>
-</div>
-<!-- China/Pearl River Delta -->
-<div class="pin pin-empty" style="top: 46%; left: 74%;">
-<div class="pin-marker"></div>
-</div>
-<!-- Japan/Tokyo -->
-<div class="pin pin-empty" style="top: 40%; left: 80%;">
-<div class="pin-marker"></div>
-</div>
-</div>
-</div>
-</main>
-<!-- END: MainContent -->
-<!-- BEGIN: BottomPanel -->
-<div class="fixed bottom-[30px] left-1/2 transform -translate-x-1/2 w-[80%] max-w-[900px] z-50 shadow-[0_4px_12px_rgba(0,0,0,0.3)] rounded-lg">
-<div class="bg-white rounded-lg overflow-hidden border border-gray-200">
-<div class="bg-[#2A8855] text-white text-center py-[15px] font-bold text-base">
-        Arraste os rótulos para o mapa
-      </div>
-<div class="p-4 md:p-6 flex flex-wrap justify-center gap-3">
-<button class="px-4 py-2 border-2 border-[#2A8855] text-gray-800 rounded bg-white hover:bg-green-50 font-medium transition-colors cursor-grab active:cursor-grabbing">
-          ABCD Paulista
-        </button>
-<button class="px-4 py-2 border-2 border-[#2A8855] text-gray-800 rounded bg-white hover:bg-green-50 font-medium transition-colors cursor-grab active:cursor-grabbing">
-          Ruhr
-        </button>
-<button class="px-4 py-2 border-2 border-[#2A8855] text-gray-800 rounded bg-white hover:bg-green-50 font-medium transition-colors cursor-grab active:cursor-grabbing">
-          Delta do Rio das Pérolas
-        </button>
-<button class="px-4 py-2 border-2 border-[#2A8855] text-gray-800 rounded bg-white hover:bg-green-50 font-medium transition-colors cursor-grab active:cursor-grabbing">
-          Tóquio
-        </button>
-<button class="px-4 py-2 border-2 border-[#2A8855] text-gray-800 rounded bg-white hover:bg-green-50 font-medium transition-colors cursor-grab active:cursor-grabbing">
-          Lombardia
-        </button>
-<button class="px-4 py-2 border-2 border-[#2A8855] text-gray-800 rounded bg-white hover:bg-green-50 font-medium transition-colors cursor-grab active:cursor-grabbing">
-          Mumbai
-        </button>
-<button class="px-4 py-2 border-2 border-[#A0A0A0] text-[#A0A0A0] rounded bg-white font-medium line-through cursor-not-allowed" disabled="">
-          Vale do Silício
-        </button>
-</div>
-</div>
-</div>
-<!-- END: BottomPanel -->
-</body></html>
+<body class="min-h-screen relative flex flex-col">
+
+    <!-- Premium Navigation Bar -->
+    <nav class="fixed top-6 left-1/2 -translate-x-1/2 z-50 w-[90%] max-w-6xl">
+        <div class="glass rounded-2xl px-8 py-4 flex items-center justify-between shadow-[0_20px_50px_rgba(0,0,0,0.5)] border-sky-500/20 border-b-2 border-b-sky-500">
+            <div class="flex items-center gap-4">
+                <a href="../../index.html" class="w-10 h-10 flex items-center justify-center rounded-xl bg-slate-800 hover:bg-slate-700 transition-colors text-slate-300 shadow-inner">
+                    <i class="fa-solid fa-arrow-left"></i>
+                </a>
+                <div>
+                    <h1 class="text-sm font-black uppercase tracking-[0.2em] text-sky-400">Hub Geopolítico</h1>
+                    <p class="text-[9px] text-slate-400 font-bold uppercase tracking-[0.3em]">Globo Interativo</p>
+                </div>
+            </div>
+            <div class="flex items-center gap-8">
+                <div class="hidden md:flex flex-col items-end">
+                    <span class="text-[10px] font-black text-slate-500 uppercase tracking-widest">Controle Global</span>
+                    <div class="w-32 h-1.5 bg-slate-800/80 rounded-full mt-1.5 overflow-hidden shadow-inner">
+                        <div id="progress-bar" class="h-full bg-sky-500 transition-all duration-700 relative" style="width: 0%">
+                             <div class="absolute top-0 right-0 w-8 h-full bg-white/40 blur-sm"></div>
+                        </div>
+                    </div>
+                </div>
+                <div class="flex flex-col items-center justify-center px-4 border-l border-slate-700/50">
+                    <span class="text-[10px] font-bold text-slate-500 uppercase tracking-widest mb-1">Score</span>
+                    <span id="score" class="text-2xl font-black text-sky-400 leading-none drop-shadow-[0_0_8px_rgba(56,189,248,0.5)]">0</span>
+                </div>
+            </div>
+        </div>
+    </nav>
+
+    <!-- Main Game Area -->
+    <main class="flex-grow pt-32 pb-12 px-6 w-full flex flex-col">
+        
+        <!-- Header / Mission -->
+        <div class="max-w-4xl mx-auto text-center w-full mb-6 z-10 relative">
+            <span class="inline-block px-4 py-1 rounded-full bg-sky-500/10 text-sky-400 text-[10px] font-black uppercase tracking-[0.3em] border border-sky-500/20 mb-4 backdrop-blur-sm">
+                Alvo Geopolítico
+            </span>
+            <h2 id="question-text" class="text-2xl md:text-4xl font-black text-white leading-tight mb-3 drop-shadow-lg">
+                Sincronizando satélites...
+            </h2>
+            <p id="question-hint" class="text-slate-400 text-sm font-medium">
+                Conectando à base de dados geoeconômica.
+            </p>
+        </div>
+
+        <!-- Map Container -->
+        <div class="relative w-full flex-grow flex items-center justify-center -mt-8">
+            <div id="map-container" class="w-full max-w-6xl aspect-[2/1] relative z-0 flex items-center justify-center pt-8">
+                <div id="loader" class="absolute flex flex-col items-center gap-4">
+                    <div class="relative w-16 h-16">
+                        <div class="absolute inset-0 border-4 border-slate-800 rounded-full"></div>
+                        <div class="absolute inset-0 border-4 border-sky-500 rounded-full border-t-transparent animate-spin"></div>
+                    </div>
+                    <span class="text-sky-500 font-black uppercase tracking-widest text-xs animate-pulse">Renderizando Globo...</span>
+                </div>
+            </div>
+            <div id="tooltip"></div>
+        </div>
+    </main>
+
+    <!-- Feedback Modal -->
+    <div id="finish-modal" class="fixed inset-0 bg-black/90 backdrop-blur-xl z-[100] hidden flex items-center justify-center p-6 opacity-0 transition-opacity duration-700">
+        <div class="glass bg-slate-900/80 border border-sky-500/30 rounded-[40px] p-12 max-w-lg w-full text-center shadow-[0_0_80px_rgba(14,165,233,0.3)] transform scale-90 transition-transform duration-700 delay-100" id="modal-content">
+            <div class="w-24 h-24 bg-sky-500/20 text-sky-400 rounded-3xl flex items-center justify-center mx-auto mb-8 text-5xl">
+                <i class="fa-solid fa-globe animate-spin-slow" style="animation: spin 10s linear infinite;"></i>
+            </div>
+            <h2 class="text-4xl font-black text-white uppercase tracking-[0.1em] mb-4">Mestre Global</h2>
+            <p class="text-slate-400 font-medium mb-10 text-sm leading-relaxed">Sua compreensão das dinâmicas econômicas, industriais e populacionais do mundo está em nível de excelência.</p>
+            
+            <div class="grid grid-cols-2 gap-4 mb-8">
+                <div class="bg-slate-800/50 rounded-2xl p-4 border border-slate-700/50">
+                    <span class="block text-[10px] text-slate-500 uppercase font-black tracking-widest mb-1">Precisão</span>
+                    <span class="text-2xl font-black text-white">100%</span>
+                </div>
+                <div class="bg-sky-500/10 rounded-2xl p-4 border border-sky-500/20">
+                    <span class="block text-[10px] text-sky-500/70 uppercase font-black tracking-widest mb-1">Score Total</span>
+                    <span id="final-score" class="text-2xl font-black text-sky-400">0</span>
+                </div>
+            </div>
+
+            <button onclick="location.reload()" class="w-full bg-white text-slate-900 py-4 rounded-xl font-black uppercase tracking-[0.2em] hover:bg-slate-200 transition-colors shadow-xl">
+                Nova Operação
+            </button>
+        </div>
+    </div>
+
+    <!-- Background Elements -->
+    <div class="fixed inset-0 pointer-events-none z-[-1] overflow-hidden bg-[radial-gradient(ellipse_at_top,_var(--tw-gradient-stops))] from-slate-900 via-[#020617] to-[#020617]">
+        <!-- Grid overlay -->
+        <div class="absolute inset-0 bg-[url('data:image/svg+xml;base64,PHN2ZyB3aWR0aD0iNjAiIGhlaWdodD0iNjAiIHhtbG5zPSJodHRwOi8vd3d3LnczLm9yZy8yMDAwL3N2ZyI+PHBhdGggZD0iTTYwIDBMMCAwIDAgNjAiIGZpbGw9Im5vbmUiIHN0cm9rZT0icmdiYSgyNTUsMjU1LDI1NSwwLjAyKSIgc3Ryb2tlLXdpZHRoPSIxIi8+PC9zdmc+')] opacity-50"></div>
+    </div>
+
+    <script src="../gamedata.js"></script>
+    <script>
+        const urlParams = new URLSearchParams(window.location.search);
+        const topic = urlParams.get('topic') || 'geopolitica';
+        let questions = [];
+        if(window.windowGameData && window.windowGameData[topic] && window.windowGameData[topic].map_mundo) {
+            questions = window.windowGameData[topic].map_mundo;
+        } else {
+             questions = [
+                { targetId: "USA", text: "Maior potência militar e econômica.", hint: "América do Norte." },
+                { targetId: "CHN", text: "A 'Fábrica do Mundo'.", hint: "Ásia." }
+            ];
+        }
+
+        let currentQuestion = 0;
+        let score = 0;
+        let svg, projection, path;
+        
+        // UI Elements
+        const questionText = document.getElementById('question-text');
+        const questionHint = document.getElementById('question-hint');
+        const progressBar = document.getElementById('progress-bar');
+        const scoreEl = document.getElementById('score');
+        const tooltip = document.getElementById('tooltip');
+        
+        // Advanced Audio
+        const ctx = new (window.AudioContext || window.webkitAudioContext)();
+        function playSound(type) {
+            if(ctx.state === 'suspended') ctx.resume();
+            
+            if (type === 'correct') {
+                const osc = ctx.createOscillator();
+                const obj = ctx.createOscillator();
+                const gainNode = ctx.createGain();
+                
+                osc.type = 'sine';
+                obj.type = 'triangle';
+                
+                osc.frequency.setValueAtTime(880, ctx.currentTime);
+                osc.frequency.exponentialRampToValueAtTime(1760, ctx.currentTime + 0.1);
+                
+                obj.frequency.setValueAtTime(440, ctx.currentTime);
+                
+                osc.connect(gainNode);
+                obj.connect(gainNode);
+                gainNode.connect(ctx.destination);
+                
+                gainNode.gain.setValueAtTime(0.3, ctx.currentTime);
+                gainNode.gain.exponentialRampToValueAtTime(0.01, ctx.currentTime + 0.4);
+                
+                osc.start(ctx.currentTime);
+                obj.start(ctx.currentTime);
+                osc.stop(ctx.currentTime + 0.4);
+                obj.stop(ctx.currentTime + 0.4);
+            } else if (type === 'error') {
+                const osc = ctx.createOscillator();
+                const gainNode = ctx.createGain();
+                osc.connect(gainNode);
+                gainNode.connect(ctx.destination);
+                
+                osc.type = 'square';
+                osc.frequency.setValueAtTime(100, ctx.currentTime);
+                osc.frequency.exponentialRampToValueAtTime(50, ctx.currentTime + 0.3);
+                
+                gainNode.gain.setValueAtTime(0.2, ctx.currentTime);
+                gainNode.gain.exponentialRampToValueAtTime(0.01, ctx.currentTime + 0.3);
+                
+                osc.start(ctx.currentTime);
+                osc.stop(ctx.currentTime + 0.3);
+            }
+        }
+
+        async function initMap() {
+            const width = 1000;
+            const height = 500;
+
+            svg = d3.select("#map-container")
+                .append("svg")
+                .attr("viewBox", `0 0 ${width} ${height}`)
+                .attr("preserveAspectRatio", "xMidYMid meet")
+                .style("width", "100%")
+                .style("height", "100%");
+
+            try {
+                // GeoJSON loaded directly as it's more stable for D3
+                const geoResponse = await fetch("https://raw.githubusercontent.com/holtzy/D3-graph-gallery/master/DATA/world.geojson");
+                const worldGeoJSON = await geoResponse.json();
+
+                document.getElementById('loader').style.display = 'none';
+
+                projection = d3.geoMercator()
+                    .scale(150)
+                    .translate([width / 2, height / 1.5]); // Push up slightly
+
+                path = d3.geoPath().projection(projection);
+
+                svg.append("g")
+                    .selectAll("path")
+                    .data(worldGeoJSON.features)
+                    .enter()
+                    .append("path")
+                    .attr("class", "country-path")
+                    .attr("d", path)
+                    .attr("data-id", d => d.id) // ISO 3166-1 alpha-3
+                    .on("mouseover", function(event, d) {
+                        if (this.classList.contains('completed') || this.classList.contains('correct')) return;
+                        
+                        tooltip.style.opacity = 1;
+                        tooltip.innerHTML = `<i class="fa-solid fa-location-crosshairs mr-2"></i>${d.properties.name}`;
+                    })
+                    .on("mousemove", function(event) {
+                        tooltip.style.left = (event.pageX + 15) + "px";
+                        tooltip.style.top = (event.pageY - 15) + "px";
+                    })
+                    .on("mouseout", function(event, d) {
+                        tooltip.style.opacity = 0;
+                    })
+                    .on("click", handleCountryClick);
+
+                // Start
+                shuffleArray(questions);
+                loadQuestion();
+
+            } catch (error) {
+                console.error("Erro ao carregar mapa mundial:", error);
+                document.getElementById('question-text').innerText = "Falha na conexão de satélite.";
+                document.getElementById('question-hint').innerText = "Verifique seus protocolos de rede (Interet).";
+                document.getElementById('loader').innerHTML = '<i class="fa-solid fa-satellite-dish text-4xl text-red-500 mb-2"></i>';
+            }
+        }
+
+        function handleCountryClick(event, d) {
+            if(currentQuestion >= questions.length || !d.id) return;
+            
+            const clickedId = d.id;
+            const targetId = questions[currentQuestion].targetId;
+            
+            const element = d3.select(this);
+
+            if (clickedId === targetId) {
+                playSound('correct');
+                tooltip.style.opacity = 0;
+
+                element.attr("class", "country-path correct");
+                element.transition().duration(500).style("fill", "#10b981");
+                
+                score += 2500;
+                score += Math.max(0, 1000 - (Date.now() - questionStartTime) / 10);
+                scoreEl.innerText = Math.floor(score);
+                
+                currentQuestion++;
+                updateProgress();
+                
+                setTimeout(() => {
+                    element.attr("class", "country-path completed");
+                    if (currentQuestion < questions.length) {
+                        loadQuestion();
+                    } else {
+                        endGame();
+                    }
+                }, 1000);
+                
+            } else {
+                playSound('error');
+                score -= 300;
+                scoreEl.innerText = Math.floor(score);
+                
+                const prevClass = element.attr("class");
+                element.attr("class", "country-path error");
+                setTimeout(() => {
+                    element.attr("class", prevClass);
+                }, 400);
+            }
+        }
+
+        let questionStartTime;
+        function loadQuestion() {
+            const q = questions[currentQuestion];
+            const qEl = document.getElementById('question-text');
+            const hEl = document.getElementById('question-hint');
+            
+            qEl.style.opacity = 0;
+            hEl.style.opacity = 0;
+            qEl.style.transform = 'translateY(10px)';
+            
+            setTimeout(() => {
+                qEl.innerHTML = q.text;
+                hEl.innerHTML = `<span class="bg-slate-800/80 px-3 py-1 rounded-md text-xs border border-slate-700"><i class="fa-solid fa-radar text-sky-400 mr-2"></i> Setor: ${q.hint}</span>`;
+                qEl.style.transition = 'all 0.4s cubic-bezier(0.4, 0, 0.2, 1)';
+                hEl.style.transition = 'all 0.4s';
+                qEl.style.opacity = 1;
+                qEl.style.transform = 'translateY(0)';
+                hEl.style.opacity = 1;
+                questionStartTime = Date.now();
+            }, 300);
+        }
+
+        function updateProgress() {
+            const pct = (currentQuestion / questions.length) * 100;
+            progressBar.style.width = pct + "%";
+        }
+
+        function endGame() {
+            document.getElementById('question-text').innerText = "Análise Global Concluída.";
+            document.getElementById('question-hint').innerText = "Todos os dados foram compilados.";
+            
+            document.getElementById('final-score').innerText = Math.floor(score);
+            
+            const modal = document.getElementById('finish-modal');
+            const content = document.getElementById('modal-content');
+            modal.classList.remove('hidden');
+            
+            void modal.offsetWidth;
+            
+            modal.classList.replace('opacity-0', 'opacity-100');
+            content.classList.replace('scale-90', 'scale-100');
+        }
+
+        function shuffleArray(array) {
+            for (let i = array.length - 1; i > 0; i--) {
+                const j = Math.floor(Math.random() * (i + 1));
+                [array[i], array[j]] = [array[j], array[i]];
+            }
+        }
+
+        initMap();
+    </script>
+</body>
+</html>

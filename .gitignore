@@ -10,3 +10,30 @@ npm-debug.log
 # OS files
 .DS_Store
 Thumbs.db
+
+# Python / Dev files
+.venv/
+__pycache__/
+*.pyc
+*.py
+.ruff_cache/
+
+# Backups
+backups/
+*.tar.gz
+*.zip
+
+# Dev/debug files
+debug.txt
+extracted_texts.json
+
+# Agent/IDE config
+.agent/
+.gemini/
+
+# Backup data files
+games/gamedata.js.bak
+games/gamedata.js_mundo.bak
+
+# Docs (dev only)
+docs/
