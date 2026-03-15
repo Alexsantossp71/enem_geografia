@@ -196,5 +196,40 @@
     }
   })();
 </script>
+
+<script>
+  (function() {
+    const urlParams = new URLSearchParams(window.location.search);
+    const topic = urlParams.get('topic');
+    if (topic) {
+        const aulaLink = `../../aulas/${topic}.html`;
+        // Find all links that point to Indice_aulas.html and change them to the specific lesson
+        const links = document.querySelectorAll('a[href*="Indice_aulas.html"]');
+        links.forEach(link => {
+            link.href = aulaLink;
+            link.innerHTML = '<i class="fa-solid fa-arrow-left mr-2"></i> Voltar para Aula';
+        });
+        
+        // Also add a floating button or ensure top nav has it
+        const nav = document.querySelector('nav.hidden.md\:flex');
+        if (nav && !nav.querySelector('.back-to-lesson')) {
+            const backBtn = document.createElement('a');
+            backBtn.href = aulaLink;
+            backBtn.className = 'back-to-lesson bg-amber-500 text-indigo-950 px-4 py-2 rounded-lg hover:bg-amber-400 transition-all font-black text-xs uppercase tracking-widest flex items-center gap-2';
+            backBtn.innerHTML = '<i class="fa-solid fa-graduation-cap"></i> Ver Aula';
+            nav.prepend(backBtn);
+        }
+        
+        const mobileMenu = document.getElementById('mobile-menu');
+        if (mobileMenu && !mobileMenu.querySelector('.back-to-lesson-mob')) {
+             const backBtnMob = document.createElement('a');
+             backBtnMob.href = aulaLink;
+             backBtnMob.className = 'back-to-lesson-mob py-2 text-amber-600 font-black border-b border-indigo-50/50';
+             backBtnMob.innerHTML = '<i class="fa-solid fa-graduation-cap mr-2"></i> Voltar para Aula';
+             mobileMenu.prepend(backBtnMob);
+        }
+    }
+  })();
+</script>
 </body>
 </html>
