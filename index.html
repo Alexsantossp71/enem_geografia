@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html lang="pt-BR" class="scroll-smooth">
+<html lang="pt-BR" class="scroll-smooth overflow-x-hidden">
 <head>
     <meta charset="utf-8"/>
     <meta content="width=device-width, initial-scale=1.0" name="viewport"/>
@@ -22,9 +22,11 @@
             background-color: var(--bg-color);
             color: #1E293B;
             overflow-x: hidden;
+            width: 100%;
         }
         h1, h2, h3, h4, h5, h6, .outfit {
             font-family: 'Outfit', sans-serif;
+            word-wrap: break-word;
         }
         /* Glassmorphism */
         .glass {
@@ -40,6 +42,8 @@
             border: 1px solid rgba(255, 255, 255, 0.6);
             box-shadow: 0 10px 30px -10px rgba(0, 0, 0, 0.1);
             transition: all 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+            width: 100%;
+            max-width: 100%;
         }
         .glass-card:hover {
             transform: translateY(-8px);
@@ -125,7 +129,7 @@
         }
     </style>
 </head>
-<body class="relative min-h-screen flex flex-col bg-grid">
+<body class="relative min-h-screen flex flex-col bg-grid overflow-x-hidden">
     <!-- Background blurred shapes -->
     <div class="fixed inset-0 w-full h-full overflow-hidden -z-10 pointer-events-none">
         <div class="absolute top-0 left-1/4 w-[30rem] h-[30rem] bg-emerald-300 rounded-full mix-blend-multiply filter blur-3xl opacity-30 animate-blob"></div>
@@ -182,7 +186,7 @@
                     </span>
                     Prepare-se para o sucesso no ENEM
                 </div>
-                <h1 class="text-5xl lg:text-7xl font-extrabold leading-tight mb-6 text-gray-900 outfit tracking-tight">
+                <h1 class="text-4xl sm:text-5xl lg:text-7xl font-extrabold leading-tight mb-6 text-gray-900 outfit tracking-tight">
                     Domine a <br class="hidden lg:block"/>
                     <span class="text-gradient">Geografia</span>
                 </h1>
@@ -221,24 +225,24 @@
                 <img src="assets/images/hero_geography.png" alt="Geografia ENEM" class="rounded-[2.5rem] shadow-2xl float-img border-4 border-white object-cover aspect-[4/3] w-full max-w-lg lg:max-w-none">
                 
                 <!-- Floating badge 1 -->
-                <div class="absolute top-10 -left-6 lg:-left-12 glass p-4 rounded-2xl shadow-lg flex items-center gap-3 animate-bounce" style="animation-duration: 3s;">
-                    <div class="w-12 h-12 rounded-xl bg-emerald-500 text-white flex items-center justify-center text-xl shadow-md shadow-emerald-500/40">
+                <div class="absolute top-10 -left-6 lg:-left-12 glass p-3 md:p-4 rounded-2xl shadow-lg flex items-center gap-2 md:gap-3 animate-bounce" style="animation-duration: 3s;">
+                    <div class="w-10 h-10 md:w-12 md:h-12 rounded-xl bg-emerald-500 text-white flex items-center justify-center text-lg md:text-xl shadow-md shadow-emerald-500/40">
                         <i class="fas fa-globe-americas"></i>
                     </div>
                     <div>
-                        <p class="text-xs text-gray-500 font-medium">Conteúdo</p>
-                        <p class="font-bold text-gray-800">+15 Módulos</p>
+                        <p class="text-[10px] md:text-xs text-gray-500 font-medium leading-none mb-1">Conteúdo</p>
+                        <p class="text-xs md:text-base font-bold text-gray-800 leading-none">+15 Módulos</p>
                     </div>
                 </div>
 
                 <!-- Floating badge 2 -->
-                <div class="absolute bottom-10 -right-6 lg:-right-12 glass p-4 rounded-2xl shadow-lg flex items-center gap-3 animate-bounce" style="animation-duration: 4s; animation-delay: 1s;">
-                    <div class="w-12 h-12 rounded-xl bg-blue-500 text-white flex items-center justify-center text-xl shadow-md shadow-blue-500/40">
+                <div class="absolute bottom-10 -right-6 lg:-right-12 glass p-3 md:p-4 rounded-2xl shadow-lg flex items-center gap-2 md:gap-3 animate-bounce" style="animation-duration: 4s; animation-delay: 1s;">
+                    <div class="w-10 h-10 md:w-12 md:h-12 rounded-xl bg-blue-500 text-white flex items-center justify-center text-lg md:text-xl shadow-md shadow-blue-500/40">
                         <i class="fas fa-check-circle"></i>
                     </div>
                     <div>
-                        <p class="text-xs text-gray-500 font-medium">Fixação</p>
-                        <p class="font-bold text-gray-800">Exercícios 3D</p>
+                        <p class="text-[10px] md:text-xs text-gray-500 font-medium leading-none mb-1">Fixação</p>
+                        <p class="text-xs md:text-base font-bold text-gray-800 leading-none">Exercícios 3D</p>
                     </div>
                 </div>
             </div>
