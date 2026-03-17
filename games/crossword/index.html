@@ -3,7 +3,7 @@
 <head>
   <meta charset="utf-8"/>
   <meta content="width=device-width, initial-scale=1.0" name="viewport"/>
-  <title>GeoENEM - Caça-Palavras</title>
+  <title>GeoENEM - Vocabulário Interativo</title>
     <link rel="icon" type="image/svg+xml" href="../../assets/favicon.svg">
   <script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
   <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" rel="stylesheet"/>
@@ -130,6 +130,9 @@
     <div class="bg-white p-5 rounded-3xl shadow-lg border border-indigo-50">
       <h2 class="text-base font-black text-slate-800 uppercase tracking-tight mb-1">Vocabulário</h2>
       <p class="text-[10px] font-bold text-slate-400 uppercase tracking-widest mb-3">Clique e arraste</p>
+      <div class="mb-4 text-xs font-black text-indigo-600 bg-indigo-50 p-2 rounded-lg text-center uppercase tracking-widest">
+        termo <span id="found-count">0</span> de <span id="total-count">0</span>
+      </div>
       <div class="grid grid-cols-2 lg:grid-cols-1 gap-1.5 word-scroll" id="word-list"></div>
     </div>
   </aside>

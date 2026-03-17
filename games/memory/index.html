@@ -56,7 +56,7 @@
       </nav>
 
       <!-- Mobile Menu Toggle -->
-      <button id="mobile-menu-toggle" class="md:hidden p-2 text-indigo-950 focus:outline-none">
+      <button id="mobile-menu-toggle" class="md:hidden p-2 text-indigo-950 focus:outline-none relative z-[60]">
         <i class="fa-solid fa-bars text-2xl"></i>
       </button>
     </div>
@@ -75,7 +75,8 @@
 <main class="flex-grow flex flex-col items-center justify-center p-6 gap-8">
   <div class="text-center">
     <h2 class="text-3xl font-black text-slate-900 mb-2 uppercase tracking-tight">Associação de Conceitos</h2>
-    <p class="text-slate-500 text-sm font-medium">Ligue o <span class="text-emerald-600 font-bold">Termo</span> à sua <span class="text-emerald-600 font-bold">Explicação</span> correta.</p>
+    <p class="text-slate-500 text-sm font-medium mb-4">Ligue o <span class="text-emerald-600 font-bold">Termo</span> à sua <span class="text-emerald-600 font-bold">Explicação</span> correta.</p>
+    <div id="score" class="inline-block bg-emerald-50 text-emerald-700 font-black px-4 py-2 rounded-xl text-xs uppercase tracking-widest border border-emerald-100">Pares: 0 / 6</div>
   </div>
 
   <div class="grid grid-cols-3 md:grid-cols-4 gap-4 w-full max-w-3xl px-4" id="game-grid">
@@ -157,7 +158,8 @@
         card1.card.classList.add('matched');
         card2.card.classList.add('matched');
         matchedPairs++;
-        document.getElementById('score').innerText = `Pares: ${matchedPairs} / 6`;
+        const scoreEl = document.getElementById('score');
+        if (scoreEl) scoreEl.innerText = `Pares: ${matchedPairs} / 6`;
         flippedCards = [];
         if (matchedPairs === 6) {
           showWinner();
@@ -189,7 +191,8 @@
   function resetGame() {
     matchedPairs = 0;
     flippedCards = [];
-    document.getElementById('score').innerText = `Pares: 0 / 6`;
+    const scoreEl = document.getElementById('score');
+    if (scoreEl) scoreEl.innerText = `Pares: 0 / 6`;
     const grid = document.getElementById('game-grid');
     grid.innerHTML = '';
     shuffle(cardData).forEach((data, index) => {

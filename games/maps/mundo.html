@@ -65,7 +65,7 @@
       </nav>
 
       <!-- Mobile Menu Toggle -->
-      <button id="mobile-menu-toggle" class="md:hidden p-2 text-indigo-950 focus:outline-none">
+      <button id="mobile-menu-toggle" class="md:hidden p-2 text-indigo-950 focus:outline-none relative z-[60]">
         <i class="fa-solid fa-bars text-2xl"></i>
       </button>
     </div>
@@ -127,7 +127,7 @@
         </div>
 
         <!-- Map Container -->
-        <div class="relative w-full flex-grow flex items-center justify-center -mt-8">
+        <div class="relative w-full flex-grow flex flex-col items-center justify-center -mt-8">
             <div id="map-container" class="w-full max-w-6xl aspect-[2/1] relative z-0 flex items-center justify-center pt-8">
                 <div id="loader" class="absolute flex flex-col items-center gap-4">
                     <div class="relative w-16 h-16">
@@ -136,6 +136,10 @@
                     </div>
                     <span class="text-sky-500 font-black uppercase tracking-widest text-xs animate-pulse">Renderizando Globo...</span>
                 </div>
+            </div>
+            <!-- Mobile Zoom Hint -->
+            <div class="md:hidden mt-4 px-4 py-2 rounded-full bg-sky-500/10 border border-sky-500/20 text-sky-400 text-[10px] font-black uppercase tracking-[0.2em] animate-pulse">
+                <i class="fa-solid fa-magnifying-glass-plus mr-2"></i> FAÇA PINÇA PARA AUMENTAR
             </div>
             <div id="tooltip"></div>
         </div>

@@ -29,6 +29,13 @@
     
     @keyframes float { 0% { transform: translateY(0px); } 50% { transform: translateY(-10px); } 100% { transform: translateY(0px); } }
     .animate-float { animation: float 4s ease-in-out infinite; }
+
+    @media (max-width: 640px) {
+      .card-face { padding: 24px !important; }
+      .card-scene { height: 360px !important; }
+      #card-question { font-size: 1.5rem !important; }
+      #card-answer { font-size: 1.1rem !important; }
+    }
   </style>
 
   <style>
@@ -95,43 +102,56 @@
     </div>
   </div>
 
-  <!-- Game Canvas -->
-  <div class="w-full h-[500px] flex items-center justify-center relative">
-    
-    <div class="card-scene" onclick="toggleCard()">
-      <div class="card" id="main-card">
-        <!-- Front -->
-        <div class="card-face card-front">
-          <div class="glow"></div>
-          <i class="fa-solid fa-earth-americas text-6xl opacity-30 mb-8"></i>
-          <h3 id="card-question" class="text-4xl font-black text-center leading-tight tracking-tight px-4 uppercase">Escala Cartográfica</h3>
-          <span class="absolute bottom-10 text-[10px] font-bold uppercase tracking-[0.3em] opacity-40">Clique para Virar</span>
-        </div>
-        <!-- Back -->
-        <div class="card-face card-back">
-          <div class="w-12 h-1 bg-indigo-600 mb-8 rounded-full"></div>
-          <h4 class="text-sm font-bold text-indigo-600 uppercase tracking-widest mb-4">Definição Acadêmica</h4>
-          <p id="card-answer" class="text-xl md:text-2xl text-slate-700 text-center leading-relaxed font-medium">
-            Relação matemática entre as dimensões do objeto real e a sua representação no mapa.
-          </p>
-          <div class="mt-auto flex gap-4">
-            <span class="bg-slate-100 text-slate-500 text-[10px] font-bold px-3 py-1 rounded-md uppercase">Mapas</span>
-            <span class="bg-indigo-50 text-indigo-600 text-[10px] font-bold px-3 py-1 rounded-md uppercase">Cálculo</span>
+  <!-- Game Canvas Area -->
+  <div class="w-full max-w-4xl px-4 flex flex-col items-center gap-8">
+    <div class="w-full h-[400px] md:h-[500px] flex items-center justify-center relative">
+      
+      <div class="card-scene" onclick="toggleCard()">
+        <div class="card" id="main-card">
+          <!-- Front -->
+          <div class="card-face card-front">
+            <div class="glow"></div>
+            <i class="fa-solid fa-earth-americas text-5xl md:text-6xl opacity-30 mb-6 md:mb-8"></i>
+            <h3 id="card-question" class="text-2xl md:text-4xl font-black text-center leading-tight tracking-tight px-4 uppercase">Escala Cartográfica</h3>
+            <span class="absolute bottom-8 md:bottom-10 text-[10px] font-bold uppercase tracking-[0.3em] opacity-40">Clique para Virar</span>
+          </div>
+          <!-- Back -->
+          <div class="card-face card-back">
+            <div class="w-12 h-1 bg-indigo-600 mb-6 md:mb-8 rounded-full"></div>
+            <h4 class="text-xs md:text-sm font-bold text-indigo-600 uppercase tracking-widest mb-3 md:mb-4">Definição Acadêmica</h4>
+            <div class="flex-grow flex items-center">
+              <p id="card-answer" class="text-lg md:text-2xl text-slate-700 text-center leading-relaxed font-medium">
+                Relação matemática entre as dimensões do objeto real e a sua representação no mapa.
+              </p>
+            </div>
+            <div class="mt-4 flex gap-3 md:gap-4">
+              <span class="bg-slate-100 text-slate-500 text-[10px] font-bold px-3 py-1 rounded-md uppercase">Mapas</span>
+              <span class="bg-indigo-50 text-indigo-600 text-[10px] font-bold px-3 py-1 rounded-md uppercase">Cálculo</span>
+            </div>
           </div>
         </div>
       </div>
+
+      <!-- Desktop Navigation Overlay (Hidden on Mobile) -->
+      <div class="hidden md:flex absolute inset-x-0 top-1/2 -translate-y-1/2 pointer-events-none items-center justify-between px-4 lg:px-20">
+          <button onclick="prevCard()" class="pointer-events-auto w-14 h-14 bg-white shadow-xl rounded-full flex items-center justify-center text-slate-400 hover:text-indigo-600 hover:scale-110 transition-all border border-slate-100 group">
+            <i class="fa-solid fa-chevron-left text-xl group-active:-translate-x-1 transition-transform"></i>
+          </button>
+          <button onclick="nextCard()" class="pointer-events-auto w-14 h-14 bg-indigo-600 shadow-2xl shadow-indigo-200 rounded-full flex items-center justify-center text-white hover:bg-indigo-700 hover:scale-110 transition-all group">
+            <i class="fa-solid fa-chevron-right text-xl group-active:translate-x-1 transition-transform"></i>
+          </button>
+      </div>
     </div>
 
-    <!-- UI Overlay Navigation -->
-    <div class="absolute inset-x-0 bottom-0 top-0 pointer-events-none flex items-center justify-between px-4 md:px-20">
-        <button onclick="prevCard()" class="pointer-events-auto w-14 h-14 bg-white shadow-xl rounded-full flex items-center justify-center text-slate-400 hover:text-indigo-600 hover:scale-110 transition-all border border-slate-100 group">
-          <i class="fa-solid fa-chevron-left text-xl group-active:-translate-x-1 transition-transform"></i>
+    <!-- Mobile Navigation (Visible only on Mobile) -->
+    <div class="flex md:hidden items-center justify-center gap-12">
+        <button onclick="prevCard()" class="w-12 h-12 bg-white shadow-lg rounded-full flex items-center justify-center text-slate-400 border border-slate-100 active:scale-95 transition-all">
+          <i class="fa-solid fa-chevron-left text-lg"></i>
         </button>
-        <button onclick="nextCard()" class="pointer-events-auto w-14 h-14 bg-indigo-600 shadow-2xl shadow-indigo-200 rounded-full flex items-center justify-center text-white hover:bg-indigo-700 hover:scale-110 transition-all group">
-          <i class="fa-solid fa-chevron-right text-xl group-active:translate-x-1 transition-transform"></i>
+        <button onclick="nextCard()" class="w-12 h-12 bg-indigo-600 shadow-lg rounded-full flex items-center justify-center text-white active:scale-95 transition-all">
+          <i class="fa-solid fa-chevron-right text-lg"></i>
         </button>
     </div>
-
   </div>
 
   <!-- Quick Stats -->

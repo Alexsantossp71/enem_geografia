@@ -58,6 +58,11 @@
         @media (min-width: 1024px) {
             .game-grid { grid-template-columns: 400px 1fr; }
         }
+        @media (max-width: 1023px) {
+            .game-grid { display: flex; flex-direction: column; }
+            .order-mobile-1 { order: 1; }
+            .order-mobile-2 { order: 2; }
+        }
     </style>
 </head>
 <body class="min-h-screen relative flex flex-col">
@@ -79,7 +84,7 @@
       </nav>
 
       <!-- Mobile Menu Toggle -->
-      <button id="mobile-menu-toggle" class="md:hidden p-2 text-indigo-950 focus:outline-none">
+      <button id="mobile-menu-toggle" class="md:hidden p-2 text-indigo-950 focus:outline-none relative z-[60]">
         <i class="fa-solid fa-bars text-2xl"></i>
       </button>
     </div>
@@ -126,7 +131,7 @@
     <main class="flex-grow pt-52 pb-20 px-6 max-w-7xl mx-auto w-full game-grid">
         
         <!-- Left Sidebar: Questions & Info -->
-        <div class="flex flex-col gap-6 relative z-10 order-2 lg:order-1">
+        <div class="flex flex-col gap-6 relative z-10 order-mobile-1 lg:order-1">
             <div class="glass p-8 rounded-3xl border-t border-white/10 shadow-2xl relative overflow-hidden">
                 <div class="absolute top-0 right-0 w-32 h-32 bg-indigo-500/20 rounded-full blur-3xl -mr-16 -mt-16"></div>
                 
@@ -166,7 +171,7 @@
         </div>
 
         <!-- Right Side: Interactive Map -->
-        <div class="relative w-full h-[500px] lg:h-[700px] flex items-center justify-center order-1 lg:order-2">
+        <div class="relative w-full h-[400px] md:h-[500px] lg:h-[700px] flex items-center justify-center order-mobile-2 lg:order-2">
             <div id="map-container" class="w-full h-full relative z-0 flex items-center justify-center drop-shadow-2xl">
                 <!-- D3 Map will be appended here -->
                 <div id="loader" class="absolute flex flex-col items-center gap-4">

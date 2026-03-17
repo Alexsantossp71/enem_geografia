@@ -6,6 +6,7 @@
   <title>GeoENEM - Caça-Palavras</title>
     <link rel="icon" type="image/svg+xml" href="../../assets/favicon.svg">
   <link href="https://fonts.googleapis.com/css2?family=Nunito:wght@400;600;700;800;900&display=swap" rel="stylesheet"/>
+  <script src="https://cdn.tailwindcss.com"></script>
   <style>
     *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
 
@@ -160,6 +161,7 @@
       border-radius: 10px;
       overflow: visible;
       box-shadow: inset 0 0 0 1px rgba(0,0,0,0.06);
+      touch-action: none;
     }
 
     #grid-table {
@@ -280,9 +282,23 @@
     }
 
     @media (max-width: 640px) {
-      .main-area { flex-direction: column; }
-      .left-panel { width: 100%; }
-      .word-list { flex-direction: row; flex-wrap: wrap; max-height: none; }
+      body { padding-top: 70px; }
+      .main-area { flex-direction: column; gap: 10px; }
+      .left-panel { width: 100%; padding: 10px; }
+      .btn-novo-jogo { padding: 10px; font-size: 0.9rem; margin-bottom: 8px; }
+      .word-list { 
+        flex-direction: row; 
+        flex-wrap: wrap; 
+        max-height: 120px; 
+        gap: 4px;
+        justify-content: center;
+        background: #f8fafc;
+        padding: 8px;
+        border-radius: 8px;
+        border: 1px solid #e2e8f0;
+      }
+      .word-item { font-size: 0.65rem; padding: 2px 6px; background: white; border: 1px solid #f1f5f9; }
+      .board-wrap { padding: 5px; }
     }
   </style>
 
@@ -336,7 +352,7 @@
       </nav>
 
       <!-- Mobile Menu Toggle -->
-      <button id="mobile-menu-toggle" class="md:hidden p-2 text-indigo-950 focus:outline-none">
+      <button id="mobile-menu-toggle" class="md:hidden p-2 text-indigo-950 focus:outline-none relative z-[60]">
         <i class="fa-solid fa-bars text-2xl"></i>
       </button>
     </div>
@@ -366,7 +382,7 @@
   <!-- Board -->
   <div style="flex:1">
     <div class="score-bar" style="display:none">
-      <span id="found-count-old">0</span> / <span id="total-count-old">0</span> palavras
+      <span id="found-count">0</span> / <span id="total-count">0</span> palavras
     </div>
     <div class="board-wrap">
       <div class="board-inner" id="board-inner">
@@ -458,8 +474,10 @@ function newGame() {
 function startGame() {
   words = words.map(w => w.toUpperCase().normalize('NFD').replace(/[\u0300-\u036f]/g,''));
   words.sort((a,b) => b.length - a.length);
-  document.getElementById('total-count').textContent = words.length;
-  document.getElementById('found-count').textContent = 0;
+  const totalCountEl = document.getElementById('total-count');
+  const foundCountEl = document.getElementById('found-count');
+  if (totalCountEl) totalCountEl.textContent = words.length;
+  if (foundCountEl) foundCountEl.textContent = 0;
   foundWords = [];
   foundHighlights = [];
   wordPlacements = {};
@@ -576,17 +594,14 @@ function setupEvents() {
     if (td) onDown(+td.dataset.r, +td.dataset.c);
   }, { passive: false });
 
-  tbl.addEventListener('touchmove', e => {
-    e.preventDefault();
+  document.addEventListener('touchmove', e => {
+    if (!isSelecting) return;
     const t = e.touches[0];
     const td = tdAt(t.clientX, t.clientY);
     if (td) onMove(+td.dataset.r, +td.dataset.c);
   }, { passive: false });
 
-  tbl.addEventListener('touchend', e => {
-    e.preventDefault();
-    onUp();
-  }, { passive: false });
+  document.addEventListener('touchend', () => onUp());
 }
 
 function renderWordList() {
